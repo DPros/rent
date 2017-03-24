@@ -1,0 +1,30 @@
+.row button:not(.delete),
+.row.new button {
+    display: none;
+}
+
+.row.edited:not(.new) .js-save,
+.row.new.edited .js-new {
+    display: initial;
+}
+
+.row.edited input {
+    background-color: rgb(185, 255, 142);
+}
+
+.container {
+    width: 500px;
+}
+
+.row .buttons{
+    text-align: center;
+}
+
+.row{
+    padding: 10px;
+}
+
+.list-container input+button.delete-input{
+    margin-top: -60px;
+    margin-left: 430px;
+}

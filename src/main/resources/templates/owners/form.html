@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${personVO.name == null} ? #{new.owner} : ${personVO.name}">Title</title>
+    <link rel="stylesheet" href="../../resources/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"
+          type="text/css"/>
+    <link rel="stylesheet" href="../../resources/css/form.css" th:href="@{/css/form.css}" type="text/css"/>
+</head>
+<body>
+<form th:object="${personVO}" th:action="@{save}" action="#" method="post">
+    <div class="container">
+        <input type="hidden" th:field="*{id}"/>
+        <input class="hidden" type="checkbox" th:field="*{isOwner}"/>
+        <div class="form-group">
+            <label for="passport" th:text="#{person.id}"></label>
+            <input class="form-control" id="passport" th:field="*{passport}"/>
+        </div>
+        <div class="form-group">
+            <label for="title" th:text="#{person.title}"></label>
+            <select class="form-control" id="title" th:field="*{titleId}" th:each="title : ${titles}">
+                <option th:value="${title.key}" th:text="${title.value}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="name" th:text="#{person.name}"></label>
+            <div class="alert-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+            <input class="form-control" id="name" th:field="*{name}"/>
+        </div>
+        <div class="form-group">
+            <label for="caf" th:text="#{person.CAF}"></label>
+            <input class="form-control" id="caf" th:field="*{caf}"/>
+        </div>
+        <div class="form-group">
+            <label for="address" th:text="#{address}"></label>
+            <input class="form-control" id="address" th:field="*{address}"/>
+        </div>
+        <div class="form-group">
+            <label for="phone1" th:text="${#{phone} + ' 1'}"></label>
+            <input class="form-control" id="phone1" th:field="*{phone1}"/>
+        </div>
+        <div class="form-group">
+            <label for="phone2" th:text="${#{phone} + ' 2'}"></label>
+            <input class="form-control" id="phone2" th:field="*{phone2}"/>
+        </div>
+        <div class="form-group">
+            <label for="email1" th:text="${#{email} + ' 1'}"></label>
+            <input class="form-control" id="email1" th:field="*{email1}"/>
+        </div>
+        <div class="form-group">
+            <label for="email2" th:text="${#{email} + ' 2'}"></label>
+            <input class="form-control" id="email2" th:field="*{email2}"/>
+        </div>
+        <hr/>
+        <div th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.globalErrors()}">
+            <div class="alert alert-danger" th:text="${error}"></div>
+        </div>
+        <div class="pull-right">
+            <button type="submit" class="btn btn-primary" th:text="#{save}">Save</button>
+        </div>
+    </div>
+</form>
+<!--<div class="etalon hidden list-container">-->
+    <!--<input class="form-control" type="text"/>-->
+    <!--<button type="button" class="delete-input glyphicon glyphicon-remove btn btn-danger"></button>-->
+<!--</div>-->
+</body>
+<script src="../../resources/js/jquery-3.2.0.min.js" th:src="@{/js/jquery-3.2.0.min.js}"></script>
+<script src="../../resources/js/bootstrap.min.js" th:src="@{/js/bootstrap.js}"></script>
+<!--<script src="../../resources/js/form.js" th:src="@{/js/form.js}"></script>-->
+</html>

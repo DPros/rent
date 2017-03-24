@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{all.owners}">Title</title>
+    <link rel="stylesheet" href="../../resources/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"
+          type="text/css"/>
+    <link rel="stylesheet" href="../../resources/css/datatables.min.css" th:href="@{/css/datatables.min.css}"
+          type="text/css"/>
+</head>
+<body>
+<table id="owners" class="table table-striped">
+    <thead>
+    <tr>
+        <td th:text="#{person.id}">ID</td>
+        <td th:text="#{person.name}"></td>
+        <td th:text="#{person.CAF}"></td>
+        <td th:text="#{address}"></td>
+        <td th:text="#{phone}"></td>
+        <td th:text="#{email}"></td>
+    </tr>
+    </thead>
+    <tbody th:each="person : ${owners}">
+    <tr>
+        <td th:text="${person.passport}"></td>
+        <td><a th:href="${'/owners/' + person.id}" th:text="${person.name}"></a></td>
+        <td th:text="${person.caf}"></td>
+        <td th:text="${person.address}"></td>
+        <td>
+            <div th:text="${person.phone1}"></div>
+            <div th:text="${person.phone2}"></div>
+        </td>
+        <td>
+            <div th:text="${person.email1}"></div>
+            <div th:text="${person.email2}"></div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+<script src="../../resources/js/jquery-3.2.0.min.js" th:src="@{/js/jquery-3.2.0.min.js}"></script>
+<script src="../../resources/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+<script src="../../resources/js/datatables.min.js" th:src="@{/js/datatables.min.js}"></script>
+<script src="../../resources/js/owners.js" th:src="@{/js/owners.js}"></script>
+</html>
