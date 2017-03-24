@@ -1,13 +1,29 @@
 package com.proskurnia.VOs;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+
 /**
  * Created by dmpr0116 on 07.03.2017.
  */
-public class CreditPaymentVO extends Payment{
+public class CreditPaymentVO extends Payment {
 
     private boolean deposit;
     private boolean confirmed;
     private int contractId;
+
+    public CreditPaymentVO() {
+    }
+
+    public CreditPaymentVO(int id, Timestamp date, BigDecimal amount, String comment, boolean deposit, boolean confirmed, int contractId) {
+        this.id = id;
+        this.date = date;
+        this.amount = amount;
+        this.comment = comment;
+        this.confirmed = confirmed;
+        this.deposit = deposit;
+        this.contractId = contractId;
+    }
 
     public boolean isDeposit() {
         return deposit;

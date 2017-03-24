@@ -5,9 +5,7 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -25,30 +23,9 @@ public class PersonDaoJdbc extends Eager_JDBC_DAO<PersonVO, Integer> implements 
 
     private final static String DELETE = "DELETE FROM persons WHERE person_id=?;";
 
-//    @Override
-//    protected PreparedStatement getModifyPS(PersonVO o, QueryType queryType, Connection conn) throws SQLException {
-//
-//        PreparedStatement ps = jdbcTemplate.getDataSource().getConnection().prepareStatement(queryType == QueryType.INSERT ? INSERT : UPDATE);
-//        int index = 0;
-//        ps.setString(++index, o.getPassport());
-//        ps.setString(++index, o.getName());
-//        ps.setString(++index, o.getAddress());
-//        ps.setString(++index, o.getCaf());
-//        ps.setInt(++index, o.getTitleId());
-//        ps.setArray(++index, jdbcTemplate.getDataSource().getConnection().createArrayOf("character varying", o.getPhones());
-//        if (queryType == QueryType.UPDATE) {
-//            ps.setInt(++index, o.getId());
-//        } else {
-//            ps.setBoolean(++index, o.isOwner());
-//        }
-//        for (String phone : o.getPhones()) {
-//            ps.setString(++index, phone);
-//        }
-//        for (String email : o.getEmails()) {
-//            ps.setString(++index, email);
-//        }
-//        return ps;
-//    }
+    @Override
+    protected void inject(PersonVO o) {
+    }
 
     @Override
     protected String getDeleteQuery() {

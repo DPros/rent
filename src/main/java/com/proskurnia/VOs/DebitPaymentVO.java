@@ -1,11 +1,26 @@
 package com.proskurnia.VOs;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+
 /**
  * Created by dmpr0116 on 07.03.2017.
  */
 public class DebitPaymentVO extends Payment {
+
     private DebitPaymentType type;
+    private String description;
     private int reasonId;
+
+    public DebitPaymentVO(int id, Timestamp date, BigDecimal amount, String comment, DebitPaymentType type, int reasonId, String description) {
+        this.id = id;
+        this.date = date;
+        this.amount = amount;
+        this.comment = comment;
+        this.type = type;
+        this.reasonId = reasonId;
+        this.description = description;
+    }
 
     public DebitPaymentType getType() {
         return type;

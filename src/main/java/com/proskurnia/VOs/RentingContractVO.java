@@ -1,45 +1,63 @@
 package com.proskurnia.VOs;
 
-import java.util.Currency;
+import java.sql.Timestamp;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * Created by dmpr0116 on 07.03.2017.
  */
-public class RentingContractVO {
-    private int number;
-    private Currency rentPrice;
-    private Currency deposit;
+public class RentingContractVO implements Identified<Integer> {
+    private int id;
+    private BigDecimal rentPrice;
+    private BigDecimal deposit;
     private boolean depositReturned;
-    private Currency balance;
-    private Currency estimatedFees;
-    private Date startDate;
-    private Date expectedEndDate;
-    private Date actualEndDate;
+    private BigDecimal balance;
+    private BigDecimal estimatedFees;
+    private Timestamp startDate;
+    private Timestamp expectedEndDate;
+    private Timestamp actualEndDate;
     private int tenantId;
     private int apartmentId;
 
-    public int getNumber() {
-        return number;
+    public RentingContractVO() {
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public RentingContractVO(int id, BigDecimal rentPrice, BigDecimal deposit, boolean depositReturned, BigDecimal balance, BigDecimal estimatedFees, Timestamp startDate, Timestamp expectedEndDate, Timestamp actualEndDate, int tenantId, int apartmentId) {
+        this.id = id;
+        this.rentPrice = rentPrice;
+        this.deposit = deposit;
+        this.depositReturned = depositReturned;
+        this.balance = balance;
+        this.estimatedFees = estimatedFees;
+        this.startDate = startDate;
+        this.expectedEndDate = expectedEndDate;
+        this.actualEndDate = actualEndDate;
+        this.tenantId = tenantId;
+        this.apartmentId = apartmentId;
     }
 
-    public Currency getRentPrice() {
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public BigDecimal getRentPrice() {
         return rentPrice;
     }
 
-    public void setRentPrice(Currency rentPrice) {
+    public void setRentPrice(BigDecimal rentPrice) {
         this.rentPrice = rentPrice;
     }
 
-    public Currency getDeposit() {
+    public BigDecimal getDeposit() {
         return deposit;
     }
 
-    public void setDeposit(Currency deposit) {
+    public void setDeposit(BigDecimal deposit) {
         this.deposit = deposit;
     }
 
@@ -51,43 +69,43 @@ public class RentingContractVO {
         this.depositReturned = depositReturned;
     }
 
-    public Currency getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(Currency balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 
-    public Currency getEstimatedFees() {
+    public BigDecimal getEstimatedFees() {
         return estimatedFees;
     }
 
-    public void setEstimatedFees(Currency estimatedFees) {
+    public void setEstimatedFees(BigDecimal estimatedFees) {
         this.estimatedFees = estimatedFees;
     }
 
-    public Date getStartDate() {
+    public Timestamp getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(Timestamp startDate) {
         this.startDate = startDate;
     }
 
-    public Date getExpectedEndDate() {
+    public Timestamp getExpectedEndDate() {
         return expectedEndDate;
     }
 
-    public void setExpectedEndDate(Date expectedEndDate) {
+    public void setExpectedEndDate(Timestamp expectedEndDate) {
         this.expectedEndDate = expectedEndDate;
     }
 
-    public Date getActualEndDate() {
+    public Timestamp getActualEndDate() {
         return actualEndDate;
     }
 
-    public void setActualEndDate(Date actualEndDate) {
+    public void setActualEndDate(Timestamp actualEndDate) {
         this.actualEndDate = actualEndDate;
     }
 
@@ -114,7 +132,7 @@ public class RentingContractVO {
 
         RentingContractVO that = (RentingContractVO) o;
 
-        if (getNumber() != that.getNumber()) return false;
+        if (getId() != that.getId()) return false;
         if (isDepositReturned() != that.isDepositReturned()) return false;
         if (getTenantId() != that.getTenantId()) return false;
         if (getApartmentId() != that.getApartmentId()) return false;
@@ -129,7 +147,7 @@ public class RentingContractVO {
 
     @Override
     public int hashCode() {
-        int result = getNumber();
+        int result = getId();
         result = 31 * result + getRentPrice().hashCode();
         result = 31 * result + getDeposit().hashCode();
         result = 31 * result + (isDepositReturned() ? 1 : 0);

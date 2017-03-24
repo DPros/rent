@@ -1,38 +1,38 @@
 package com.proskurnia.VOs;
 
-import java.util.Currency;
-import java.util.Date;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 /**
  * Created by dmpr0116 on 07.03.2017.
  */
-public abstract class Payment {
-    protected int id;
-    protected Date date;
-    protected Currency amount;
+public abstract class Payment implements Identified<Long> {
+    protected long id;
+    protected Timestamp date;
+    protected BigDecimal amount;
     protected String comment;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Date getDate() {
+    public Timestamp getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Timestamp date) {
         this.date = date;
     }
 
-    public Currency getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Currency amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -52,16 +52,16 @@ public abstract class Payment {
         Payment payment = (Payment) o;
 
         if (getId() != payment.getId()) return false;
-        if (!getDate().equals(payment.getDate())) return false;
-        if (!getAmount().equals(payment.getAmount())) return false;
+        if (getDate() != null ? !getDate().equals(payment.getDate()) : payment.getDate() != null) return false;
+        if (getAmount() != null ? !getAmount().equals(payment.getAmount()) : payment.getAmount() != null) return false;
         return getComment() != null ? getComment().equals(payment.getComment()) : payment.getComment() == null;
     }
 
     @Override
     public int hashCode() {
-        int result = getId();
-        result = 31 * result + getDate().hashCode();
-        result = 31 * result + getAmount().hashCode();
+        int result = (int) (getId() ^ (getId() >>> 32));
+        result = 31 * result + (getDate() != null ? getDate().hashCode() : 0);
+        result = 31 * result + (getAmount() != null ? getAmount().hashCode() : 0);
         result = 31 * result + (getComment() != null ? getComment().hashCode() : 0);
         return result;
     }
