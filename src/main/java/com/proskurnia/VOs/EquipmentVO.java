@@ -3,7 +3,7 @@ package com.proskurnia.VOs;
 /**
  * Created by dmpr0116 on 07.03.2017.
  */
-public class EquipmentVO {
+public class EquipmentVO implements Identified<String> {
 
     private String id;
     private String wifiName;

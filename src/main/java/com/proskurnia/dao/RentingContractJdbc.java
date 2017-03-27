@@ -4,7 +4,6 @@ import com.proskurnia.VOs.RentingContractVO;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 
-import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,7 +13,7 @@ import java.util.List;
 /**
  * Created by dmpr0116 on 24.03.2017.
  */
-public class RentingContractJdbc extends Lazy_JDBC_DAO<RentingContractVO, Integer> implements RentingContractDao {
+public class RentingContractJdbc extends LazyJdbcDao<RentingContractVO, Integer> implements RentingContractDao {
 
     private final static String INSERT = "INSERT INTO renting_contracts(rent_price,deposit_amount,estimated_fees,start_date,expected_end_date,tenant_id,apartment_id) VALUES(?,?,?,?,?,?,?) RETURNING contract_id;";
 

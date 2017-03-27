@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * Created by D on 14.03.2017.
  */
 @Repository
-public class PersonDaoJdbc extends Eager_JDBC_DAO<PersonVO, Integer> implements PersonDao {
+public class PersonDaoJdbc extends EagerJdbcDao<PersonVO, Integer> implements PersonDao {
 
     private final static String INSERT = "INSERT INTO persons(passport,name,address,caf,title_id,phone1,phone2,email1,email2,is_owner) VALUES(?,?,?,?,?,?,?,?) RETURNING person_id;";
 
@@ -22,10 +22,6 @@ public class PersonDaoJdbc extends Eager_JDBC_DAO<PersonVO, Integer> implements 
     private final static String SELECT_ALL = "SELECT * FROM persons NATURAL JOIN titles;";
 
     private final static String DELETE = "DELETE FROM persons WHERE person_id=?;";
-
-    @Override
-    protected void inject(PersonVO o) {
-    }
 
     @Override
     protected String getDeleteQuery() {

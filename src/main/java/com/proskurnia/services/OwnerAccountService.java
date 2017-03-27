@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by D on 21.03.2017.
  */
-public interface OwnerAccountService extends GenericService<OwnerAccountVO, Integer> {
+public interface OwnerAccountService extends GenericService<OwnerAccountVO, String> {
 
-    List<OwnerAccountVO> getByOwner(PersonVO p);
+    List<OwnerAccountVO> getByOwnerId(int id);
 }

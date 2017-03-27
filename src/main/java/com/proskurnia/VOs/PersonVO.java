@@ -11,7 +11,6 @@ import java.io.Serializable;
 public class PersonVO implements Identified<Integer>, Serializable {
     protected int id;
     protected String passport;
-    @NotNull
     @NotEmpty
     protected String name;
     protected String address;

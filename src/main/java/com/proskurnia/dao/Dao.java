@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import com.proskurnia.VOs.Identified;
 
-public interface DAO<T extends Identified<I>, I> {
+public interface Dao<T extends Identified<I>, I> {
 
 	Collection<T> getAll();
 	

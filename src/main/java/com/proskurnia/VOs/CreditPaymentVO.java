@@ -15,7 +15,7 @@ public class CreditPaymentVO extends Payment {
     public CreditPaymentVO() {
     }
 
-    public CreditPaymentVO(int id, Timestamp date, BigDecimal amount, String comment, boolean deposit, boolean confirmed, int contractId) {
+    public CreditPaymentVO(long id, Timestamp date, BigDecimal amount, String comment, boolean deposit, boolean confirmed, int contractId) {
         this.id = id;
         this.date = date;
         this.amount = amount;

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public abstract class Eager_JDBC_DAO<T extends Identified<I>, I> implements DAO<T, I> {
+public abstract class EagerJdbcDao<T extends Identified<I>, I> implements Dao<T, I> {
 
     @Autowired
     protected JdbcTemplate jdbcTemplate;
@@ -66,7 +66,7 @@ public abstract class Eager_JDBC_DAO<T extends Identified<I>, I> implements DAO<
 
     protected abstract PreparedStatementCreator getStatementCreator(T o, QueryType queryType);
 
-    public T getById(Object id) {
+    public T getById(I id) {
         return repository.get(id);
     }
 }

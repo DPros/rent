@@ -12,7 +12,7 @@ import java.util.List;
  * Created by D on 22.03.2017.
  */
 @Repository
-public class ApartmentDaoJdbc extends Lazy_JDBC_DAO<ApartmentVO, Integer> implements ApartmentDao {
+public class ApartmentDaoJdbc extends LazyJdbcDao<ApartmentVO, Integer> implements ApartmentDao {
 
     private final static String INSERT = "INSERT INTO apartments (roomNumber,size,building_id) VALUES(?,?,?) RETURNING apartment_id;";
 

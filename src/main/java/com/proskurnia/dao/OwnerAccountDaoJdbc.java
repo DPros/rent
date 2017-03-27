@@ -1,7 +1,6 @@
 package com.proskurnia.dao;
 
 import com.proskurnia.VOs.OwnerAccountVO;
-import com.proskurnia.VOs.PersonVO;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -11,11 +10,9 @@ import java.util.List;
 /**
  * Created by D on 21.03.2017.
  */
-public class OwnerAccountDaoJdbc extends Lazy_JDBC_DAO<OwnerAccountVO, Integer> implements OwnerAccountDao {
+public class OwnerAccountDaoJdbc extends LazyJdbcDao<OwnerAccountVO, String> implements OwnerAccountDao {
 
-    private final static String INSERT = "INSERT INTO accounts (number,balance,bank_id,owner_id) VALUES(?,?,?,?) RETURNING account_id;";
-
-    private final static String UPDATE = "UPDATE account SET number=?, balance=?, bank_id=?, owner_id=? WHERE account_id=?;";
+    private final static String INSERT = "INSERT INTO accounts (balance,bank_id,owner_id,account_number) VALUES(?,?,?,?) RETURNING account_id;";
 
     private final static String SELECT_ALL = "SELECT * FROM accounts NATURAL JOIN banks;";
 
@@ -28,15 +25,12 @@ public class OwnerAccountDaoJdbc extends Lazy_JDBC_DAO<OwnerAccountVO, Integer> 
     @Override
     protected PreparedStatementCreator getStatementCreator(OwnerAccountVO o, QueryType queryType) {
         return con -> {
-            PreparedStatement ps = con.prepareStatement(queryType == QueryType.INSERT ? INSERT : UPDATE);
+            PreparedStatement ps = con.prepareStatement(INSERT);
             int index = 0;
-            ps.setString(++index, o.getNumber());
             ps.setBigDecimal(++index, o.getBalance());
             ps.setInt(++index, o.getBankId());
             ps.setInt(++index, o.getOwnerId());
-            if (queryType == QueryType.UPDATE) {
-                ps.setInt(++index, o.getId());
-            }
+            ps.setString(++index, o.getId());
             return ps;
         };
     }
@@ -59,16 +53,16 @@ public class OwnerAccountDaoJdbc extends Lazy_JDBC_DAO<OwnerAccountVO, Integer> 
     @Override
     protected RowMapper<OwnerAccountVO> getRowMapper() {
         return (rs, rowNum) -> new OwnerAccountVO(
-                rs.getInt("account_id"),
-                rs.getString("number"),
+                rs.getString("account_number"),
                 rs.getInt("bank_id"),
                 rs.getBigDecimal("balance"),
-                rs.getInt("owner_id")
+                rs.getInt("owner_id"),
+                rs.getString("name")
         );
     }
 
     @Override
-    public List<OwnerAccountVO> getByOwner(PersonVO p) {
-        return jdbcTemplate.query(SELECT_BY_OWNER, new Object[]{p.getId()}, getRowMapper());
+    public List<OwnerAccountVO> getByOwnerId(int id) {
+        return jdbcTemplate.query(SELECT_BY_OWNER, getRowMapper(), id);
     }
 }

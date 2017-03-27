@@ -33,7 +33,7 @@ public class ApartmentController {
     @GetMapping("/")
     public String getAllBuildings(Model model) {
         model.addAttribute("buildings", buildingService.getAll());
-        return "buildings/all";
+        return "buildings/list";
     }
 
     @GetMapping("/{buildingId}")

@@ -9,9 +9,9 @@ import java.util.List;
 /**
  * Created by D on 21.03.2017.
  */
-public class OwnerAccountServiceImpl extends GenericServiceImpl<OwnerAccountVO, Integer> implements OwnerAccountService {
+public class OwnerAccountServiceImpl extends GenericServiceImpl<OwnerAccountVO, String> implements OwnerAccountService {
     @Override
-    public List<OwnerAccountVO> getByOwner(PersonVO p) {
-        return ((OwnerAccountDao) dao).getByOwner(p);
+    public List<OwnerAccountVO> getByOwnerId(int id) {
+        return ((OwnerAccountDao) dao).getByOwnerId(id);
     }
 }

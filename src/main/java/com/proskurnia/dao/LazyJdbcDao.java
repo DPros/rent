@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public abstract class Lazy_JDBC_DAO<T extends Identified<I>, I> implements DAO<T, I> {
+public abstract class LazyJdbcDao<T extends Identified<I>, I> implements Dao<T, I> {
 
     @Autowired
     protected JdbcTemplate jdbcTemplate;
@@ -20,7 +20,7 @@ public abstract class Lazy_JDBC_DAO<T extends Identified<I>, I> implements DAO<T
         return jdbcTemplate.query(getAllQuery(), getRowMapper());
     }
 
-    public T getById(Object id) {
+    public T getById(I id) {
         return jdbcTemplate.queryForObject(getByIdQuery(), getRowMapper(), id);
     }
 

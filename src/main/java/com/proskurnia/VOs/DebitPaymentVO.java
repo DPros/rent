@@ -12,7 +12,7 @@ public class DebitPaymentVO extends Payment {
     private String description;
     private int reasonId;
 
-    public DebitPaymentVO(int id, Timestamp date, BigDecimal amount, String comment, DebitPaymentType type, int reasonId, String description) {
+    public DebitPaymentVO(long id, Timestamp date, BigDecimal amount, String comment, DebitPaymentType type, int reasonId, String description) {
         this.id = id;
         this.date = date;
         this.amount = amount;
@@ -69,6 +69,19 @@ public class DebitPaymentVO extends Payment {
 
         public int getVal() {
             return val;
+        }
+
+        public static DebitPaymentType valueOf(int i) {
+            switch (i) {
+                case 0:
+                    return ServicePayment;
+                case 1:
+                    return BuildingPayment;
+                case 2:
+                    return ApartmentPayment;
+                default:
+                    throw new IllegalArgumentException("bad Debit Payment type");
+            }
         }
     }
 }

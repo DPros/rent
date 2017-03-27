@@ -9,7 +9,7 @@ import java.util.Collection;
  * Created by D on 14.03.2017.
  */
 @Repository
-public interface PersonDao extends DAO<PersonVO, Integer>{
+public interface PersonDao extends Dao<PersonVO, Integer> {
 
     Collection<PersonVO> getTenants();
 

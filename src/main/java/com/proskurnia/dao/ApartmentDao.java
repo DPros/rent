@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by D on 22.03.2017.
  */
-public interface ApartmentDao extends DAO<ApartmentVO, Integer> {
+public interface ApartmentDao extends Dao<ApartmentVO, Integer> {
 
     List<ApartmentVO> getByBuildingId(int buildingId);
 }

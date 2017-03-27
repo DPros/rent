@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by D on 21.03.2017.
  */
-public interface BuildingDao extends DAO<BuildingVO, Integer> {
+public interface BuildingDao extends Dao<BuildingVO, Integer> {
 
     List<BuildingVO> getByOwner(PersonVO p);
 }

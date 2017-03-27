@@ -3,16 +3,45 @@ package com.proskurnia.VOs;
 /**
  * Created by dmpr0116 on 07.03.2017.
  */
-public class BankVO {
+public class BankVO implements Identified<Integer> {
     private int id;
     private String name;
     private String address;
+    private String phone;
+    private String email;
 
-    public int getId() {
+    public BankVO() {
+    }
+
+    public BankVO(int id, String name, String address, String phone, String email) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -35,20 +64,24 @@ public class BankVO {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof BankVO)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         BankVO bankVO = (BankVO) o;
 
-        if (getId() != bankVO.getId()) return false;
-        if (!getName().equals(bankVO.getName())) return false;
-        return getAddress() != null ? getAddress().equals(bankVO.getAddress()) : bankVO.getAddress() == null;
+        if (id != bankVO.id) return false;
+        if (name != null ? !name.equals(bankVO.name) : bankVO.name != null) return false;
+        if (address != null ? !address.equals(bankVO.address) : bankVO.address != null) return false;
+        if (phone != null ? !phone.equals(bankVO.phone) : bankVO.phone != null) return false;
+        return email != null ? email.equals(bankVO.email) : bankVO.email == null;
     }
 
     @Override
     public int hashCode() {
-        int result = getId();
-        result = 31 * result + getName().hashCode();
-        result = 31 * result + (getAddress() != null ? getAddress().hashCode() : 0);
+        int result = id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (address != null ? address.hashCode() : 0);
+        result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
         return result;
     }
 }

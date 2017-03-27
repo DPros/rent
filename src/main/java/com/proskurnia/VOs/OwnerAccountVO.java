@@ -1,43 +1,47 @@
 package com.proskurnia.VOs;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Currency;
 
 /**
  * Created by dmpr0116 on 07.03.2017.
  */
-public class OwnerAccountVO implements Identified<Integer>{
-    private int id;
-    private String number;
+public class OwnerAccountVO implements Identified<String>{
+    @NotEmpty
+    private String id;
     private int bankId;
     private BigDecimal balance;
     private int ownerId;
+    private String bankName;
 
     public OwnerAccountVO() {
     }
 
-    public OwnerAccountVO(int id, String number, int bankId, BigDecimal balance, int ownerId) {
+    public OwnerAccountVO(String id, int bankId, BigDecimal balance, int ownerId, String bankName) {
         this.id = id;
-        this.number = number;
         this.bankId = bankId;
         this.balance = balance;
         this.ownerId = ownerId;
+        this.bankName = bankName;
     }
 
-    public Integer getId() {
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
     }
 
     public int getOwnerId() {
@@ -71,17 +75,15 @@ public class OwnerAccountVO implements Identified<Integer>{
 
         OwnerAccountVO that = (OwnerAccountVO) o;
 
-        if (id != that.id) return false;
         if (bankId != that.bankId) return false;
         if (ownerId != that.ownerId) return false;
-        if (number != null ? !number.equals(that.number) : that.number != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         return balance != null ? balance.equals(that.balance) : that.balance == null;
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (number != null ? number.hashCode() : 0);
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + bankId;
         result = 31 * result + (balance != null ? balance.hashCode() : 0);
         result = 31 * result + ownerId;

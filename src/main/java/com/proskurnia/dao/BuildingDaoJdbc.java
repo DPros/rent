@@ -13,7 +13,7 @@ import java.util.List;
  * Created by D on 21.03.2017.
  */
 @Repository
-public class BuildingDaoJdbc extends Lazy_JDBC_DAO<BuildingVO, Integer> implements BuildingDao {
+public class BuildingDaoJdbc extends LazyJdbcDao<BuildingVO, Integer> implements BuildingDao {
 
     private final static String EMPTY_APARTMENTS_COUNT_FOR_BUILDING = "(SELECT COUNT(*) FROM apartments WHERE building_id=building.building_id AND NOT EXISTS (SELECT * FROM renting_contracts WHERE apartment_id=apartments.apartment.id AND actual_end_date IS NULL AND start_date < current_timestamp AND expected_end_date > current_timestamp)) AS empty_apartments";
 
