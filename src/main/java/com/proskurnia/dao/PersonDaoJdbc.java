@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Repository
 public class PersonDaoJdbc extends EagerJdbcDao<PersonVO, Integer> implements PersonDao {
 
-    private final static String INSERT = "INSERT INTO persons(passport,name,address,caf,title_id,phone1,phone2,email1,email2,is_owner) VALUES(?,?,?,?,?,?,?,?) RETURNING person_id;";
+    private final static String INSERT = "INSERT INTO persons(passport,name,address,caf,title_id,phone1,phone2,email1,email2,is_owner) VALUES(?,?,?,?,?,?,?,?,?,?) RETURNING person_id;";
 
     private final static String UPDATE = "UPDATE persons SET passport=?,name=?,address=?,caf=?,title_id=?,phone1=?,phone2=?,email1=?,email2=? WHERE person_id=?;";
 
@@ -68,7 +68,7 @@ public class PersonDaoJdbc extends EagerJdbcDao<PersonVO, Integer> implements Pe
             if (queryType == QueryType.UPDATE) {
                 ps.setInt(++index, o.getId());
             } else {
-                ps.setBoolean(++index, o.isOwner());
+                ps.setBoolean(++index, o.getIsOwner());
             }
             return ps;
         };
@@ -76,11 +76,11 @@ public class PersonDaoJdbc extends EagerJdbcDao<PersonVO, Integer> implements Pe
 
     @Override
     public Collection<PersonVO> getTenants() {
-        return repository.values().stream().filter(p -> !p.isOwner()).collect(Collectors.toList());
+        return repository.values().stream().filter(p -> !p.getIsOwner()).collect(Collectors.toList());
     }
 
     @Override
     public Collection<PersonVO> getOwners() {
-        return repository.values().stream().filter(p -> p.isOwner()).collect(Collectors.toList());
+        return repository.values().stream().filter(p -> p.getIsOwner()).collect(Collectors.toList());
     }
 }

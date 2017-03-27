@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+>
 <!--/*@thymesVar id="object" type="com.proskurnia.VOs.PersonVO"*/-->
 <head>
     <meta charset="UTF-8"/>
     <title th:text="${object.name == null} ? #{new.owner} : ${object.name}">Title</title>
-    <link rel="stylesheet" href="../../resources/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"
-          type="text/css"/>
-    <link rel="stylesheet" href="../../resources/css/form.css" th:href="@{/css/form.css}" type="text/css"/>
+    <th:block th:fragment="template :: css"></th:block>
 </head>
 <body>
 <form th:object="${object}" th:action="@{save}" action="#" method="post">
@@ -22,8 +19,10 @@
         </div>
         <div class="form-group">
             <label for="title" th:text="#{person.title}"></label>
-            <select data-live-search="true" class="selectpicker form-control" id="title" th:field="*{titleId}" th:each="title : ${titles}">
-                <option th:value="${title.key}" th:text="${title.value}"></option>
+            <select data-live-search="true" class="form-control selectpicker" id="title" th:field="*{titleId}">
+                <th:block th:each="title : ${titles}">
+                    <option th:value="${title.key}" th:text="${title.value}"></option>
+                </th:block>
             </select>
         </div>
         <div class="form-group">
@@ -40,19 +39,19 @@
             <input class="form-control" id="address" th:field="*{address}"/>
         </div>
         <div class="form-group">
-            <label for="phone1" th:text="${#{phone} + ' 1'}"></label>
+            <label for="phone1" th:text="#{phone} + ' 1'"></label>
             <input class="form-control" id="phone1" th:field="*{phone1}"/>
         </div>
         <div class="form-group">
-            <label for="phone2" th:text="${#{phone} + ' 2'}"></label>
+            <label for="phone2" th:text="#{phone} + ' 2'"></label>
             <input class="form-control" id="phone2" th:field="*{phone2}"/>
         </div>
         <div class="form-group">
-            <label for="email1" th:text="${#{email} + ' 1'}"></label>
+            <label for="email1" th:text="#{email} + ' 1'"></label>
             <input class="form-control" id="email1" th:field="*{email1}"/>
         </div>
         <div class="form-group">
-            <label for="email2" th:text="${#{email} + ' 2'}"></label>
+            <label for="email2" th:text="#{email} + ' 2'"></label>
             <input class="form-control" id="email2" th:field="*{email2}"/>
         </div>
         <hr/>
@@ -64,8 +63,6 @@
         </div>
     </div>
 </form>
+<th:block th:fragment="template :: js"></th:block>
 </body>
-<script src="../../resources/js/jquery-3.2.0.min.js" th:src="@{/js/jquery-3.2.0.min.js}"></script>
-<script src="../../resources/js/bootstrap.min.js" th:src="@{/js/bootstrap.js}"></script>
-<script src="../../resources/js/bootstrap-select.js" th:src="@{/js/bootsrap-select.js}"></script>
 </html>

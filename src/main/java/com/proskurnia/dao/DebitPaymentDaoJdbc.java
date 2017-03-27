@@ -3,10 +3,12 @@ package com.proskurnia.dao;
 import com.proskurnia.VOs.DebitPaymentVO;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 /**
  * Created by D on 26.03.2017.
  */
+@Repository
 public class DebitPaymentDaoJdbc extends LazyJdbcDao<DebitPaymentVO, Long> implements DebitPaymentDao {
 
     final static String DELETE = "DELETE FROM debit_payments WHERE payment_id=?;";

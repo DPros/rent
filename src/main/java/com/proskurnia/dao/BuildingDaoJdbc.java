@@ -21,13 +21,19 @@ public class BuildingDaoJdbc extends LazyJdbcDao<BuildingVO, Integer> implements
 
     private final static String UPDATE = "UPDATE account SET address=?, acquisition_date=?, construction_date=?, date_of_sale=?, comment=?,account_id=?,manageable=? WHERE building_id=?;";
 
-    private final static String SELECT_ALL = "SELECT *, " + EMPTY_APARTMENTS_COUNT_FOR_BUILDING + "FROM buildings";
+    private final static String SELECT_ALL = "SELECT " +
+            "b.building_id,b.address,b.acquisition_date,b.construction_date,b.date_of_sale,b.manageable,b.comment,b.account_id,empty_apartments,persons.name, " + EMPTY_APARTMENTS_COUNT_FOR_BUILDING +
+            "FROM buildings b NATURAL JOIN accounts JOIN persons ON persons.person_id=accounts.owner_id;";
 
     private final static String DELETE = "DELETE FROM buildings WHERE building_id=?;";
 
-    private final static String SELECT_BY_ID = "SELECT *, " + EMPTY_APARTMENTS_COUNT_FOR_BUILDING + " FROM buildings WHERE building_id=?;";
+    private final static String SELECT_BY_ID = "SELECT " +
+            "b.building_id,b.address,b.acquisition_date,b.construction_date,b.date_of_sale,b.manageable,b.comment,b.account_id,empty_apartments,persons.name, " +
+            "FROM buildings b NATURAL JOIN accounts JOIN persons ON persons.person_id=accounts.owner_id WHERE building_id=?;";
 
-    private final static String SELECT_BY_OWNER = "SELECT *, " + EMPTY_APARTMENTS_COUNT_FOR_BUILDING + " FROM buildings NATURAL JOIN accounts WHERE owner_id=?;";
+    private final static String SELECT_BY_OWNER = "SELECT " +
+            "b.building_id,b.address,b.acquisition_date,b.construction_date,b.date_of_sale,b.manageable,b.comment,b.account_id,empty_apartments,persons.name, " + EMPTY_APARTMENTS_COUNT_FOR_BUILDING +
+            "FROM buildings b NATURAL JOIN accounts JOIN persons ON persons.person_id=accounts.owner_id WHERE owner_id=?;";
 
     @Override
     public List<BuildingVO> getByOwner(PersonVO p) {
@@ -79,7 +85,8 @@ public class BuildingDaoJdbc extends LazyJdbcDao<BuildingVO, Integer> implements
                 rs.getBoolean("manageable"),
                 rs.getString("comment"),
                 rs.getInt("account_id"),
-                rs.getInt("empty_apartments")
+                rs.getInt("empty_apartments"),
+                rs.getString("name")
         );
     }
 }

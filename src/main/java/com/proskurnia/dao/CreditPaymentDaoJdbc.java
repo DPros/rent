@@ -4,6 +4,7 @@ import com.proskurnia.VOs.CreditPaymentVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -12,6 +13,7 @@ import java.util.List;
 /**
  * Created by D on 26.03.2017.
  */
+@Repository
 public class CreditPaymentDaoJdbc extends LazyJdbcDao<CreditPaymentVO, Long> implements CreditPaymentDao {
 
     private final static String DELETE = "DELETE FROM credit_payments WHERE payment_id=?;";

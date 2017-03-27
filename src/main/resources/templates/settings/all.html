@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+>
 <head>
     <meta charset="UTF-8"/>
     <title th:text="#{application.settings}">Title</title>
-    <link rel="stylesheet" href="../../resources/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"
-          type="text/css"/>
-    <link rel="stylesheet" href="../../resources/css/form.css" th:href="@{/css/form.css}" type="text/css"/>
-
+    <th:block th:fragment="template :: css"></th:block>
 </head>
 <body>
 <div class="container">
@@ -21,23 +17,25 @@
                 <input type="text" name="value" class="form-control" th:value="${entry.value}"/>
             </span>
             <span class="col-md-3 buttons">
-                <button class="btn btn-success js-save" data-url="/save-title" th:text="#{save}"></button>
-                <button class="btn btn-danger js-delete" data-url="/delete-title" th:text="#{delete}"></button>
+                <button class="btn btn-success js-save" data-url="/settings/save-title" th:text="#{save}"></button>
+                <button class="btn btn-danger js-delete" data-url="/settings/delete-title" th:text="#{delete}"></button>
             </span>
         </div>
     </th:block>
-    <div class="row new">
+    <div class="row new etalon">
         <span class="col-md-9 input form-group">
             <input name="key" type="hidden" value="0"/>
             <input name="value" type="text" class="form-control"/>
         </span>
         <span class="col-md-3 buttons">
-            <button class="btn btn-primary js-new" th:text="#{add.new}"></button>
-            <button class="btn btn-success js-save" data-url="/save-title" th:text="#{save}"></button>
-            <button class="btn btn-danger js-delete" data-url="/delete-title" th:text="#{delete}"></button>
+            <button class="btn btn-success js-save" data-url="/settings/save-title" th:text="#{save}"></button>
+            <button class="btn btn-danger js-delete" data-url="/settings/delete-title" th:text="#{delete}"></button>
         </span>
     </div>
-    <hr/>
+    <button class="btn btn-primary js-new" th:text="#{add.new}"></button>
+</div>
+<hr/>
+<div class="container">
     <h3 th:text="#{service.company.types}"></h3>
     <th:block th:each="entry : ${serviceCompanyTypes}">
         <div class="row">
@@ -46,40 +44,30 @@
                 <input type="text" name="value" class="form-control" th:value="${entry.value}"/>
             </span>
             <span class="col-md-3 buttons">
-                <button class="btn btn-success js-save" data-url="/save-service-company-type" th:text="#{save}"></button>
-                <button class="btn btn-danger js-delete" data-url="/delete-service-company-type" th:text="#{delete}"></button>
+                <button class="btn btn-success js-save" data-url="/settings/save-service-company-type"
+                        th:text="#{save}"></button>
+                <button class="btn btn-danger js-delete" data-url="/settings/delete-service-company-type"
+                        th:text="#{delete}"></button>
             </span>
         </div>
     </th:block>
-    <div class="row new">
+    <div class="row new etalon">
         <span class="col-md-9 input form-group">
             <input name="key" type="hidden" value="0"/>
             <input name="value" type="text" class="form-control"/>
         </span>
         <span class="col-md-3 buttons">
-            <button class="btn btn-primary js-new" th:text="#{add.new}"></button>
-            <button class="btn btn-success js-save" data-url="/save-service-company-type" th:text="#{save}"></button>
-            <button class="btn btn-danger js-delete" data-url="/delete-service-company-type" th:text="#{delete}"></button>
+            <button class="btn btn-success js-save" data-url="/settings/save-service-company-type"
+                    th:text="#{save}"></button>
+            <button class="btn btn-danger js-delete" data-url="/settings/delete-service-company-type"
+                    th:text="#{delete}"></button>
         </span>
     </div>
-</div>
-<div class="etalon hidden">
-    <div class="row new">
-        <div class="col-md-9 form-group">
-            <input name="key" type="hidden" value="0"/>
-            <input name="value" type="text" class="form-control"/>
-        </div>
-        <div class="col-md-3 buttons">
-            <button class="btn btn-primary js-new" th:text="#{add.new}"></button>
-            <button class="btn btn-success js-save" th:text="#{save}"></button>
-            <button class="btn btn-danger js-delete" th:text="#{delete}"></button>
-        </div>
+    <div>
+        <button class="btn btn-primary js-new" th:text="#{add.new}"></button>
     </div>
 </div>
 </body>
-<footer>
-    <script src="../../resources/js/jquery-3.2.0.min.js" th:src="@{/js/jquery-3.2.0.min.js}"></script>
-    <script src="../../resources/js/bootstrap.min.js" th:src="@{/js/bootstrap.js}"></script>
-    <script src="../../resources/js/settings.js" th:src="@{/js/settings.js}"></script>
-</footer>
+<th:block th:fragment="template :: js"></th:block>
+<script src="../../resources/js/settings.js" th:src="@{/js/settings.js}"></script>
 </html>

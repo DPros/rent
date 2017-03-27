@@ -3,6 +3,7 @@ package com.proskurnia.dao;
 import com.proskurnia.VOs.OwnerAccountVO;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 /**
  * Created by D on 21.03.2017.
  */
+@Repository
 public class OwnerAccountDaoJdbc extends LazyJdbcDao<OwnerAccountVO, String> implements OwnerAccountDao {
 
     private final static String INSERT = "INSERT INTO accounts (balance,bank_id,owner_id,account_number) VALUES(?,?,?,?) RETURNING account_id;";

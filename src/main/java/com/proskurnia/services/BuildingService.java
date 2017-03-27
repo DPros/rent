@@ -1,4 +1,4 @@
-package com.proskurnia.dao;
+package com.proskurnia.services;
 
 import com.proskurnia.VOs.BuildingVO;
 import com.proskurnia.VOs.PersonVO;

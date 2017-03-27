@@ -1,8 +1,6 @@
 package com.proskurnia.VOs;
 
 import java.sql.Timestamp;
-import java.sql.Timestamp;
-import java.util.Date;
 
 /**
  * Created by dmpr0116 on 07.03.2017.
@@ -16,14 +14,16 @@ public class BuildingVO implements Identified<Integer> {
     private boolean manageable;
     private String comment;
     private int ownerAccountId;
+    private String ownerName;
     private int emptyApartments;
 
     public BuildingVO() {
     }
 
-    public BuildingVO(int id, String address, Timestamp acquisitionDate, Timestamp constructionDate, Timestamp dateOfSale, boolean manageable, String comment, int ownerAccountId, int emptyApartments) {
+    public BuildingVO(int id, String address, Timestamp acquisitionDate, Timestamp constructionDate, Timestamp dateOfSale, boolean manageable, String comment, int ownerAccountId, int emptyApartments, String ownerName) {
         this.id = id;
         this.address = address;
+        this.ownerName = ownerName;
         this.acquisitionDate = acquisitionDate;
         this.constructionDate = constructionDate;
         this.dateOfSale = dateOfSale;
@@ -31,6 +31,14 @@ public class BuildingVO implements Identified<Integer> {
         this.comment = comment;
         this.ownerAccountId = ownerAccountId;
         this.emptyApartments = emptyApartments;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
     }
 
     public Integer getId() {

@@ -57,11 +57,11 @@ public class PersonVO implements Identified<Integer>, Serializable {
         this.titleId = titleId;
     }
 
-    public boolean isOwner() {
+    public boolean getIsOwner() {
         return isOwner;
     }
 
-    public void setOwner(boolean owner) {
+    public void setIsOwner(boolean owner) {
         isOwner = owner;
     }
 

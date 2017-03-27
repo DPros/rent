@@ -29,7 +29,7 @@ public class OwnerController {
     @Autowired
     UtilsService utilsService;
 
-    @RequestMapping("/")
+    @RequestMapping
     public String allOwners(Model model) {
         model.addAttribute("owners", ownerService.getAllOwners());
         return "owners/list";
@@ -54,7 +54,7 @@ public class OwnerController {
         } else {
             try {
                 if (object.getId() == 0) {
-                    object.setOwner(true);
+                    object.setIsOwner(true);
                     ownerService.create(object);
                 } else {
                     ownerService.update(object);

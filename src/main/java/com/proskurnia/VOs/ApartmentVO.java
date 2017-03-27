@@ -8,15 +8,25 @@ public class ApartmentVO implements Identified<Integer> {
     private String roomNumber;
     private double size;
     private int buildingId;
+    private String address;
 
     public ApartmentVO() {
     }
 
-    public ApartmentVO(int id, String roomNumber, double size, int buildingId) {
+    public ApartmentVO(int id, String roomNumber, double size, int buildingId, String address) {
         this.id = id;
         this.roomNumber = roomNumber;
         this.size = size;
         this.buildingId = buildingId;
+        this.address = address;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getRoomNumber() {

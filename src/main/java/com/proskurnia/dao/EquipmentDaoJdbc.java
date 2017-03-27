@@ -3,12 +3,14 @@ package com.proskurnia.dao;
 import com.proskurnia.VOs.EquipmentVO;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 
 /**
  * Created by D on 25.03.2017.
  */
+@Repository
 public class EquipmentDaoJdbc extends LazyJdbcDao<EquipmentVO, String> implements EquipmentDao {
 
     private final static String INSERT = "INSERT INTO equipment(wifi_name,wifi_password,serial_number,service_contract_id) VALUES(?,?,?,?);";

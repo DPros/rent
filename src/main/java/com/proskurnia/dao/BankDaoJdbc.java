@@ -3,12 +3,14 @@ package com.proskurnia.dao;
 import com.proskurnia.VOs.BankVO;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 
 /**
  * Created by D on 25.03.2017.
  */
+@Repository
 public class BankDaoJdbc extends LazyJdbcDao<BankVO, Integer> implements BankDao {
 
     private final static String INSERT = "INSERT INTO banks(address,phone,email,name) VALUES(?,?,?,?) RETURNING bank_id;";

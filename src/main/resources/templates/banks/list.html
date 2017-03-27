@@ -6,10 +6,7 @@
 <head>
     <meta charset="UTF-8"/>
     <title th:text="${#{bank.accounts}+' | '+${owner.name}}">Title</title>
-    <link rel="stylesheet" href="../../resources/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"
-          type="text/css"/>
-    <link rel="stylesheet" href="../../resources/css/datatables.min.css" th:href="@{/css/datatables.min.css}"
-          type="text/css"/>
+    <th:block th:fragment="template :: css"></th:block>
 </head>
 <body>
 <table id="owners" class="table table-striped dataTable">
@@ -29,9 +26,6 @@
     </tr>
     </tbody>
 </table>
+<th:block th:fragment="template :: js"></th:block>
 </body>
-<script src="../../resources/js/jquery-3.2.0.min.js" th:src="@{/js/jquery-3.2.0.min.js}"></script>
-<script src="../../resources/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
-<script src="../../resources/js/datatables.min.js" th:src="@{/js/datatables.min.js}"></script>
-<script src="../../resources/js/all-page.js" th:src="@{/js/all-page.js}"></script>
 </html>

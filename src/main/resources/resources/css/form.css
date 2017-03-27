@@ -1,10 +1,9 @@
-.row button:not(.delete),
-.row.new button {
+.row .js-save,
+.row.edited .js-delete{
     display: none;
 }
 
-.row.edited:not(.new) .js-save,
-.row.new.edited .js-new {
+.row.edited .js-save {
     display: initial;
 }
 
@@ -16,15 +15,14 @@
     width: 500px;
 }
 
-.row .buttons{
+.row .buttons {
     text-align: center;
 }
 
-.row{
+.row {
     padding: 10px;
 }
 
-.list-container input+button.delete-input{
-    margin-top: -60px;
-    margin-left: 430px;
+.etalon {
+    display: none
 }

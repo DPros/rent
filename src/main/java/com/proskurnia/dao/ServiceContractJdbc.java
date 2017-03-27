@@ -3,12 +3,14 @@ package com.proskurnia.dao;
 import com.proskurnia.VOs.ServiceContractVO;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 
 /**
  * Created by D on 25.03.2017.
  */
+@Repository
 public class ServiceContractJdbc extends LazyJdbcDao<ServiceContractVO, Integer> implements ServiceContractDao {
 
     private static final String INSERT = "INSERT INTO service_contracts(comment,login,password,company_id,building_id,start_date,end_date) VALUES (?,?,?,?,?,?,?);";

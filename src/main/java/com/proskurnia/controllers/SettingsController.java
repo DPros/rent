@@ -20,7 +20,7 @@ public class SettingsController {
     @Autowired
     UtilsService utilsService;
 
-    @RequestMapping("/")
+    @RequestMapping
     public String render(Model model) {
         model.addAttribute("titles", utilsService.getPersonTitles());
         model.addAttribute("serviceCompanyTypes", utilsService.getServiceCompanyTypes());

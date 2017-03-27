@@ -3,6 +3,7 @@ package com.proskurnia.dao;
 import com.proskurnia.VOs.ServiceCompanyVO;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 /**
  * Created by D on 25.03.2017.
  */
+@Repository
 public class ServiceCompanyDaoJdbc extends LazyJdbcDao<ServiceCompanyVO, Integer> implements ServiceCompanyDao {
 
     private final static String INSERT = "INSERT INTO service_companies(name,address,comment,type_id,email,phone1,phone2) VALUES (?,?,?,?,?,?,?) RETURNING company_id;";
