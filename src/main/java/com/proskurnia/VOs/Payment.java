@@ -11,6 +11,15 @@ public abstract class Payment implements Identified<Long> {
     protected Timestamp date;
     protected BigDecimal amount;
     protected String comment;
+    protected String accountNumber;
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
 
     public Long getId() {
         return id;
@@ -54,7 +63,9 @@ public abstract class Payment implements Identified<Long> {
         if (getId() != payment.getId()) return false;
         if (getDate() != null ? !getDate().equals(payment.getDate()) : payment.getDate() != null) return false;
         if (getAmount() != null ? !getAmount().equals(payment.getAmount()) : payment.getAmount() != null) return false;
-        return getComment() != null ? getComment().equals(payment.getComment()) : payment.getComment() == null;
+        if (getComment() != null ? !getComment().equals(payment.getComment()) : payment.getComment() != null)
+            return false;
+        return getAccountNumber() != null ? getAccountNumber().equals(payment.getAccountNumber()) : payment.getAccountNumber() == null;
     }
 
     @Override
@@ -63,6 +74,7 @@ public abstract class Payment implements Identified<Long> {
         result = 31 * result + (getDate() != null ? getDate().hashCode() : 0);
         result = 31 * result + (getAmount() != null ? getAmount().hashCode() : 0);
         result = 31 * result + (getComment() != null ? getComment().hashCode() : 0);
+        result = 31 * result + (getAccountNumber() != null ? getAccountNumber().hashCode() : 0);
         return result;
     }
 }

@@ -11,4 +11,6 @@ import java.util.List;
 public interface OwnerAccountService extends GenericService<OwnerAccountVO, String> {
 
     List<OwnerAccountVO> getByOwnerId(int id);
+
+    List<OwnerAccountVO> getByAccountId(String id);
 }

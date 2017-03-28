@@ -22,7 +22,9 @@ public class OwnerAccountDaoJdbc extends LazyJdbcDao<OwnerAccountVO, String> imp
 
     private final static String SELECT_BY_ID = "SELECT * FROM accounts NATURAL JOIN banks WHERE account_id=?;";
 
-    private final static String SELECT_BY_OWNER = "SELECT * FROM accounts NATURAL JOIN banks WHERE owner_id=?;";
+    private final static String SELECT_BY_OWNER_ID = "SELECT * FROM accounts NATURAL JOIN banks WHERE owner_id=?;";
+
+    private final static String SELECT_ALL_ACCOUNT_OF_OWNER_BY_ACCOUNT_ID = "SELECT * FROM accounts WHERE owner_id IN (SELECT owner_id FROM accounts WHERE account_id=?);";
 
     @Override
     protected PreparedStatementCreator getStatementCreator(OwnerAccountVO o, QueryType queryType) {
@@ -65,6 +67,11 @@ public class OwnerAccountDaoJdbc extends LazyJdbcDao<OwnerAccountVO, String> imp
 
     @Override
     public List<OwnerAccountVO> getByOwnerId(int id) {
-        return jdbcTemplate.query(SELECT_BY_OWNER, getRowMapper(), id);
+        return jdbcTemplate.query(SELECT_BY_OWNER_ID, getRowMapper(), id);
+    }
+
+    @Override
+    public List<OwnerAccountVO> getByAccountId(String id) {
+        return jdbcTemplate.query(SELECT_ALL_ACCOUNT_OF_OWNER_BY_ACCOUNT_ID, getRowMapper(), id);
     }
 }

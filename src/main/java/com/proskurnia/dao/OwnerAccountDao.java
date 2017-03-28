@@ -10,4 +10,6 @@ import java.util.List;
 public interface OwnerAccountDao extends Dao<OwnerAccountVO, String> {
 
     List<OwnerAccountVO> getByOwnerId(int id);
+    List<OwnerAccountVO> getByAccountId(String id);
+
 }

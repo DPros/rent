@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+>
 <head>
     <meta charset="UTF-8"/>
-    <title th:text="${object.address ?: #{register.building}}">Title</title>
-    <th:block th:fragment="template :: css"></th:block>
+    <title th:text="${object.address}?:#{register.building}">Title</title>
+    <th:block th:replace="template :: css"></th:block>
 </head>
 <body>
 <!--/*@thymesVar id="object" type="com.proskurnia.VOs.BuildingVO"*/-->
@@ -15,21 +14,32 @@
         <input type="hidden" th:field="*{id}"/>
         <input type="hidden" th:field="*{ownerAccountId}"/>
         <div class="form-group">
-            <label for="address" th:text="#{address}"></label>
+            <label th:text="#{address}"></label>
             <div class="alert-danger" th:errors="*{address}">Address Error</div>
-            <input class="form-control" id="address" th:field="*{address}"/>
+            <input class="form-control" th:field="*{address}"/>
         </div>
         <div class="form-group">
-            <label for="owner" th:text="#{owner}"></label>
-            <input class="form-control" id="owner" th:field="*{ownerName}" th:readonly="true"/>
+            <label th:text="#{owner}"></label>
+            <input class="form-control" th:field="*{ownerName}" th:readonly="true"/>
         </div>
         <div class="form-group">
-            <label for="comment" th:text="#{comment}"></label>
-            <textarea class="form-control" id="comment" th:field="*{acquisitionDate}"/>
+            <label th:text="#{comment}"></label>
+            <textarea class="form-control" id="comment" th:field="*{comment}"/>
         </div>
         <div class="form-group">
-            <label for="acquisition-date" th:text="#{acquisition.date}"></label>
-            <input class="form-control" id="acquisition-date" th:field="*{acquisitionDate}"/>
+            <label th:text="#{acquisition.date}"></label>
+            <input type="hidden" th:field="*{acquisitionDate}"/>
+            <input class="datepicker form-control" data-alt-field="#acquisitionDate"/>
+        </div>
+        <div class="form-group">
+            <label th:text="#{construction.date}"></label>
+            <input type="hidden" th:field="*{constructionDate}"/>
+            <input class="datepicker form-control" data-alt-field="#constructionDate"/>
+        </div>
+        <div class="form-group">
+            <label th:text="#{date.of.sale}"></label>
+            <input type="hidden" th:field="*{dateOfSale}"/>
+            <input class="datepicker form-control" data-alt-field="#dateOfSale"/>
         </div>
         <hr/>
         <div th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.globalErrors()}">
@@ -40,6 +50,6 @@
         </div>
     </div>
 </form>
-<th:block th:fragment="template :: js"></th:block>
+<th:block th:replace="template :: js"></th:block>
 </body>
 </html>

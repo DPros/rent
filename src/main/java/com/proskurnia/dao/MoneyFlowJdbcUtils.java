@@ -25,9 +25,13 @@ public class MoneyFlowJdbcUtils {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    final static String INSERT_CREDIT = "INSERT INTO credit_payments (date,amount,comment,deposit,confirmed,contract_id) VALUES(?,?,?,?,?,?) RETURNING payment_id;";
+    final static String INSERT_CREDIT = "INSERT INTO credit_payments (date,amount,comment,deposit,confirmed,contract_id,account_number) " +
+            "VALUES(?,?,?,?,?,?,(SELECT account_number FROM buildings WHERE building_id IN " +
+            "(SELECT building_id FROM apartments WHERE apartment_id IN " +
+            "(SELECT apartment_id FROM renting_contracts WHERE contract_id=?)))) RETURNING payment_id;";
 
-    final static String INSERT_DEBIT = "INSERT INTO debit_payments (date,amount,comment,type,reason_id) VALUES(?,?,?,?,?);";
+    final static String INSERT_DEBIT = "INSERT INTO debit_payments (date,amount,comment,type,reason_id,account_number) " +
+            "VALUES(?,?,?,?,?,get_account_num(?,?));";
 
     private final static String UPDATE_RENTING_CONTRACT_BALANCE = "UPDATE renting_contracts SET balance=?+balance WHERE contract_id=?;";
     private final static String UPDATE_RENTING_CONTRACT_DEPOSIT = "UPDATE renting_contracts SET deposit=?+balance WHERE contract_id=?;";
@@ -69,6 +73,7 @@ public class MoneyFlowJdbcUtils {
             createPayment.setString(++index, payment.getComment());
             createPayment.setBoolean(++index, payment.isDeposit());
             createPayment.setBoolean(++index, payment.isConfirmed());
+            createPayment.setInt(++index, payment.getContractId());
             createPayment.setInt(++index, payment.getContractId());
             payment.setId(createPayment.executeQuery().getLong(1));
             con.commit();

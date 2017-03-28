@@ -1,7 +1,6 @@
 package com.proskurnia.services;
 
 import com.proskurnia.VOs.OwnerAccountVO;
-import com.proskurnia.VOs.PersonVO;
 import com.proskurnia.dao.OwnerAccountDao;
 import org.springframework.stereotype.Service;
 
@@ -15,5 +14,10 @@ public class OwnerAccountServiceImpl extends GenericServiceImpl<OwnerAccountVO, 
     @Override
     public List<OwnerAccountVO> getByOwnerId(int id) {
         return ((OwnerAccountDao) dao).getByOwnerId(id);
+    }
+
+    @Override
+    public List<OwnerAccountVO> getByAccountId(String id) {
+        return ((OwnerAccountDao) dao).getByAccountId(id);
     }
 }

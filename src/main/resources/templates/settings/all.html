@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8"/>
     <title th:text="#{application.settings}">Title</title>
-    <th:block th:fragment="template :: css"></th:block>
+    <th:block th:replace="template :: css"></th:block>
 </head>
 <body>
 <div class="container">
@@ -68,6 +68,6 @@
     </div>
 </div>
 </body>
-<th:block th:fragment="template :: js"></th:block>
-<script src="../../resources/js/settings.js" th:src="@{/js/settings.js}"></script>
+<th:block th:fragment="replace :: js"></th:block>
+<script src="/resources/js/settings.js" th:src="@{/js/settings.js}"></script>
 </html>

@@ -22,22 +22,22 @@ public class BuildingDaoJdbc extends LazyJdbcDao<BuildingVO, Integer> implements
     private final static String UPDATE = "UPDATE account SET address=?, acquisition_date=?, construction_date=?, date_of_sale=?, comment=?,account_id=?,manageable=? WHERE building_id=?;";
 
     private final static String SELECT_ALL = "SELECT " +
-            "b.building_id,b.address,b.acquisition_date,b.construction_date,b.date_of_sale,b.manageable,b.comment,b.account_id,empty_apartments,persons.name, " + EMPTY_APARTMENTS_COUNT_FOR_BUILDING +
-            "FROM buildings b NATURAL JOIN accounts JOIN persons ON persons.person_id=accounts.owner_id;";
+            "b.building_id,b.address,b.acquisition_date,b.construction_date,b.date_of_sale,b.manageable,b.comment,b.account_id,persons.name, " + EMPTY_APARTMENTS_COUNT_FOR_BUILDING +
+            " FROM buildings b NATURAL JOIN accounts JOIN persons ON persons.person_id=accounts.owner_id;";
 
     private final static String DELETE = "DELETE FROM buildings WHERE building_id=?;";
 
     private final static String SELECT_BY_ID = "SELECT " +
-            "b.building_id,b.address,b.acquisition_date,b.construction_date,b.date_of_sale,b.manageable,b.comment,b.account_id,empty_apartments,persons.name, " +
-            "FROM buildings b NATURAL JOIN accounts JOIN persons ON persons.person_id=accounts.owner_id WHERE building_id=?;";
+            "b.building_id,b.address,b.acquisition_date,b.construction_date,b.date_of_sale,b.manageable,b.comment,b.account_id,persons.name, " +
+            " FROM buildings b NATURAL JOIN accounts JOIN persons ON persons.person_id=accounts.owner_id WHERE building_id=?;";
 
     private final static String SELECT_BY_OWNER = "SELECT " +
-            "b.building_id,b.address,b.acquisition_date,b.construction_date,b.date_of_sale,b.manageable,b.comment,b.account_id,empty_apartments,persons.name, " + EMPTY_APARTMENTS_COUNT_FOR_BUILDING +
-            "FROM buildings b NATURAL JOIN accounts JOIN persons ON persons.person_id=accounts.owner_id WHERE owner_id=?;";
+            "b.building_id,b.address,b.acquisition_date,b.construction_date,b.date_of_sale,b.manageable,b.comment,b.account_id,persons.name, " + EMPTY_APARTMENTS_COUNT_FOR_BUILDING +
+            " FROM buildings b NATURAL JOIN accounts JOIN persons ON persons.person_id=accounts.owner_id WHERE owner_id=?;";
 
     @Override
-    public List<BuildingVO> getByOwner(PersonVO p) {
-        return jdbcTemplate.query(SELECT_BY_OWNER, getRowMapper());
+    public List<BuildingVO> getByOwnerId(int id) {
+        return jdbcTemplate.query(SELECT_BY_OWNER, getRowMapper(), id);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class BuildingDaoJdbc extends LazyJdbcDao<BuildingVO, Integer> implements
             ps.setTimestamp(++index, o.getConstructionDate());
             ps.setTimestamp(++index, o.getDateOfSale());
             ps.setString(++index, o.getComment());
-            ps.setInt(++index, o.getOwnerAccountId());
+            ps.setString(++index, o.getOwnerAccountId());
             ps.setBoolean(++index, o.isManageable());
             if (queryType == QueryType.UPDATE) {
                 ps.setInt(++index, o.getId());
@@ -84,7 +84,7 @@ public class BuildingDaoJdbc extends LazyJdbcDao<BuildingVO, Integer> implements
                 rs.getTimestamp("date_of_sale"),
                 rs.getBoolean("manageable"),
                 rs.getString("comment"),
-                rs.getInt("account_id"),
+                rs.getString("account_id"),
                 rs.getInt("empty_apartments"),
                 rs.getString("name")
         );

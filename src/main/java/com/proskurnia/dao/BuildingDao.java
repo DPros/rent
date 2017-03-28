@@ -10,5 +10,5 @@ import java.util.List;
  */
 public interface BuildingDao extends Dao<BuildingVO, Integer> {
 
-    List<BuildingVO> getByOwner(PersonVO p);
+    List<BuildingVO> getByOwnerId(int id);
 }

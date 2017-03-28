@@ -57,7 +57,8 @@ public class CreditPaymentDaoJdbc extends LazyJdbcDao<CreditPaymentVO, Long> imp
                 rs.getString("comment"),
                 rs.getBoolean("deposit"),
                 rs.getBoolean("confirmed"),
-                rs.getInt("contract_id")
+                rs.getInt("contract_id"),
+                rs.getString("account_number")
         );
     }
 

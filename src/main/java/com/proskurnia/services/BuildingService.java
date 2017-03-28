@@ -11,5 +11,5 @@ import java.util.List;
  */
 public interface BuildingService extends GenericService<BuildingVO, Integer> {
 
-    List<BuildingVO> getByOwner(PersonVO p);
+    List<BuildingVO> getByOwnerId(int id);
 }

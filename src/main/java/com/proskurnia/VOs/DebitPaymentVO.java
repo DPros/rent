@@ -12,7 +12,7 @@ public class DebitPaymentVO extends Payment {
     private String description;
     private int reasonId;
 
-    public DebitPaymentVO(long id, Timestamp date, BigDecimal amount, String comment, DebitPaymentType type, int reasonId, String description) {
+    public DebitPaymentVO(long id, Timestamp date, BigDecimal amount, String comment, DebitPaymentType type, int reasonId, String description, String accountNumber) {
         this.id = id;
         this.date = date;
         this.amount = amount;
@@ -20,6 +20,7 @@ public class DebitPaymentVO extends Payment {
         this.type = type;
         this.reasonId = reasonId;
         this.description = description;
+        this.accountNumber = accountNumber;
     }
 
     public DebitPaymentType getType() {
