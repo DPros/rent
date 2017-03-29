@@ -1,5 +1,6 @@
 package com.proskurnia.VOs;
 
+import javax.validation.constraints.Min;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -10,16 +11,20 @@ public class ServiceContractVO implements Identified<Integer> {
     private int id;
     private Timestamp startDate;
     private Timestamp endDate;
+    @Min(1)
     private int serviceCompanyId;
     private String comment;
     private String accountLogin;
     private String accountPassword;
+    @Min(1)
     private int buildingId;
+    private String companyName;
+    private String buildingAddress;
 
     public ServiceContractVO() {
     }
 
-    public ServiceContractVO(int id, Timestamp startDate, Timestamp endDate, int serviceCompanyId, String comment, String accountLogin, String accountPassword, int buildingId) {
+    public ServiceContractVO(int id, Timestamp startDate, Timestamp endDate, int serviceCompanyId, String comment, String accountLogin, String accountPassword, int buildingId, String companyName, String buildingAddress) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -28,6 +33,24 @@ public class ServiceContractVO implements Identified<Integer> {
         this.accountLogin = accountLogin;
         this.accountPassword = accountPassword;
         this.buildingId = buildingId;
+        this.companyName = companyName;
+        this.buildingAddress = buildingAddress;
+    }
+
+    public String getBuildingAddress() {
+        return buildingAddress;
+    }
+
+    public void setBuildingAddress(String buildingAddress) {
+        this.buildingAddress = buildingAddress;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public Integer getId() {

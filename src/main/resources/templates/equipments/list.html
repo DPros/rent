@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${#{bank.accounts}+' | '+${owner.name}}">Title</title>
+    <th:block th:fragment="template :: css"></th:block>
+</head>
+<body>
+<table id="owners" class="table table-striped dataTable">
+    <thead>
+    <tr>
+        <td th:text="#{serial.number}">ID</td>
+        <td th:text="#{wifi.name}"></td>
+        <td th:text="#{wifi.password}"></td>
+        <td th:text="#{location.address}"></td>
+    </tr>
+    </thead>
+    <!--/*@thymesVar id="object" type="com.proskurnia.VOs.EquipmentVO"*/-->
+    <tbody th:each="object : ${list}">
+    <tr>
+        <td th:text="${object.id}"></td>
+        <td th:text="${object.wifiName}"></td>
+        <td th:text="${object.wifiPassword}"></td>
+        <td><a th:href="${'/buildings/' + object.buildingId}" th:text="${object.address}"></a></td>
+    </tr>
+    </tbody>
+</table>
+<th:block th:fragment="template :: js"></th:block>
+</body>
+</html>

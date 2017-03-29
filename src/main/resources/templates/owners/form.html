@@ -5,7 +5,7 @@
 <!--/*@thymesVar id="object" type="com.proskurnia.VOs.PersonVO"*/-->
 <head>
     <meta charset="UTF-8"/>
-    <title th:text="${object.name == null} ? #{new.owner} : ${object.name}">Title</title>
+    <title th:text="${object.name}?:#{new.owner}">Title</title>
     <th:block th:fragment="template :: css"></th:block>
 </head>
 <body>

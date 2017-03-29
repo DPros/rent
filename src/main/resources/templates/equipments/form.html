@@ -1,34 +1,28 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
->
-<!--/*@thymesVar id="personVO" type="com.proskurnia.VOs.PersonVO"*/-->
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title th:text="${personVO.name == null} ? #{new.owner} : ${personVO.name}">Title</title>
     <th:block th:fragment="template :: css"></th:block>
 </head>
 <body>
-<!--/*@thymesVar id="object" type="com.proskurnia.VOs.BankVO"*/-->
+<!--/*@thymesVar id="object" type="com.proskurnia.VOs.EquipmentVO"*/-->
 <form th:object="${object}" th:action="@{save}" action="#" method="post">
     <div class="container">
-        <input type="hidden" th:field="*{id}"/>
+        <!--<input type="hidden" th:field="*{id}"/>-->
         <div class="form-group">
-            <label th:text="#{bank}"></label>
-            <div class="alert-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
-            <input class="form-control" th:field="*{name}"/>
+            <label th:text="#{serial.number}"></label>
+            <div class="alert-danger" th:if="${#fields.hasErrors('id')}" th:errors="*{id}">Name Error</div>
+            <input class="form-control" th:field="*{id}"/>
         </div>
         <div class="form-group">
-            <label th:text="#{address}"></label>
-            <input class="form-control" th:field="*{address}"/>
+            <label th:text="#{wifi.name}"></label>
+            <input class="form-control" th:field="*{wifiName}"/>
         </div>
         <div class="form-group">
-            <label th:text="#{phone}"></label>
-            <input class="form-control" th:field="*{phone}"/>
-        </div>
-        <div class="form-group">
-            <label th:text="#{email}"></label>
-            <input class="form-control" th:field="*{email}"/>
+            <label th:text="#{wifi.password}"></label>
+            <input class="form-control" th:field="*{wifiPassword}"/>
         </div>
         <hr/>
         <div th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.globalErrors()}">

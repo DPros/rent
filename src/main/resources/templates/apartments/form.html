@@ -2,54 +2,32 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <!--/*@thymesVar id="object" type="com.proskurnia.VOs.ApartmentVO"*/-->
     <meta charset="UTF-8"/>
-    <title th:text="${object.roomNumber ?: #{register.apartment}} + ' | ' +${object.address}">Title</title>
+    <title th:text="${object.roomNumber}?:#{register.apartment} + ' | ' +${object.address}">Title</title>
     <th:block th:fragment="template :: css"></th:block>
 </head>
 <body>
+<!--/*@thymesVar id="object" type="com.proskurnia.VOs.ApartmentVO"*/-->
 <form th:object="${object}" th:action="@{save}" action="#" method="post">
     <div class="container">
         <input type="hidden" th:field="*{id}"/>
         <input type="hidden" th:field="*{buildingId}"/>
         <div class="form-group">
-            <label for="address" th:text="#{address}"></label>
-            <input class="form-control" id="address" th:field="*{address}"/>
+            <label th:text="#{address}"></label>
+            <input class="form-control" th:field="*{address}" readonly="true"/>
         </div>
         <div class="form-group">
-            <label for="title" th:text="#{person.title}"></label>
-            <select class="form-control" id="title" th:field="*{titleId}" th:each="title : ${titles}">
-                <option th:value="${title.key}" th:text="${title.value}"></option>
-            </select>
+            <label th:text="#{room.number}"></label>
+            <div class="alert-danger" th:if="${#fields.hasErrors('roomNumber')}" th:errors="*{roomNumber}">Name Error</div>
+            <input class="form-control" th:field="*{roomNumber}"/>
         </div>
         <div class="form-group">
-            <label for="name" th:text="#{person.name}"></label>
-            <div class="alert-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
-            <input class="form-control" id="name" th:field="*{name}"/>
+            <label th:text="#{room.size}"></label>
+            <input class="form-control" th:field="*{size}"/>
         </div>
         <div class="form-group">
-            <label for="caf" th:text="#{person.CAF}"></label>
-            <input class="form-control" id="caf" th:field="*{caf}"/>
-        </div>
-        <div class="form-group">
-            <label for="address" th:text="#{address}"></label>
-            <input class="form-control" id="address" th:field="*{address}"/>
-        </div>
-        <div class="form-group">
-            <label for="phone1" th:text="${#{phone} + ' 1'}"></label>
-            <input class="form-control" id="phone1" th:field="*{phone1}"/>
-        </div>
-        <div class="form-group">
-            <label for="phone2" th:text="${#{phone} + ' 2'}"></label>
-            <input class="form-control" id="phone2" th:field="*{phone2}"/>
-        </div>
-        <div class="form-group">
-            <label for="email1" th:text="${#{email} + ' 1'}"></label>
-            <input class="form-control" id="email1" th:field="*{email1}"/>
-        </div>
-        <div class="form-group">
-            <label for="email2" th:text="${#{email} + ' 2'}"></label>
-            <input class="form-control" id="email2" th:field="*{email2}"/>
+            <label th:text="#{tenant}"></label>
+            <input class="form-control" th:field="*{tenantName}" readonly="true"/>
         </div>
         <hr/>
         <div th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.globalErrors()}">

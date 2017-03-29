@@ -1,14 +1,51 @@
 package com.proskurnia.VOs;
 
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.beans.factory.annotation.Value;
+
+import javax.validation.constraints.Min;
+
 /**
  * Created by dmpr0116 on 07.03.2017.
  */
 public class EquipmentVO implements Identified<String> {
 
+    @NotEmpty
     private String id;
     private String wifiName;
     private String wifiPassword;
+    @Min(1)
     private int serviceContractId;
+    private int buildingId;
+    private String address;
+
+    public EquipmentVO() {
+    }
+
+    public EquipmentVO(String id, String wifiName, String wifiPassword, int serviceContractId, int buildingId, String address) {
+        this.id = id;
+        this.wifiName = wifiName;
+        this.wifiPassword = wifiPassword;
+        this.serviceContractId = serviceContractId;
+        this.buildingId = buildingId;
+        this.address = address;
+    }
+
+    public int getBuildingId() {
+        return buildingId;
+    }
+
+    public void setBuildingId(int buildingId) {
+        this.buildingId = buildingId;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public String getId() {
         return id;

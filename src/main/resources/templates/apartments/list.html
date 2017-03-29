@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+>
 <head>
     <meta charset="UTF-8"/>
     <title th:text="#{all.buildings}">Title</title>
@@ -13,23 +12,20 @@
     <thead>
     <tr>
         <td th:text="#{address}"></td>
-        <td th:text="#{vacant.apartments}"></td>
-        <td th:text="#{acquisition.date}"></td>
-        <td th:text="#{construction.date}"></td>
-        <td th:text="#{date.of.sale}"></td>
-        <td th:text="#{comment}"></td>
-        <td th:text="#{manageable}"></td>
+        <td th:text="#{room.number}"></td>
+        <td th:text="#{room.size}"></td>
+        <td th:text="#{tenant}"></td>
     </tr>
     </thead>
-    <tbody th:each="entity : ${list}">
+    <!--/*@thymesVar id="object" type="com.proskurnia.VOs.ApartmentVO"*/-->
+    <tbody th:each="object : ${list}">
     <tr>
-        <td th:text="${entity.address}"></td>
-        <td><a th:href="${'/buildings/' + ${entity.id} + '/'}" th:text="${entity.emptyApartments}"></a></td>
-        <td th:text="${entity.acquisitionDate}"></td>
-        <td th:text="${entity.constructionDate}"></td>
-        <td th:text="${entity.dateOfSale}"></td>
-        <td th:text="${entity.comment}"></td>
-        <td th:text="${entity.manageable ? #{yes} : #{no}}"></td>
+        <td><a th:href="'/buildings/' + ${object.getBuildingId()}" th:text="${object.address}"></a></td>
+        <td th:text="${object.roomNumber}"></td>
+        <td th:text="${object.size}"></td>
+        <td>
+            <a th:href="'/rentingContracts/' + ${object.getRentingContractId()}" th:text="${object.tenantName}"></a>
+        </td>
     </tr>
     </tbody>
 </table>

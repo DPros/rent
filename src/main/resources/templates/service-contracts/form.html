@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<!--/*@thymesVar id="object" type="com.proskurnia.VOs.ServiceContractVO"*/-->
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${object.companyName}?:#{register.service.contract}">Title</title>
+    <th:block th:fragment="template :: css"></th:block>
+</head>
+<body>
+<form th:object="${object}" th:action="@{save}" action="#" method="post">
+    <div class="container">
+        <input type="hidden" th:field="*{id}"/>
+        <div class="form-group">
+            <label th:text="#{service.company.name}"></label>
+            <select data-live-search="true" class="form-control selectpicker" th:field="*{serviceCompanyId}"
+                    th:readonly="${companies.size()==1}">
+                <th:block th:each="company : ${companies}">
+                    <option th:value="${company.id}" th:text="${company.name}"></option>
+                </th:block>
+            </select>
+        </div>
+        <div class="form-group">
+            <label th:text="#{address}"></label>
+            <input class="form-control" th:field="*{buildingAddress}" th:readonly="true"/>
+        </div>
+        <div class="form-group">
+            <label th:text="#{login}"></label>
+            <input class="form-control" th:field="*{accountLogin}"/>
+        </div>
+        <div class="form-group">
+            <label th:text="#{password}"></label>
+            <input class="form-control" th:field="*{accountPassword}"/>
+        </div>
+        <div class="form-group">
+            <label th:text="#{start.date}"></label>
+            <input type="hidden" th:field="*{startDate}"/>
+            <input class="datepicker form-control" data-alt-field="#startDate"/>
+        </div>
+        <div class="form-group">
+            <label th:text="#{end.date}"></label>
+            <input type="hidden" th:field="*{endDate}"/>
+            <input class="datepicker form-control" data-alt-field="#endDate"/>
+        </div>
+        <div class="form-group">
+            <label th:text="#{comment}"></label>
+            <input class="form-control" th:field="*{comment}"/>
+        </div>
+        <hr/>
+        <div th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.globalErrors()}">
+            <div class="alert alert-danger" th:text="${error}"></div>
+        </div>
+        <div class="pull-right">
+            <button type="submit" class="btn btn-primary" th:text="#{save}">Save</button>
+        </div>
+    </div>
+</form>
+<th:block th:fragment="template :: js"></th:block>
+</body>
+</html>

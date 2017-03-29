@@ -30,18 +30,18 @@ public class ApartmentController {
     }
 
     @GetMapping("/{apartmentId}")
-    public String getBuilding(@PathVariable int apartmentId,
+    public String getBuilding(@PathVariable int id,
                               @RequestParam(required = false) Integer buildingId,
                               @RequestParam(required = false) String address, Model model) {
-        if (apartmentId == 0) {
+        if (id == 0) {
             ApartmentVO object = new ApartmentVO();
             object.setBuildingId(buildingId);
             object.setAddress(address);
             model.addAttribute(object);
         } else {
-            model.addAttribute("object", apartmentService.getById(buildingId));
+            model.addAttribute("object", apartmentService.getById(id));
         }
-        return "buildings/form";
+        return "apartments/form";
     }
 
     @PostMapping("/save")
@@ -56,7 +56,7 @@ public class ApartmentController {
                     apartmentService.update(object);
                 }
             } catch (SQLException e) {
-                bindingResult.addError(new ObjectError("building", e.getLocalizedMessage()));
+                bindingResult.addError(new ObjectError("object", e.getLocalizedMessage()));
                 return save(object, bindingResult, model);
             }
             return "redirect:/apartments?buildingId=" + object.getBuildingId();

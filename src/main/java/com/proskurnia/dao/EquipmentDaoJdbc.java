@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 
 /**
  * Created by D on 25.03.2017.
@@ -19,7 +20,13 @@ public class EquipmentDaoJdbc extends LazyJdbcDao<EquipmentVO, String> implement
 
     private final static String DELETE = "DELETE FROM equipment WHERE serial_number=?;";
 
-    private final static String GET_BY_ID = "SELECT * FROM equipment WHERE serial_number=?;";
+    private final static String GET_BY_ID = "SELECT serial_number,wifi_name,wifi_password,service_contract_id,building_id,address FROM equipment NATURAL JOIN service_contracts NATURAL JOIN buildings WHERE serial_number=?;";
+
+    private final static String GET_BY_BUILDING_ID = "SELECT serial_number,wifi_name,wifi_password,service_contract_id,building_id,address FROM equipment NATURAL JOIN service_contracts NATURAL JOIN buildings WHERE building_id=?;";
+
+    private final static String GET_BY_SERVICE_CONTRACT_ID = "SELECT serial_number,wifi_name,wifi_password,service_contract_id,building_id,address FROM equipment NATURAL JOIN service_contracts NATURAL JOIN buildings WHERE service_contract_id=?;";
+
+    private final static String GET_ALL = "SELECT serial_number,wifi_name,wifi_password,service_contract_id,building_id,address FROM equipment NATURAL JOIN service_contracts NATURAL JOIN buildings;";
 
     @Override
     protected PreparedStatementCreator getStatementCreator(EquipmentVO o, QueryType queryType) {
@@ -29,7 +36,7 @@ public class EquipmentDaoJdbc extends LazyJdbcDao<EquipmentVO, String> implement
             ps.setString(++index, o.getWifiName());
             ps.setString(++index, o.getWifiPassword());
             ps.setString(++index, o.getId());
-            if(queryType == QueryType.INSERT){
+            if (queryType == QueryType.INSERT) {
                 ps.setInt(++index, o.getServiceContractId());
             }
             return ps;
@@ -48,11 +55,28 @@ public class EquipmentDaoJdbc extends LazyJdbcDao<EquipmentVO, String> implement
 
     @Override
     protected String getAllQuery() {
-        return null;
+        return GET_ALL;
     }
 
     @Override
     protected RowMapper<EquipmentVO> getRowMapper() {
-        return null;
+        return (rs, rowNum) -> new EquipmentVO(
+                rs.getString("serial_number"),
+                rs.getString("wifi_name"),
+                rs.getString("wifi_password"),
+                rs.getInt("service_contract_id"),
+                rs.getInt("building_id"),
+                rs.getString("address")
+        );
+    }
+
+    @Override
+    public List<EquipmentVO> getByBuildingId(int id) {
+        return jdbcTemplate.query(GET_BY_BUILDING_ID, getRowMapper(), id);
+    }
+
+    @Override
+    public List<EquipmentVO> getByServiceContractId(int id) {
+        return jdbcTemplate.query(GET_BY_SERVICE_CONTRACT_ID, getRowMapper(), id);
     }
 }

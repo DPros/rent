@@ -21,15 +21,16 @@
         <td th:text="#{manageable}"></td>
     </tr>
     </thead>
-    <tbody th:each="entity : ${list}">
+    <!--/*@thymesVar id="object" type="com.proskurnia.VOs.BuildingVO"*/-->
+    <tbody th:each="object : ${list}">
     <tr>
-        <td th:text="${entity.address}"></td>
-        <td><a th:href="${'/buildings/' + ${entity.id} + '/'}" th:text="${entity.emptyApartments}"></a></td>
-        <td th:text="${entity.acquisitionDate}"></td>
-        <td th:text="${entity.constructionDate}"></td>
-        <td th:text="${entity.dateOfSale}"></td>
-        <td th:text="${entity.comment}"></td>
-        <td th:text="${entity.manageable ? #{yes} : #{no}}"></td>
+        <td th:text="${object.address}"></td>
+        <td><a th:href="${'/apartments?buildingId=' + ${object.id}}" th:text="${object.emptyApartments}"></a></td>
+        <td th:text="${object.acquisitionDate}"></td>
+        <td th:text="${object.constructionDate}"></td>
+        <td th:text="${object.dateOfSale}"></td>
+        <td th:text="${object.comment}"></td>
+        <td th:text="${object.manageable ? #{yes} : #{no}}"></td>
     </tr>
     </tbody>
 </table>

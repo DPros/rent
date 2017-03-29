@@ -4,8 +4,6 @@ import com.proskurnia.VOs.CreditPaymentVO;
 import com.proskurnia.VOs.DebitPaymentVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,8 +11,6 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.List;
 
 /**
  * Created by dmpr0116 on 24.03.2017.
@@ -31,7 +27,11 @@ public class MoneyFlowJdbcUtils {
             "(SELECT apartment_id FROM renting_contracts WHERE contract_id=?)))) RETURNING payment_id;";
 
     final static String INSERT_DEBIT = "INSERT INTO debit_payments (date,amount,comment,type,reason_id,account_number) " +
-            "VALUES(?,?,?,?,?,get_account_num(?,?));";
+            "VALUES(?,?,?,?,?,(CASE ? WHEN 0 THEN (SELECT account_number FROM buildings " +
+            "WHERE building_id IN (SELECT building_id FROM service_accounts WHERE accound_id=?)) " +
+            "WHEN 1 THEN (SELECT account_number FROM buildings WHERE building_id=?) " +
+            "WHEN 2 THEN (SELECT account_number FROM buildings WHERE building_id IN " +
+            "(SELECT building_id FROM apartments WHERE apartment_id=?))END));";
 
     private final static String UPDATE_RENTING_CONTRACT_BALANCE = "UPDATE renting_contracts SET balance=?+balance WHERE contract_id=?;";
     private final static String UPDATE_RENTING_CONTRACT_DEPOSIT = "UPDATE renting_contracts SET deposit=?+balance WHERE contract_id=?;";
@@ -101,6 +101,10 @@ public class MoneyFlowJdbcUtils {
             createPayment.setBigDecimal(++index, payment.getAmount());
             createPayment.setString(++index, payment.getComment());
             createPayment.setInt(++index, payment.getType().getVal());
+            createPayment.setInt(++index, payment.getReasonId());
+            createPayment.setInt(++index, payment.getType().getVal());
+            createPayment.setInt(++index, payment.getReasonId());
+            createPayment.setInt(++index, payment.getReasonId());
             createPayment.setInt(++index, payment.getReasonId());
             payment.setId(createPayment.executeQuery().getLong(1));
             return null;

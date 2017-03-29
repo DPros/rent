@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 
 /**
  * Created by D on 25.03.2017.
@@ -19,7 +20,9 @@ public class ServiceContractJdbc extends LazyJdbcDao<ServiceContractVO, Integer>
 
     private final static String DELETE = "DELETE FROM service_contracts WHERE contract_id=?;";
 
-    private final static String GET_BY_ID = "SELECT FROM service_contracts WHERE contract_id=?;";
+    private final static String GET_BY_ID = "SELECT contract_id,comment,login,password,company_id,name,address,building_id FROM service_contracts NATURAL JOIN service_companies NATURAL JOIN buildings WHERE contract_id=?;";
+
+    private final static String GET_BY_BUILDING_ID = "SELECT contract_id,comment,login,password,company_id,name,address,building_id FROM service_contracts NATURAL JOIN service_companies NATURAL JOIN buildings WHERE contract_id=?;";
 
     @Override
     protected PreparedStatementCreator getStatementCreator(ServiceContractVO o, QueryType queryType) {
@@ -64,7 +67,14 @@ public class ServiceContractJdbc extends LazyJdbcDao<ServiceContractVO, Integer>
                 rs.getString("comment"),
                 rs.getString("login"),
                 rs.getString("password"),
-                rs.getInt("building_id")
+                rs.getInt("building_id"),
+                rs.getString("name"),
+                rs.getString("address")
         );
+    }
+
+    @Override
+    public List<ServiceContractVO> getByBuildingId(int id) {
+        return jdbcTemplate.query(GET_BY_BUILDING_ID, getRowMapper(), id);
     }
 }

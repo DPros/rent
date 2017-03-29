@@ -18,13 +18,14 @@ public class ApartmentDaoJdbc extends LazyJdbcDao<ApartmentVO, Integer> implemen
 
     private final static String UPDATE = "UPDATE apartments SET roomNumber=?, size=? WHERE apartment_id=?;";
 
-    private final static String SELECT_ALL = "SELECT * FROM apartments NATURAL JOIN buildings;";
+    private final static String SELECT_ALL = "SELECT a.apartment_id,a.room_number,a.size,a.building_id,buildings.address,renting_contracts.contract_id,persons.name " +
+            "FROM apartments a NATURAL JOIN buildings NATURAL LEFT JOIN renting_contracts LEFT JOIN persons ON renting_contracts.tenant_id=persons.person_id";
 
     private final static String DELETE = "DELETE FROM apartments WHERE apartment_id=?;";
 
-    private final static String SELECT_BY_BUILDING = "SELECT * FROM apartments NATURAL JOIN buildings WHERE building_id=?;";
+    private final static String SELECT_BY_BUILDING = SELECT_ALL + " WHERE building_id=?;";
 
-    private final static String SELECT_BY_ID = "SELECT * FROM apartments NATURAL JOIN buildings WHERE apartment_id=?;";
+    private final static String SELECT_BY_ID = SELECT_ALL + " WHERE apartment_id=?;";
 
     @Override
     protected PreparedStatementCreator getStatementCreator(ApartmentVO o, QueryType queryType) {
@@ -63,7 +64,9 @@ public class ApartmentDaoJdbc extends LazyJdbcDao<ApartmentVO, Integer> implemen
                 rs.getString("room_number"),
                 rs.getDouble("size"),
                 rs.getInt("building_id"),
-                rs.getString("address")
+                rs.getString("address"),
+                rs.getInt("contract_id"),
+                rs.getString("name")
         );
     }
 
