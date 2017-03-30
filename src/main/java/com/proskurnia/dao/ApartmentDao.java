@@ -10,4 +10,6 @@ import java.util.List;
 public interface ApartmentDao extends Dao<ApartmentVO, Integer> {
 
     List<ApartmentVO> getByBuildingId(int buildingId);
+
+    List<ApartmentVO> getEmptyByBuildingId(int buildingId);
 }

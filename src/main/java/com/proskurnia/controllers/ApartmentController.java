@@ -10,15 +10,15 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.Serializable;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 /**
  * Created by D on 22.03.2017.
  */
 @Controller
 @RequestMapping("/apartments")
-public class ApartmentController {
+public class ApartmentController implements Serializable{
 
     @Autowired
     ApartmentService apartmentService;

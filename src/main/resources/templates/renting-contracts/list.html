@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{all.owners}">Title</title>
+    <th:block th:replace="template :: css"></th:block>
+</head>
+<body>
+<table id="owners" class="table table-striped dataTable">
+    <thead>
+    <tr>
+        <td th:text="#{service.company.name}">ID</td>
+        <td th:text="#{address}"></td>
+        <td th:text="#{start.date}"></td>
+        <td th:text="#{end.date}"></td>
+        <td th:text="#{login}"></td>
+        <td th:text="#{password}"></td>
+        <td th:text="#{comment}"></td>
+    </tr>
+    </thead>
+    <!--/*@thymesVar id="object" type="com.proskurnia.VOs.RentingContractVO"*/-->
+    <tbody th:each="object : ${list}">
+    <tr>
+        <td><a th:href="/service-companies/+${object.serviceCompanyId}" th:text="${object.companyName}"></td>
+        <td><a th:href="${'/owners/' + object.buildingId}" th:text="${object.buildingAddress}"></a></td>
+        <td th:text="${new java.util.Date(object.startDate)}"></td>
+        <td th:text="${new java.util.Date(object.endDate)}"></td>
+        <td th:text="${object.accountLogin}"></td>
+        <td th:text="${object.accountPassword}"></td>
+        <td th:text="${object.comment}"></td>
+    </tr>
+    </tbody>
+</table>
+<th:block th:replace="template :: js"></th:block>
+</body>
+</html>

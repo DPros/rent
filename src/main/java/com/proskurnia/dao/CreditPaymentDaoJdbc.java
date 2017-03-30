@@ -25,7 +25,7 @@ public class CreditPaymentDaoJdbc extends LazyJdbcDao<CreditPaymentVO, Long> imp
 
     @Override
     public CreditPaymentVO create(CreditPaymentVO o) throws SQLException {
-        return moneyFlowJdbcUtils.createCreditPayment(o);
+        return moneyFlowJdbcUtils.create(o);
     }
 
     @Override

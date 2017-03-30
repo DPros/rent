@@ -1,5 +1,7 @@
 package com.proskurnia.VOs;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import java.sql.Timestamp;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -9,21 +11,27 @@ import java.util.Date;
  */
 public class RentingContractVO implements Identified<Integer> {
     private int id;
+    @DecimalMin("0.00")
     private BigDecimal rentPrice;
+    @DecimalMin("0.00")
     private BigDecimal deposit;
     private boolean depositReturned;
     private BigDecimal balance;
+    @DecimalMin("0.00")
     private BigDecimal estimatedFees;
     private Timestamp startDate;
     private Timestamp expectedEndDate;
     private Timestamp actualEndDate;
     private int tenantId;
     private int apartmentId;
+    private String address;
+    private String roomNumber;
+    private String tenantName;
 
     public RentingContractVO() {
     }
 
-    public RentingContractVO(int id, BigDecimal rentPrice, BigDecimal deposit, boolean depositReturned, BigDecimal balance, BigDecimal estimatedFees, Timestamp startDate, Timestamp expectedEndDate, Timestamp actualEndDate, int tenantId, int apartmentId) {
+    public RentingContractVO(int id, BigDecimal rentPrice, BigDecimal deposit, boolean depositReturned, BigDecimal balance, BigDecimal estimatedFees, Timestamp startDate, Timestamp expectedEndDate, Timestamp actualEndDate, int tenantId, int apartmentId, String tenantName, String address, String roomNumber) {
         this.id = id;
         this.rentPrice = rentPrice;
         this.deposit = deposit;
@@ -35,6 +43,33 @@ public class RentingContractVO implements Identified<Integer> {
         this.actualEndDate = actualEndDate;
         this.tenantId = tenantId;
         this.apartmentId = apartmentId;
+        this.tenantName = tenantName;
+        this.address = address;
+        this.roomNumber = roomNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getRoomNumber() {
+        return roomNumber;
+    }
+
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    public String getTenantName() {
+        return tenantName;
+    }
+
+    public void setTenantName(String tenantName) {
+        this.tenantName = tenantName;
     }
 
     public Integer getId() {

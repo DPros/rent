@@ -14,9 +14,9 @@ import java.util.List;
 @Repository
 public class ApartmentDaoJdbc extends LazyJdbcDao<ApartmentVO, Integer> implements ApartmentDao {
 
-    private final static String INSERT = "INSERT INTO apartments (roomNumber,size,building_id) VALUES(?,?,?) RETURNING apartment_id;";
+    private final static String INSERT = "INSERT INTO apartments (room_number,size,building_id) VALUES(?,?,?) RETURNING apartment_id;";
 
-    private final static String UPDATE = "UPDATE apartments SET roomNumber=?, size=? WHERE apartment_id=?;";
+    private final static String UPDATE = "UPDATE apartments SET room_number=?, size=? WHERE apartment_id=?;";
 
     private final static String SELECT_ALL = "SELECT a.apartment_id,a.room_number,a.size,a.building_id,buildings.address,renting_contracts.contract_id,persons.name " +
             "FROM apartments a NATURAL JOIN buildings NATURAL LEFT JOIN renting_contracts LEFT JOIN persons ON renting_contracts.tenant_id=persons.person_id";
@@ -73,5 +73,10 @@ public class ApartmentDaoJdbc extends LazyJdbcDao<ApartmentVO, Integer> implemen
     @Override
     public List<ApartmentVO> getByBuildingId(int buildingId) {
         return jdbcTemplate.query(SELECT_BY_BUILDING, getRowMapper());
+    }
+
+    @Override
+    public List<ApartmentVO> getEmptyByBuildingId(int buildingId) {
+        return null;
     }
 }

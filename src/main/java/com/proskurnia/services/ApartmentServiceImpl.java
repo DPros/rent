@@ -16,4 +16,9 @@ public class ApartmentServiceImpl extends GenericServiceImpl<ApartmentVO, Intege
     public List<ApartmentVO> getByBuildingId(int buildingId) {
         return ((ApartmentDao)dao).getByBuildingId(buildingId);
     }
+
+    @Override
+    public List<ApartmentVO> getEmptyByBuilding(int buildingId) {
+        return ((ApartmentDao)dao).getEmptyByBuildingId(buildingId);
+    }
 }

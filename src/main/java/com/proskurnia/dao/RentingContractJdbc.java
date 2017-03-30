@@ -1,6 +1,7 @@
 package com.proskurnia.dao;
 
 import com.proskurnia.VOs.RentingContractVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -17,9 +18,8 @@ import java.util.List;
 @Repository
 public class RentingContractJdbc extends LazyJdbcDao<RentingContractVO, Integer> implements RentingContractDao {
 
-    private final static String INSERT = "INSERT INTO renting_contracts(rent_price,deposit_amount,estimated_fees,start_date,expected_end_date,tenant_id,apartment_id) VALUES(?,?,?,?,?,?,?) RETURNING contract_id;";
-
-
+    @Autowired
+    MoneyFlowJdbcUtils moneyFlowJdbcUtils;
 
     private final static String RETURN_DEPOSIT = "UPDATE renting_contracts SET deposit_returned=true WHERE contract_id=?;";
 
@@ -27,24 +27,18 @@ public class RentingContractJdbc extends LazyJdbcDao<RentingContractVO, Integer>
 
     private final static String DELETE = "DELETE FROM renting_contracts WHERE contract_id=?;";
 
-    private final static String SELECT_BY_TENANT_ID = "SELECT * FROM renting_contracts NATURAL JOIN apartments NATURAL JOIN buildings WHERE tenant_id=?;";
+    private final static String SELECT_BY_TENANT_ID = "SELECT *,(SELECT amount FROM credit_payments WHERE contract_id=renting_contracts.contract_id AND deposit=TRUE) FROM renting_contracts NATURAL JOIN apartments NATURAL JOIN buildings JOIN persons ON renting_contracts.tenant_id=persons.persons_id WHERE tenant_id=?;";
 
-    private final static String SELECT_BY_ID = "SELECT * FROM renting_contracts NATURAL JOIN apartments NATURAL JOIN buildings WHERE contract_id=?;";
+    private final static String SELECT_BY_ID = "SELECT * FROM renting_contracts NATURAL JOIN apartments NATURAL JOIN buildings JOIN persons ON renting_contracts.tenant_id=persons.person_id WHERE contract_id=?;";
 
     @Override
     protected PreparedStatementCreator getStatementCreator(RentingContractVO o, QueryType queryType) {
-        return con -> {
-            PreparedStatement ps = con.prepareStatement(INSERT);
-            int index = 0;
-            ps.setBigDecimal(++index, o.getRentPrice());
-            ps.setBigDecimal(++index, o.getDeposit());
-            ps.setBigDecimal(++index, o.getEstimatedFees());
-            ps.setTimestamp(++index, o.getStartDate());
-            ps.setTimestamp(++index, o.getExpectedEndDate());
-            ps.setInt(++index, o.getTenantId());
-            ps.setInt(++index, o.getApartmentId());
-            return ps;
-        };
+        return null;
+    }
+
+    @Override
+    public RentingContractVO create(RentingContractVO o) throws SQLException {
+        return moneyFlowJdbcUtils.create(o);
     }
 
     @Override
@@ -64,24 +58,22 @@ public class RentingContractJdbc extends LazyJdbcDao<RentingContractVO, Integer>
 
     @Override
     protected RowMapper<RentingContractVO> getRowMapper() {
-        return new RowMapper<RentingContractVO>() {
-            @Override
-            public RentingContractVO mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new RentingContractVO(
-                        rs.getInt("contract_id"),
-                        rs.getBigDecimal("rent_price"),
-                        rs.getBigDecimal("deposit_amount"),
-                        rs.getBoolean("deposit_returned"),
-                        rs.getBigDecimal("balance"),
-                        rs.getBigDecimal("estimated_fees"),
-                        rs.getTimestamp("start_date"),
-                        rs.getTimestamp("expected_end_date"),
-                        rs.getTimestamp("actual_end_date"),
-                        rs.getInt("tenant_id"),
-                        rs.getInt("apartment_id")
-                );
-            }
-        };
+        return (rs, rowNum) -> new RentingContractVO(
+                rs.getInt("contract_id"),
+                rs.getBigDecimal("rent_price"),
+                rs.getBigDecimal("deposit_amount"),
+                rs.getBoolean("deposit_returned"),
+                rs.getBigDecimal("balance"),
+                rs.getBigDecimal("estimated_fees"),
+                rs.getTimestamp("start_date"),
+                rs.getTimestamp("expected_end_date"),
+                rs.getTimestamp("actual_end_date"),
+                rs.getInt("tenant_id"),
+                rs.getInt("apartment_id"),
+                rs.getString("name"),
+                rs.getString("address"),
+                rs.getString("room_number")
+        );
     }
 
     @Override

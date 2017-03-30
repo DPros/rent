@@ -1,13 +1,15 @@
 package com.proskurnia.dao;
 
 import com.proskurnia.VOs.BuildingVO;
-import com.proskurnia.VOs.PersonVO;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by D on 21.03.2017.
@@ -15,11 +17,18 @@ import java.util.List;
 @Repository
 public class BuildingDaoJdbc extends LazyJdbcDao<BuildingVO, Integer> implements BuildingDao {
 
-    private final static String EMPTY_APARTMENTS_COUNT_FOR_BUILDING = "(SELECT COUNT(*) FROM apartments WHERE building_id=b.building_id AND NOT EXISTS (SELECT * FROM renting_contracts WHERE apartment_id=apartments.apartment_id AND actual_end_date IS NULL AND start_date < current_timestamp AND expected_end_date > current_timestamp)) AS empty_apartments";
+    private final static String EMPTY_APARTMENTS_COUNT_FOR_BUILDING = "(SELECT COUNT(*) FROM apartments WHERE building_id=b.building_id AND NOT EXISTS (SELECT 1 FROM renting_contracts WHERE apartment_id=apartments.apartment_id AND actual_end_date IS NULL AND start_date < current_timestamp AND expected_end_date > current_timestamp)) AS empty_apartments";
 
     private final static String INSERT = "INSERT INTO buildings (address,acquisition_date,construction_date,date_of_sale,comment,account_id,manageable) VALUES(?,?,?,?,?,?,?) RETURNING building_id;";
 
     private final static String UPDATE = "UPDATE account SET address=?, acquisition_date=?, construction_date=?, date_of_sale=?, comment=?,account_id=?,manageable=? WHERE building_id=?;";
+
+    private final static String SELECT_WITH_EMPTY_APARTMENTS = "SELECT address,building_id " +
+            "FROM buildings WHERE EXISTS " +
+            "(SELECT 1 FROM apartments WHERE building_id=buildings.building_id AND " +
+            "NOT EXISTS (SELECT * FROM renting_contracts WHERE apartment_id=apartments.apartment_id AND " +
+            "actual_end_date IS NULL AND start_date < current_timestamp AND expected_end_date > current_timestamp)) " +
+            "ORDER BY address;";
 
     private final static String SELECT_ALL = "SELECT " +
             "b.building_id,b.address,b.acquisition_date,b.construction_date,b.date_of_sale,b.manageable,b.comment,b.account_number,persons.name, " + EMPTY_APARTMENTS_COUNT_FOR_BUILDING +
@@ -38,6 +47,16 @@ public class BuildingDaoJdbc extends LazyJdbcDao<BuildingVO, Integer> implements
     @Override
     public List<BuildingVO> getByOwnerId(int id) {
         return jdbcTemplate.query(SELECT_BY_OWNER, getRowMapper(), id);
+    }
+
+    @Override
+    public Map<Integer, String> getBuildingsWithEmptyApartments() {
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(SELECT_WITH_EMPTY_APARTMENTS);
+        Map<Integer, String> res = new LinkedHashMap<>();
+        while (rowSet.next()) {
+            res.put(rowSet.getInt("building_id"), rowSet.getString("address"));
+        }
+        return res;
     }
 
     @Override

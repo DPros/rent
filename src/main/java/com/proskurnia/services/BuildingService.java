@@ -1,10 +1,9 @@
 package com.proskurnia.services;
 
 import com.proskurnia.VOs.BuildingVO;
-import com.proskurnia.VOs.PersonVO;
-import com.proskurnia.services.GenericService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by D on 21.03.2017.
@@ -12,4 +11,6 @@ import java.util.List;
 public interface BuildingService extends GenericService<BuildingVO, Integer> {
 
     List<BuildingVO> getByOwnerId(int id);
+
+    Map<Integer, String> getBuildingsWithEmptyApartments();
 }

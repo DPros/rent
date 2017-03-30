@@ -10,4 +10,6 @@ import java.util.List;
 public interface ApartmentService extends GenericService<ApartmentVO, Integer> {
 
     List<ApartmentVO> getByBuildingId(int buildingId);
+
+    List<ApartmentVO> getEmptyByBuilding(int buildingId);
 }

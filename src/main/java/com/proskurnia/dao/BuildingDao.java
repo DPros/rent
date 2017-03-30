@@ -1,9 +1,9 @@
 package com.proskurnia.dao;
 
 import com.proskurnia.VOs.BuildingVO;
-import com.proskurnia.VOs.PersonVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by D on 21.03.2017.
@@ -11,4 +11,6 @@ import java.util.List;
 public interface BuildingDao extends Dao<BuildingVO, Integer> {
 
     List<BuildingVO> getByOwnerId(int id);
+
+    Map<Integer, String> getBuildingsWithEmptyApartments();
 }

@@ -1,5 +1,6 @@
 package com.proskurnia.VOs;
 
+import javax.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -9,6 +10,7 @@ import java.sql.Timestamp;
 public abstract class Payment implements Identified<Long> {
     protected long id;
     protected Timestamp date;
+    @DecimalMin("0.00")
     protected BigDecimal amount;
     protected String comment;
     protected String accountNumber;

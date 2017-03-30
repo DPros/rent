@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<!--/*@thymesVar id="object" type="com.proskurnia.VOs.RentingContractVO"*/-->
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${object.companyName}?:#{register.service.contract}">Title</title>
+    <th:block th:replace="template :: css"></th:block>
+</head>
+<body>
+<form th:object="${object}" th:action="@{save}" action="#" method="post">
+    <div class="container">
+        <input type="hidden" th:field="*{id}"/>
+        <input type="hidden" th:field="*{tenantId}"/>
+        <div class="form-group">
+            <label th:text="#{tenant}"></label>
+            <input class="form-control" th:field="*{tenantName}" th:readonly="true"/>
+        </div>
+        <div class="form-group">
+            <label th:text="#{address}"></label>
+            <select th:if="${object.id==0}" data-live-search="true" class="form-control selectpicker" id="building">
+                <th:block th:each="building : ${building}">
+                    <option th:value="${building.key}" th:text="${building.value}"></option>
+                </th:block>
+            </select>
+            <input class="form-control" th:field="*{address}" th:unless="${object.id==0}" th:readonly="true"/>
+        </div>
+        <div class="form-group">
+            <label th:text="#{room.number}"></label>
+            <select data-live-search="true" class="form-control selectpicker" th:readonly="${object.id!=0}"
+                    th:field="*{apartmentId}">
+                <option th:if="${object.id!=0}" th:id="${object.apartmentId}" th:value="${object.roomNumber}"/>
+                <!--<th:block th:each="company : ${companies}">-->
+                <!--<option th:value="${company.id}" th:text="${company.name}"></option>-->
+                <!--</th:block>-->
+            </select>
+        </div>
+        <div class="form-group">
+            <label th:text="#{rent.price}"></label>
+            <div class="alert-danger" th:errors="*{rentPrice}"/>
+            <input class="form-control" th:field="*{rentPrice}"/>
+        </div>
+        <div class="form-group">
+            <label th:text="#{estimated.fees}"></label>
+            <div class="alert-danger" th:errors="*{estimatedFees}"/>
+            <input class="form-control" th:field="*{estimatedFees}"/>
+        </div>
+        <div class="form-group">
+            <label th:text="#{deposit}"></label>
+            <a id="return-deposit" class="pull-right btn btn-danger"
+               th:href="'/renting-contracts/return-deposit/'+${object.id}"
+               th:class="${object.actualEndDate!=null && !object.depositReturned}?'hidden'"
+               th:text="#{return.deposit}"></a>
+            <div class="alert-danger" th:errors="*{deposit}"/>
+            <input class="form-control" th:unless="${object.depositReturned}" th:field="*{deposit}"
+                   th:readonly="${object.id!=0}"/>
+            <input class="form-control" th:if="${object.depositReturned}"
+                   th:value="#{deposit.returned} + ': ' + *{deposit}"/>
+        </div>
+        <div class="form-group">
+            <label th:text="#{start.date}"></label>
+            <input type="hidden" th:field="*{startDate}"/>
+            <input class="datepicker form-control" data-alt-field="#startDate" th:readonly="${object.id!=0}"/>
+        </div>
+        <div class="form-group">
+            <label th:text="#{expected.end.date}"></label>
+            <input type="hidden" th:field="*{expectedEndDate}"/>
+            <input class="datepicker form-control" data-alt-field="#expectedEndDate" th:readonly="${object.id!=0}"/>
+        </div>
+        <div class="form-group">
+            <label th:text="#{actual.end.date}"></label>
+            <a id="end-contract" class="pull-right btn btn-danger"
+               th:href="'/renting-contracts/end-contract/'+${object.id}"
+               th:if="${object.actualEndDate==null && object.id!=0}" th:text="#{end.contract}"></a>
+            <input th:field="*{actualEndDate}" th:readonly="true"/>
+        </div>
+        <th:block th:if="${object.id==0}">
+            <hr/>
+            <div th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.globalErrors()}">
+                <div class="alert alert-danger" th:text="${error}"></div>
+            </div>
+            <div class="pull-right">
+                <button type="submit" class="btn btn-primary" th:text="#{save}">Save</button>
+            </div>
+        </th:block>
+    </div>
+</form>
+<th:block th:replace="template :: js"></th:block>
+<script>
+    $('#building').change(function () {
+        $.get("/rest/apartments", {buildingId: $(this).val()}, function (data) {
+            $('#apartmentId').selectpicker('destroy').html(data.map(function (number, id) {
+                return $('<option val="' + id + '">' + number + '</option>')
+            })).selectpicker();
+        });
+    });
+</script>
+</body>
+</html>

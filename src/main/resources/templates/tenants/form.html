@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<!--/*@thymesVar id="object" type="com.proskurnia.VOs.PersonVO"*/-->
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${object.name}?:#{new.tenant}">Title</title>
+    <th:block th:replace="template :: css"></th:block>
+</head>
+<body>
+<form th:object="${object}" th:action="@{save}" action="#" method="post">
+    <div class="container">
+        <input type="hidden" th:field="*{id}"/>
+        <input class="hidden" type="checkbox" th:field="*{isOwner}"/>
+        <div class="form-group">
+            <label for="passport" th:text="#{person.id}"></label>
+            <input class="form-control" id="passport" th:field="*{passport}"/>
+        </div>
+        <div class="form-group">
+            <label for="title" th:text="#{person.title}"></label>
+            <select data-live-search="true" class="form-control selectpicker" id="title" th:field="*{titleId}">
+                <th:block th:each="title : ${titles}">
+                    <option th:value="${title.key}" th:text="${title.value}"></option>
+                </th:block>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="name" th:text="#{person.name}"></label>
+            <div class="alert-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+            <input class="form-control" id="name" th:field="*{name}"/>
+        </div>
+        <div class="form-group">
+            <label for="caf" th:text="#{person.CAF}"></label>
+            <input class="form-control" id="caf" th:field="*{caf}"/>
+        </div>
+        <div class="form-group">
+            <label for="address" th:text="#{address}"></label>
+            <input class="form-control" id="address" th:field="*{address}"/>
+        </div>
+        <div class="form-group">
+            <label for="phone1" th:text="#{phone} + ' 1'"></label>
+            <input class="form-control" id="phone1" th:field="*{phone1}"/>
+        </div>
+        <div class="form-group">
+            <label for="phone2" th:text="#{phone} + ' 2'"></label>
+            <input class="form-control" id="phone2" th:field="*{phone2}"/>
+        </div>
+        <div class="form-group">
+            <label for="email1" th:text="#{email} + ' 1'"></label>
+            <input class="form-control" id="email1" th:field="*{email1}"/>
+        </div>
+        <div class="form-group">
+            <label for="email2" th:text="#{email} + ' 2'"></label>
+            <input class="form-control" id="email2" th:field="*{email2}"/>
+        </div>
+        <hr/>
+        <div th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.globalErrors()}">
+            <div class="alert alert-danger" th:text="${error}"></div>
+        </div>
+        <div>
+            <a th:href="'/renting-contracts?tenantId='+${object.id}" class="btn btn-primary" th:text="#{renting.contract}"></a>
+            <a th:href="'/accounts?ownerId='+${object.id}" class="btn btn-primary" th:text="#{bank.accounts}"></a>
+            <button type="submit" class="pull-right btn btn-primary" th:text="#{save}">Save</button>
+        </div>
+    </div>
+</form>
+<th:block th:replace="template :: js"></th:block>
+</body>
+</html>
