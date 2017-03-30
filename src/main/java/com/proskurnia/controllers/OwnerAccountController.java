@@ -30,8 +30,8 @@ public class OwnerAccountController {
     BankService bankService;
 
     @RequestMapping
-    public String byOwner(Model model, @RequestParam(required = false) Integer owner) {
-        model.addAttribute("list", owner == null ? ownerAccountService.getAll() : ownerAccountService.getByOwnerId(owner));
+    public String byOwner(Model model, @RequestParam(required = false) Integer ownerId) {
+        model.addAttribute("list", ownerId == null ? ownerAccountService.getAll() : ownerAccountService.getByOwnerId(ownerId));
         model.addAttribute("banks", bankService.getAll());
         return "owner-accounts/list";
     }

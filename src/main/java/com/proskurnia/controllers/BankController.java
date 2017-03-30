@@ -28,7 +28,7 @@ public class BankController {
     @GetMapping
     public String all(Model model) {
         model.addAttribute("list", bankService.getAll());
-        return "buildings/list";
+        return "banks/list";
     }
 
     @GetMapping("/{id}")
@@ -38,13 +38,13 @@ public class BankController {
         } else {
             model.addAttribute("object", bankService.getById(id));
         }
-        return "buildings/form";
+        return "banks/form";
     }
 
     @PostMapping("/save")
     public String save(@Valid BankVO object, BindingResult bindingResult, Model model) throws SQLException {
         if (bindingResult.hasErrors()) {
-            return "buildings/form";
+            return "banks/form";
         } else {
             try {
                 if (object.getId() == 0) {

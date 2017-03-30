@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8"/>
     <title th:text="${object.name}?:#{new.owner}">Title</title>
-    <th:block th:fragment="template :: css"></th:block>
+    <th:block th:replace="template :: css"></th:block>
 </head>
 <body>
 <form th:object="${object}" th:action="@{save}" action="#" method="post">
@@ -58,11 +58,13 @@
         <div th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.globalErrors()}">
             <div class="alert alert-danger" th:text="${error}"></div>
         </div>
-        <div class="pull-right">
-            <button type="submit" class="btn btn-primary" th:text="#{save}">Save</button>
+        <div>
+            <a th:href="'/buildings?ownerId='+${object.id}" class="btn btn-primary" th:text="#{buildings}"></a>
+            <a th:href="'/accounts?ownerId='+${object.id}" class="btn btn-primary" th:text="#{bank.accounts}"></a>
+            <button type="submit" class="pull-right btn btn-primary" th:text="#{save}">Save</button>
         </div>
     </div>
 </form>
-<th:block th:fragment="template :: js"></th:block>
+<th:block th:replace="template :: js"></th:block>
 </body>
 </html>

@@ -5,11 +5,11 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8"/>
-    <title th:text="#{all.buildings}">Title</title>
-    <th:block th:fragment="template :: css"></th:block>
+    <title th:text="#{buildings}">Title</title>
+    <th:block th:replace="template :: css"></th:block>
 </head>
 <body>
-<table class="table table-striped">
+<table class="table table-striped dataTable">
     <thead>
     <tr>
         <td th:text="#{address}"></td>
@@ -34,6 +34,6 @@
     </tr>
     </tbody>
 </table>
-<th:block th:fragment="template :: js"></th:block>
+<th:block th:replace="template :: js"></th:block>
 </body>
 </html>

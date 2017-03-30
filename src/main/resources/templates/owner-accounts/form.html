@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8"/>
     <title th:text="${object.id}">Title</title>
-    <th:block th:fragment="template :: css"></th:block>
+    <th:block th:replace="template :: css"></th:block>
 </head>
 <body>
 <form th:object="${object}" th:action="@{save}" action="#" method="post">
@@ -37,6 +37,6 @@
         </div>
     </div>
 </form>
-<th:block th:fragment="template :: js"></th:block>
+<th:block th:replace="template :: js"></th:block>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package com.proskurnia.dao;
 
 import com.proskurnia.VOs.DebitPaymentVO;
+import com.proskurnia.VOs.Payment;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -14,7 +15,7 @@ public class DebitPaymentDaoJdbc extends LazyJdbcDao<DebitPaymentVO, Long> imple
     final static String DELETE = "DELETE FROM debit_payments WHERE payment_id=?;";
 
     final static String SELECT_BY_CONTRACT_ID = "" +
-            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,buildings.address,service_company_types.type_name description " +
+            "SELECT p.id,p.date,p.amount,p.comment,p.type,p.account_number,buildings.address,service_company_types.type_name description " +
             "FROM debit_payments p " +
             "JOIN service_contracts c ON c.contract_id=p.reason_id " +
             "JOIN buildings ON c.building_id=buildings.building_id " +
@@ -22,12 +23,12 @@ public class DebitPaymentDaoJdbc extends LazyJdbcDao<DebitPaymentVO, Long> imple
             "JOIN service_company_types types ON types.type_id=service_companies.type " +
             "WHERE contract_id=? AND type=0 " +
             "UNION " +
-            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,buildings.address,'' description " +
+            "SELECT p.id,p.date,p.amount,p.comment,p.type,p.account_number,buildings.address,'' description " +
             "FROM debit_payments p " +
             "JOIN buildings ON buildings.building_id=p.reason_id " +
             "WHERE contract_id=? AND type=1 " +
             "UNION " +
-            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,buildings.address,apartments.number description " +
+            "SELECT p.id,p.date,p.amount,p.comment,p.type,p.account_number,buildings.address,apartments.number description " +
             "FROM debit_payments p JOIN apartments ON p.reason_id=apartments.apartment_id " +
             "JOIN buildings ON building.building_id=apartments.building_id " +
             "WHERE contract_id=? AND type=0 ";
@@ -59,10 +60,11 @@ public class DebitPaymentDaoJdbc extends LazyJdbcDao<DebitPaymentVO, Long> imple
                 rs.getTimestamp("date"),
                 rs.getBigDecimal("amount"),
                 rs.getString("comment"),
-                DebitPaymentVO.DebitPaymentType.valueOf(rs.getInt("type")),
+                Payment.PaymentType.valueOf(rs.getInt("type")),
                 rs.getInt("reason_id"),
                 rs.getString("description"),
-                rs.getString("account_number")
+                rs.getString("account_number"),
+                rs.getString("address")
         );
     }
 }

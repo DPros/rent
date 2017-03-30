@@ -8,11 +8,14 @@ import java.sql.Timestamp;
  */
 public class DebitPaymentVO extends Payment {
 
-    private DebitPaymentType type;
+    private PaymentType type;
     private String description;
     private int reasonId;
 
-    public DebitPaymentVO(long id, Timestamp date, BigDecimal amount, String comment, DebitPaymentType type, int reasonId, String description, String accountNumber) {
+    public DebitPaymentVO() {
+    }
+
+    public DebitPaymentVO(long id, Timestamp date, BigDecimal amount, String comment, PaymentType type, int reasonId, String description, String accountNumber, String buildingAddress) {
         this.id = id;
         this.date = date;
         this.amount = amount;
@@ -21,13 +24,22 @@ public class DebitPaymentVO extends Payment {
         this.reasonId = reasonId;
         this.description = description;
         this.accountNumber = accountNumber;
+        this.buildingAddress = buildingAddress;
     }
 
-    public DebitPaymentType getType() {
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public PaymentType getType() {
         return type;
     }
 
-    public void setType(DebitPaymentType type) {
+    public void setType(PaymentType type) {
         this.type = type;
     }
 
@@ -57,32 +69,5 @@ public class DebitPaymentVO extends Payment {
         result = 31 * result + getType().hashCode();
         result = 31 * result + getReasonId();
         return result;
-    }
-
-    public enum DebitPaymentType {
-        ServicePayment(0), BuildingPayment(1), ApartmentPayment(2);
-
-        private int val;
-
-        DebitPaymentType(int val) {
-            this.val = val;
-        }
-
-        public int getVal() {
-            return val;
-        }
-
-        public static DebitPaymentType valueOf(int i) {
-            switch (i) {
-                case 0:
-                    return ServicePayment;
-                case 1:
-                    return BuildingPayment;
-                case 2:
-                    return ApartmentPayment;
-                default:
-                    throw new IllegalArgumentException("bad Debit Payment type");
-            }
-        }
     }
 }

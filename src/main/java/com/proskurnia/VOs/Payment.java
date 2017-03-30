@@ -12,6 +12,15 @@ public abstract class Payment implements Identified<Long> {
     protected BigDecimal amount;
     protected String comment;
     protected String accountNumber;
+    protected String buildingAddress;
+
+    public String getBuildingAddress() {
+        return buildingAddress;
+    }
+
+    public void setBuildingAddress(String buildingAddress) {
+        this.buildingAddress = buildingAddress;
+    }
 
     public String getAccountNumber() {
         return accountNumber;
@@ -76,5 +85,32 @@ public abstract class Payment implements Identified<Long> {
         result = 31 * result + (getComment() != null ? getComment().hashCode() : 0);
         result = 31 * result + (getAccountNumber() != null ? getAccountNumber().hashCode() : 0);
         return result;
+    }
+
+    public enum PaymentType {
+        ServicePayment(0), BuildingPayment(1), ApartmentPayment(2), CreditPayment(3);
+
+        private int val;
+
+        PaymentType(int val) {
+            this.val = val;
+        }
+
+        public int getVal() {
+            return val;
+        }
+
+        public static PaymentType valueOf(int i) {
+            switch (i) {
+                case 0:
+                    return ServicePayment;
+                case 1:
+                    return BuildingPayment;
+                case 2:
+                    return ApartmentPayment;
+                default:
+                    return CreditPayment;
+            }
+        }
     }
 }

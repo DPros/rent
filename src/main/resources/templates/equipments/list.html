@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8"/>
     <title th:text="${#{bank.accounts}+' | '+${owner.name}}">Title</title>
-    <th:block th:fragment="template :: css"></th:block>
+    <th:block th:replace="template :: css"></th:block>
 </head>
 <body>
 <table id="owners" class="table table-striped dataTable">
@@ -28,6 +28,6 @@
     </tr>
     </tbody>
 </table>
-<th:block th:fragment="template :: js"></th:block>
+<th:block th:replace="template :: js"></th:block>
 </body>
 </html>

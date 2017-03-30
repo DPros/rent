@@ -2,8 +2,10 @@ package com.proskurnia.dao;
 
 import com.proskurnia.VOs.CreditPaymentVO;
 import com.proskurnia.VOs.DebitPaymentVO;
+import com.proskurnia.VOs.Payment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,20 +54,53 @@ public class MoneyFlowJdbcUtils {
             "(SELECT building_id FROM apartments WHERE apartment_id IN " +
             "(SELECT apartment_id FROM renting_contracts WHERE contract_id=?)));";
 
+    private final static String REPORT_BY_ACCOUNT = "" +
+            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,service_company_types.type_name AS description " +
+            "FROM debit_payments p " +
+            "JOIN service_contracts c ON c.contract_id=p.reason_id " +
+            "JOIN buildings ON c.building_id=buildings.building_id " +
+            "JOIN service_companies ON c.company_id=service_companies.company_id " +
+            "JOIN service_company_types types ON types.type_id=service_companies.type " +
+            "WHERE p.account_number=? AND type=0 " +
+            "UNION " +
+            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,p,type,buildings.address,'' description " +
+            "FROM debit_payments p " +
+            "JOIN buildings ON buildings.building_id=p.reason_id " +
+            "WHERE p.account_number=? AND type=1 " +
+            "UNION " +
+            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,apartments.number AS description " +
+            "FROM debit_payments p JOIN apartments ON p.reason_id=apartments.apartment_id " +
+            "JOIN buildings ON building.building_id=apartments.building_id " +
+            "WHERE p.account_number=? AND type=2 " +
+            "UNION " +
+            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,100 AS type,building.address, '' AS description " +
+            "FROM credit_payments NATURAL JOIN apartments NATURAL JOIN buildings" +
+            "WHERE p.account_number=? AND confirmed=true " +
+            "ORDER BY date;";
+
     @Transactional
     public CreditPaymentVO createCreditPayment(CreditPaymentVO payment) throws SQLException {
         Connection con = null;
         try {
             con = jdbcTemplate.getDataSource().getConnection();
             con.setAutoCommit(false);
-            PreparedStatement updateTenantBalance = payment.isDeposit() ? con.prepareStatement(UPDATE_RENTING_CONTRACT_DEPOSIT) : con.prepareStatement(UPDATE_RENTING_CONTRACT_BALANCE);
-            updateTenantBalance.setBigDecimal(1, payment.isDeposit() || !payment.isConfirmed() ? payment.getAmount().negate() : BigDecimal.ZERO);
-            updateTenantBalance.setInt(2, payment.getContractId());
-            updateTenantBalance.execute();
-            PreparedStatement updateOwnerBalance = con.prepareStatement(UPDATE_OWNER_ACCOUNT_BY_RENTING_CONTRACT_ID);
-            updateOwnerBalance.setBigDecimal(1, payment.getAmount());
-            updateOwnerBalance.setInt(2, payment.getContractId());
-            updateOwnerBalance.execute();
+            if (payment.isConfirmed()) {
+                if (payment.isDeposit()) {
+                    PreparedStatement updateTenantDeposit = con.prepareStatement(UPDATE_RENTING_CONTRACT_DEPOSIT);
+                    updateTenantDeposit.setBigDecimal(1, payment.getAmount().negate());
+                    updateTenantDeposit.setInt(2, payment.getContractId());
+                    updateTenantDeposit.execute();
+                }
+                PreparedStatement updateOwnerBalance = con.prepareStatement(UPDATE_OWNER_ACCOUNT_BY_RENTING_CONTRACT_ID);
+                updateOwnerBalance.setBigDecimal(1, payment.getAmount());
+                updateOwnerBalance.setInt(2, payment.getContractId());
+                updateOwnerBalance.execute();
+            } else {
+                PreparedStatement updateTenantBalance = con.prepareStatement(UPDATE_RENTING_CONTRACT_BALANCE);
+                updateTenantBalance.setBigDecimal(1, payment.getAmount().negate());
+                updateTenantBalance.setInt(2, payment.getContractId());
+                updateTenantBalance.execute();
+            }
             PreparedStatement createPayment = con.prepareStatement(INSERT_CREDIT);
             int index = 0;
             createPayment.setTimestamp(++index, payment.getDate());
@@ -75,6 +110,7 @@ public class MoneyFlowJdbcUtils {
             createPayment.setBoolean(++index, payment.isConfirmed());
             createPayment.setInt(++index, payment.getContractId());
             createPayment.setInt(++index, payment.getContractId());
+            createPayment.setString(++index, payment.getAccountNumber());
             payment.setId(createPayment.executeQuery().getLong(1));
             con.commit();
             return payment;
@@ -91,14 +127,14 @@ public class MoneyFlowJdbcUtils {
         try {
             con = jdbcTemplate.getDataSource().getConnection();
             con.setAutoCommit(false);
-            PreparedStatement updateOwnerBalance = con.prepareStatement(payment.getType() == DebitPaymentVO.DebitPaymentType.ServicePayment ? UPDATE_OWNER_ACCOUNT_BY_SERVICE_CONTRACT_ID : payment.getType() == DebitPaymentVO.DebitPaymentType.ApartmentPayment ? UPDATE_OWNER_ACCOUNT_BY_APARTMENT_ID : UPDATE_OWNER_ACCOUNT_BY_BUILDING_ID);
+            PreparedStatement updateOwnerBalance = con.prepareStatement(payment.getType() == DebitPaymentVO.PaymentType.ServicePayment ? UPDATE_OWNER_ACCOUNT_BY_SERVICE_CONTRACT_ID : payment.getType() == DebitPaymentVO.PaymentType.ApartmentPayment ? UPDATE_OWNER_ACCOUNT_BY_APARTMENT_ID : UPDATE_OWNER_ACCOUNT_BY_BUILDING_ID);
             updateOwnerBalance.setBigDecimal(1, payment.getAmount().negate());
             updateOwnerBalance.setInt(2, payment.getReasonId());
             updateOwnerBalance.execute();
             PreparedStatement createPayment = con.prepareStatement(INSERT_DEBIT);
             int index = 0;
             createPayment.setTimestamp(++index, payment.getDate());
-            createPayment.setBigDecimal(++index, payment.getAmount());
+            createPayment.setBigDecimal(++index, payment.getAmount().negate());
             createPayment.setString(++index, payment.getComment());
             createPayment.setInt(++index, payment.getType().getVal());
             createPayment.setInt(++index, payment.getReasonId());
@@ -106,13 +142,40 @@ public class MoneyFlowJdbcUtils {
             createPayment.setInt(++index, payment.getReasonId());
             createPayment.setInt(++index, payment.getReasonId());
             createPayment.setInt(++index, payment.getReasonId());
+            createPayment.setString(++index, payment.getAccountNumber());
             payment.setId(createPayment.executeQuery().getLong(1));
-            return null;
+            return payment;
         } catch (SQLException e) {
             if (con != null) con.rollback();
             throw e;
         } finally {
             if (con != null) con.close();
         }
+    }
+
+    public RowMapper<Payment> getRowMapper() {
+        return (rs, rowNum) -> rs.getInt("type") > 10 ?
+                new CreditPaymentVO(
+                        rs.getLong("payment_id"),
+                        rs.getTimestamp("date"),
+                        rs.getBigDecimal("amount"),
+                        rs.getString("comment"),
+                        false,
+                        true,
+                        rs.getInt("reason_id"),
+                        rs.getString("account_number"),
+                        rs.getString("address")
+                ) :
+                new DebitPaymentVO(
+                        rs.getLong("payment_id"),
+                        rs.getTimestamp("date"),
+                        rs.getBigDecimal("amount"),
+                        rs.getString("comment"),
+                        Payment.PaymentType.valueOf(rs.getInt("type")),
+                        rs.getInt("reason_id"),
+                        rs.getString("description"),
+                        rs.getString("account_number"),
+                        rs.getString("address")
+                );
     }
 }

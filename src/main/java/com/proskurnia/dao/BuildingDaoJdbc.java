@@ -15,24 +15,24 @@ import java.util.List;
 @Repository
 public class BuildingDaoJdbc extends LazyJdbcDao<BuildingVO, Integer> implements BuildingDao {
 
-    private final static String EMPTY_APARTMENTS_COUNT_FOR_BUILDING = "(SELECT COUNT(*) FROM apartments WHERE building_id=building.building_id AND NOT EXISTS (SELECT * FROM renting_contracts WHERE apartment_id=apartments.apartment.id AND actual_end_date IS NULL AND start_date < current_timestamp AND expected_end_date > current_timestamp)) AS empty_apartments";
+    private final static String EMPTY_APARTMENTS_COUNT_FOR_BUILDING = "(SELECT COUNT(*) FROM apartments WHERE building_id=b.building_id AND NOT EXISTS (SELECT * FROM renting_contracts WHERE apartment_id=apartments.apartment_id AND actual_end_date IS NULL AND start_date < current_timestamp AND expected_end_date > current_timestamp)) AS empty_apartments";
 
     private final static String INSERT = "INSERT INTO buildings (address,acquisition_date,construction_date,date_of_sale,comment,account_id,manageable) VALUES(?,?,?,?,?,?,?) RETURNING building_id;";
 
     private final static String UPDATE = "UPDATE account SET address=?, acquisition_date=?, construction_date=?, date_of_sale=?, comment=?,account_id=?,manageable=? WHERE building_id=?;";
 
     private final static String SELECT_ALL = "SELECT " +
-            "b.building_id,b.address,b.acquisition_date,b.construction_date,b.date_of_sale,b.manageable,b.comment,b.account_id,persons.name, " + EMPTY_APARTMENTS_COUNT_FOR_BUILDING +
+            "b.building_id,b.address,b.acquisition_date,b.construction_date,b.date_of_sale,b.manageable,b.comment,b.account_number,persons.name, " + EMPTY_APARTMENTS_COUNT_FOR_BUILDING +
             " FROM buildings b NATURAL JOIN accounts JOIN persons ON persons.person_id=accounts.owner_id;";
 
     private final static String DELETE = "DELETE FROM buildings WHERE building_id=?;";
 
     private final static String SELECT_BY_ID = "SELECT " +
-            "b.building_id,b.address,b.acquisition_date,b.construction_date,b.date_of_sale,b.manageable,b.comment,b.account_id,persons.name, " +
+            "b.building_id,b.address,b.acquisition_date,b.construction_date,b.date_of_sale,b.manageable,b.comment,b.account_number,persons.name, " +
             " FROM buildings b NATURAL JOIN accounts JOIN persons ON persons.person_id=accounts.owner_id WHERE building_id=?;";
 
     private final static String SELECT_BY_OWNER = "SELECT " +
-            "b.building_id,b.address,b.acquisition_date,b.construction_date,b.date_of_sale,b.manageable,b.comment,b.account_id,persons.name, " + EMPTY_APARTMENTS_COUNT_FOR_BUILDING +
+            "b.building_id,b.address,b.acquisition_date,b.construction_date,b.date_of_sale,b.manageable,b.comment,b.account_number,persons.name, " + EMPTY_APARTMENTS_COUNT_FOR_BUILDING +
             " FROM buildings b NATURAL JOIN accounts JOIN persons ON persons.person_id=accounts.owner_id WHERE owner_id=?;";
 
     @Override
@@ -84,9 +84,10 @@ public class BuildingDaoJdbc extends LazyJdbcDao<BuildingVO, Integer> implements
                 rs.getTimestamp("date_of_sale"),
                 rs.getBoolean("manageable"),
                 rs.getString("comment"),
-                rs.getString("account_id"),
+                rs.getString("account_number"),
                 rs.getInt("empty_apartments"),
-                rs.getString("name")
+                rs.getString("name"),
+                rs.getInt("person_id")
         );
     }
 }
