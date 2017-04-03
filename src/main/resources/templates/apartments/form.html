@@ -2,30 +2,31 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <title th:text="${object.roomNumber}?:#{register.apartment} + ' | ' +${object.address}">Title</title>
-    <th:block th:fragment="template :: css"></th:block>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${apartmentVO.roomNumber}?:#{register.apartment} + ' | ' +${apartmentVO.address}">Title</title>
+    <th:block th:replace="template :: css"></th:block>
 </head>
 <body>
-<!--/*@thymesVar id="object" type="com.proskurnia.VOs.ApartmentVO"*/-->
-<form th:object="${object}" th:action="@{save}" action="#" method="post">
+<div th:replace="template :: header"/>
+<!--/*@thymesVar id="apartmentVO" type="com.proskurnia.VOs.ApartmentVO"*/-->
+<form th:object="${apartmentVO}" th:action="@{save}" action="#" method="post">
     <div class="container">
         <input type="hidden" th:field="*{id}"/>
         <input type="hidden" th:field="*{buildingId}"/>
-        <div class="form-group">
+        <div class="form-group col-sm-6">
             <label th:text="#{address}"></label>
             <input class="form-control" th:field="*{address}" readonly="true"/>
         </div>
-        <div class="form-group">
+        <div class="form-group col-sm-6">
             <label th:text="#{room.number}"></label>
             <div class="alert-danger" th:if="${#fields.hasErrors('roomNumber')}" th:errors="*{roomNumber}">Name Error</div>
             <input class="form-control" th:field="*{roomNumber}"/>
         </div>
-        <div class="form-group">
+        <div class="form-group col-sm-6">
             <label th:text="#{room.size}"></label>
             <input class="form-control" th:field="*{size}"/>
         </div>
-        <div class="form-group">
+        <div class="form-group col-sm-6">
             <label th:text="#{tenant}"></label>
             <input class="form-control" th:field="*{tenantName}" readonly="true"/>
         </div>
@@ -33,11 +34,11 @@
         <div th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.globalErrors()}">
             <div class="alert alert-danger" th:text="${error}"></div>
         </div>
-        <div class="pull-right">
-            <button type="submit" class="btn btn-primary" th:text="#{save}">Save</button>
+        <div class="footer">
+            <button type="submit" class="pull-right btn btn-success" th:text="#{save}">Save</button>
         </div>
     </div>
 </form>
-<th:block th:fragment="template :: js"></th:block>
+<th:block th:replace="template :: js"></th:block>
 </body>
 </html>

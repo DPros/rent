@@ -23,7 +23,9 @@ public class ApartmentDaoJdbc extends LazyJdbcDao<ApartmentVO, Integer> implemen
 
     private final static String DELETE = "DELETE FROM apartments WHERE apartment_id=?;";
 
-    private final static String SELECT_BY_BUILDING = SELECT_ALL + " WHERE building_id=?;";
+    private final static String SELECT_EMPTY_BY_BUILDING = SELECT_ALL + " WHERE building_id=?;";
+
+    private final static String SELECT_BY_BUILDING = SELECT_ALL + " WHERE building_id=? ORDER BY room_number;";
 
     private final static String SELECT_BY_ID = SELECT_ALL + " WHERE apartment_id=?;";
 
@@ -34,9 +36,10 @@ public class ApartmentDaoJdbc extends LazyJdbcDao<ApartmentVO, Integer> implemen
             int index = 0;
             ps.setString(++index, o.getRoomNumber());
             ps.setDouble(++index, o.getSize());
-            ps.setInt(++index, o.getBuildingId());
             if (queryType == QueryType.UPDATE) {
                 ps.setInt(++index, o.getId());
+            } else {
+                ps.setInt(++index, o.getBuildingId());
             }
             return ps;
         };
@@ -72,7 +75,7 @@ public class ApartmentDaoJdbc extends LazyJdbcDao<ApartmentVO, Integer> implemen
 
     @Override
     public List<ApartmentVO> getByBuildingId(int buildingId) {
-        return jdbcTemplate.query(SELECT_BY_BUILDING, getRowMapper());
+        return jdbcTemplate.query(SELECT_BY_BUILDING, getRowMapper(), buildingId);
     }
 
     @Override

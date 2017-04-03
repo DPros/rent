@@ -11,21 +11,31 @@ public class ServiceCompanyVO implements Identified<Integer> {
     private String phone1;
     private String phone2;
     private String email;
-    private int type_id;
+    private int typeId;
+    private String typeName;
     private String comment;
 
     public ServiceCompanyVO() {
     }
 
-    public ServiceCompanyVO(int id, String name, String address, String phone1, String phone2, String email, int type_id, String comment) {
+    public ServiceCompanyVO(int id, String name, String address, String phone1, String phone2, String email, int typeId, String comment, String typeName) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.phone1 = phone1;
         this.phone2 = phone2;
         this.email = email;
-        this.type_id = type_id;
+        this.typeId = typeId;
         this.comment = comment;
+        this.typeName = typeName;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 
     public Integer getId() {
@@ -77,11 +87,11 @@ public class ServiceCompanyVO implements Identified<Integer> {
     }
 
     public int getTypeId() {
-        return type_id;
+        return typeId;
     }
 
-    public void setTypeId(int type_id) {
-        this.type_id = type_id;
+    public void setTypeId(int typeId) {
+        this.typeId = typeId;
     }
 
     public String getComment() {
@@ -100,7 +110,7 @@ public class ServiceCompanyVO implements Identified<Integer> {
         ServiceCompanyVO that = (ServiceCompanyVO) o;
 
         if (id != that.id) return false;
-        if (type_id != that.type_id) return false;
+        if (typeId != that.typeId) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (address != null ? !address.equals(that.address) : that.address != null) return false;
         if (phone1 != null ? !phone1.equals(that.phone1) : that.phone1 != null) return false;
@@ -117,7 +127,7 @@ public class ServiceCompanyVO implements Identified<Integer> {
         result = 31 * result + (phone1 != null ? phone1.hashCode() : 0);
         result = 31 * result + (phone2 != null ? phone2.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + type_id;
+        result = 31 * result + typeId;
         result = 31 * result + (comment != null ? comment.hashCode() : 0);
         return result;
     }

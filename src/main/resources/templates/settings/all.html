@@ -1,49 +1,42 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
->
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
     <title th:text="#{application.settings}">Title</title>
     <th:block th:replace="template :: css"></th:block>
 </head>
 <body>
-<div class="container">
+<div th:replace="template :: header"/>
+<div class="container col-sm-6">
     <h3 th:text="#{person.titles}"></h3>
     <th:block th:each="entry : ${titles}">
-        <div class="row">
-            <span class="col-md-9 input form-group">
+        <div class="input-group form-group">
                 <input name="key" type="hidden" th:value="${entry.key}"/>
                 <input type="text" name="value" class="form-control" th:value="${entry.value}"/>
-            </span>
-            <span class="col-md-3 buttons">
+            <span class="input-group-btn">
                 <button class="btn btn-success js-save" data-url="/settings/save-title" th:text="#{save}"></button>
                 <button class="btn btn-danger js-delete" data-url="/settings/delete-title" th:text="#{delete}"></button>
             </span>
         </div>
     </th:block>
-    <div class="row new etalon">
-        <span class="col-md-9 input form-group">
+    <div class="input-group form-group new etalon">
             <input name="key" type="hidden" value="0"/>
             <input name="value" type="text" class="form-control"/>
-        </span>
-        <span class="col-md-3 buttons">
+        <span class="input-group-btn">
             <button class="btn btn-success js-save" data-url="/settings/save-title" th:text="#{save}"></button>
             <button class="btn btn-danger js-delete" data-url="/settings/delete-title" th:text="#{delete}"></button>
         </span>
     </div>
     <button class="btn btn-primary js-new" th:text="#{add.new}"></button>
 </div>
-<hr/>
-<div class="container">
+<div class="container col-sm-6">
     <h3 th:text="#{service.company.types}"></h3>
     <th:block th:each="entry : ${serviceCompanyTypes}">
-        <div class="row">
-            <span class="col-md-9 input form-group">
+        <div class="input-group form-group">
                 <input name="key" type="hidden" th:value="${entry.key}"/>
                 <input type="text" name="value" class="form-control" th:value="${entry.value}"/>
-            </span>
-            <span class="col-md-3 buttons">
+            <span class="input-group-btn">
                 <button class="btn btn-success js-save" data-url="/settings/save-service-company-type"
                         th:text="#{save}"></button>
                 <button class="btn btn-danger js-delete" data-url="/settings/delete-service-company-type"
@@ -51,12 +44,10 @@
             </span>
         </div>
     </th:block>
-    <div class="row new etalon">
-        <span class="col-md-9 input form-group">
+    <div class="input-group form-group new etalon">
             <input name="key" type="hidden" value="0"/>
             <input name="value" type="text" class="form-control"/>
-        </span>
-        <span class="col-md-3 buttons">
+        <span class="input-group-btn">
             <button class="btn btn-success js-save" data-url="/settings/save-service-company-type"
                     th:text="#{save}"></button>
             <button class="btn btn-danger js-delete" data-url="/settings/delete-service-company-type"
@@ -68,6 +59,6 @@
     </div>
 </div>
 </body>
-<th:block th:fragment="replace :: js"></th:block>
+<th:block th:replace="template :: js"></th:block>
 <script src="/resources/js/settings.js" th:src="@{/js/settings.js}"></script>
 </html>

@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Created by dmpr0116 on 24.03.2017.
@@ -35,7 +36,10 @@ public class MoneyFlowJdbcUtils {
             "WHERE building_id IN (SELECT building_id FROM service_contracts WHERE contract_id=?)) " +
             "WHEN 1 THEN (SELECT account_number FROM buildings WHERE building_id=?) " +
             "WHEN 2 THEN (SELECT account_number FROM buildings WHERE building_id IN " +
-            "(SELECT building_id FROM apartments WHERE apartment_id=?))END)) RETURNING payment_id,account_number;";
+            "(SELECT building_id FROM apartments WHERE apartment_id=?)) " +
+            "WHEN 3 THEN (SELECT account_number FROM buildings WHERE building_id IN " +
+            "(SELECT building_id FROM apartments WHERE apartment_id IN " +
+            "(SELECT apartment_id FROM renting_contracts WHERE contract_id=?)))END)) RETURNING payment_id,account_number;";
 
     private final static String INSERT_RENTING_CONTRACT = "INSERT INTO renting_contracts(rent_price,estimated_fees,start_date,expected_end_date,tenant_id,apartment_id) VALUES(?,?,?,?,?,?) RETURNING contract_id;";
 
@@ -78,6 +82,12 @@ public class MoneyFlowJdbcUtils {
             "JOIN buildings ON building.building_id=apartments.building_id " +
             "WHERE p.account_number=? AND type=2 " +
             "UNION " +
+            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,apartments.number AS description " +
+            "FROM debit_payments p JOIN renting_contracts ON p.reason_id=renting_contracts.contract_id " +
+            "JOIN apartments ON renting_contracts.apartment_id=apartments.apartment_id " +
+            "JOIN buildings ON building.building_id=apartments.building_id " +
+            "WHERE p.account_number=? AND type=3 " +
+            "UNION " +
             "SELECT p.id,p.date,p.amount,p.comment,p.account_number,100 AS type,building.address, '' AS description " +
             "FROM credit_payments NATURAL JOIN apartments NATURAL JOIN buildings" +
             "WHERE p.account_number=? AND confirmed=true " +
@@ -102,9 +112,27 @@ public class MoneyFlowJdbcUtils {
             "JOIN buildings ON building.building_id=apartments.building_id " +
             "WHERE buildings.building_id=? AND type=2 " +
             "UNION " +
+            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,apartments.number AS description " +
+            "FROM debit_payments p JOIN renting_contracts ON p.reason_id=renting_contracts.contract_id " +
+            "JOIN apartments ON renting_contracts.apartment_id=apartments.apartment_id " +
+            "JOIN buildings ON building.building_id=apartments.building_id " +
+            "WHERE buildings.building_id=? AND type=3 " +
+            "UNION " +
             "SELECT p.id,p.date,p.amount,p.comment,p.account_number,100 AS type,building.address, '' AS description " +
             "FROM credit_payments NATURAL JOIN apartments NATURAL JOIN buildings" +
             "WHERE buildings.building_id=? AND confirmed=true " +
+            "ORDER BY date;";
+
+    private final static String REPORT_BY_RENTING_CONTRACT = "" +
+            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,apartments.number AS description " +
+            "FROM debit_payments p JOIN renting_contracts ON p.reason_id=renting_contracts.contract_id " +
+            "JOIN apartments ON renting_contracts.apartment_id=apartments.apartment_id " +
+            "JOIN buildings ON building.building_id=apartments.building_id " +
+            "WHERE type=3 AND renting_contracts.contract_id=? " +
+            "UNION " +
+            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,100 AS type,building.address, '' AS description " +
+            "FROM credit_payments NATURAL JOIN apartments NATURAL JOIN buildings" +
+            "WHERE renting_contracts.contract_id=? AND confirmed=true " +
             "ORDER BY date;";
 
     @Transactional
@@ -166,6 +194,18 @@ public class MoneyFlowJdbcUtils {
         }
     }
 
+    public List<Payment> getRentingContractReport(int id){
+        return jdbcTemplate.query(REPORT_BY_RENTING_CONTRACT, getRowMapper(), id, id);
+    }
+
+    public List<Payment> getBuildingReport(int id){
+        return jdbcTemplate.query(REPORT_BY_BUILDING, getRowMapper(), id, id, id, id, id);
+    }
+
+    public List<Payment> getOwnerAccountReport(int id){
+        return jdbcTemplate.query(REPORT_BY_ACCOUNT, getRowMapper(), id, id, id, id, id);
+    }
+
     public RowMapper<Payment> getRowMapper() {
         return (rs, rowNum) -> rs.getInt("type") > 10 ?
                 new CreditPaymentVO(
@@ -192,9 +232,6 @@ public class MoneyFlowJdbcUtils {
                 );
     }
 
-    /**
-     * Sets payment id
-     */
     private void doCreateCreditPayment(Connection con, CreditPaymentVO payment) throws SQLException {
         PreparedStatement createPayment = con.prepareStatement(INSERT_CREDIT);
         int index = 0;
@@ -215,7 +252,7 @@ public class MoneyFlowJdbcUtils {
         PreparedStatement createPayment = con.prepareStatement(INSERT_DEBIT);
         int index = 0;
         createPayment.setTimestamp(++index, payment.getDate());
-        createPayment.setBigDecimal(++index, payment.getAmount().negate());
+        createPayment.setBigDecimal(++index, payment.getAmount());
         createPayment.setString(++index, payment.getComment());
         createPayment.setInt(++index, payment.getType().getVal());
         createPayment.setInt(++index, payment.getReasonId());

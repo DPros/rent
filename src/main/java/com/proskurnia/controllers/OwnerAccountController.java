@@ -32,26 +32,29 @@ public class OwnerAccountController {
     @RequestMapping
     public String byOwner(Model model, @RequestParam(required = false) Integer ownerId) {
         model.addAttribute("list", ownerId == null ? ownerAccountService.getAll() : ownerAccountService.getByOwnerId(ownerId));
-        model.addAttribute("banks", bankService.getAll());
+        model.addAttribute("id", ownerId);
         return "owner-accounts/list";
     }
 
     @RequestMapping("/{accountNumber}")
-    public String byId(Model model, @PathVariable String accountNumber, @RequestParam(required = false) Integer owner) {
-        if (owner != null) {
+    public String byId(Model model, @PathVariable String accountNumber, @RequestParam(required = false) Integer ownerId) {
+        if (ownerId != null) {
             OwnerAccountVO object = new OwnerAccountVO();
-            object.setOwnerId(owner);
+            object.setOwnerId(ownerId);
+            model.addAttribute("isNew", "true");
             model.addAttribute(object);
+            model.addAttribute("banks", bankService.getAll());
         } else {
-            model.addAttribute("object", ownerAccountService.getById(accountNumber));
+            model.addAttribute(ownerAccountService.getById(accountNumber));
         }
-        model.addAttribute("banks", bankService.getAll());
         return "owner-accounts/form";
     }
 
     @PostMapping("/save")
     public String save(@Valid OwnerAccountVO object, BindingResult bindingResult, @RequestParam boolean isNew, Model model) throws SQLException {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("isNew", "true");
+            model.addAttribute("banks", bankService.getAll());
             return "owner-accounts/form";
         } else {
             try {
@@ -64,7 +67,7 @@ public class OwnerAccountController {
                 bindingResult.addError(new ObjectError("object", e.getLocalizedMessage()));
                 return save(object, bindingResult, isNew, model);
             }
-            return "redirect:/accounts" + object.getOwnerId();
+            return "redirect:/accounts?ownerId=" + object.getOwnerId();
         }
     }
 }

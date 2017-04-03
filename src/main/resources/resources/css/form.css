@@ -1,25 +1,17 @@
-.row .js-save,
-.row.edited .js-delete{
+.input-group .js-save,
+.input-group.edited .js-delete{
     display: none;
 }
 
-.row.edited .js-save {
+.input-group.edited .js-save {
     display: initial;
 }
 
-.row.edited input {
+.input-group.edited input {
     background-color: rgb(185, 255, 142);
 }
 
-.container {
-    width: 500px;
-}
-
-.row .buttons {
-    text-align: center;
-}
-
-.row {
+.input-group {
     padding: 10px;
 }
 

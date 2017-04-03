@@ -4,12 +4,13 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
     <title th:text="#{bank.accounts}">Title</title>
     <th:block th:replace="template :: css"></th:block>
 </head>
 <body>
-<table id="owners" class="table table-striped dataTable">
+<div th:replace="template :: header"/>
+<table id="owners" class="table table-striped dataTable" th:attr="data-button-href='/accounts/0?ownerId='+${id},data-button-name=#{register.owner.account},data-button-visible=${id}">
     <thead>
     <tr>
         <td th:text="#{bank.account.number}">ID</td>
@@ -22,7 +23,7 @@
     <tr>
         <td th:text="${object.id}"></td>
         <td th:text="${object.balance}"></td>
-        <td><a th:href="${'/banks' + object.id}" th:text="${object.bankName}"></a></td>
+        <td><a th:href="${'/banks/' + object.bankId}" th:text="${object.bankName}"></a></td>
     </tr>
     </tbody>
 </table>

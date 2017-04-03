@@ -27,6 +27,7 @@ public class DebitPaymentVO extends Payment {
         this.buildingAddress = buildingAddress;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }

@@ -3,11 +3,12 @@
       xmlns:th="http://www.thymeleaf.org"
 >
 <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
     <title th:text="#{all.owners}">Title</title>
     <th:block th:replace="template :: css"></th:block>
 </head>
 <body>
+<div th:replace="template :: header"/>
 <table id="owners" class="table table-striped dataTable">
     <thead>
     <tr>

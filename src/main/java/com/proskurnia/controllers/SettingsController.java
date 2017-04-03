@@ -29,13 +29,12 @@ public class SettingsController {
 
     @PostMapping("/save-title")
     public void addTitle(@RequestParam String value, @RequestParam int key, HttpServletResponse response) throws Exception {
-        response.setContentType("text/html");
         if (key > 0) {
             utilsService.updateTitle(value, key);
         } else {
             key = utilsService.createPersonTitle(value);
         }
-        response.getWriter().write(key);
+        response.getWriter().write(""+key);
     }
 
     @PostMapping("/delete-title")
@@ -46,13 +45,12 @@ public class SettingsController {
 
     @PostMapping("/save-service-company-type")
     public void addServiceCompanyType(@RequestParam String value, @RequestParam int key, HttpServletResponse response) throws Exception {
-        response.setContentType("text/html");
         if (key > 0) {
             utilsService.updateServiceCompanyType(value, key);
         } else {
             key = utilsService.createServiceCompanyType(value);
         }
-        response.getWriter().write(key);
+        response.getWriter().write(""+key);
     }
 
     @PostMapping("/delete-service-company-type")

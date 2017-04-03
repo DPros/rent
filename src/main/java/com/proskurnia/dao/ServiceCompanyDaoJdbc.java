@@ -20,9 +20,11 @@ public class ServiceCompanyDaoJdbc extends LazyJdbcDao<ServiceCompanyVO, Integer
 
     private final static String DELETE = "DELETE FROM service_companies WHERE company_id=?;";
 
-    private final static String GET_BY_ID = "SELECT * FROM service_companies WHERE company_id=?;";
+    private final static String GET_BY_ID = "SELECT * FROM service_companies NATURAL JOIN service_company_types WHERE company_id=?;";
 
-    private final static String GET_BY_TYPE = "SELECT * FROM service_companies WHERE type_id=?;";
+    private final static String GET_BY_TYPE = "SELECT * FROM service_companies NATURAL JOIN service_company_types WHERE type_id=?;";
+
+    private final static String GET_ALL = "SELECT * FROM service_companies NATURAL JOIN service_company_types;";
 
     @Override
     protected PreparedStatementCreator getStatementCreator(ServiceCompanyVO o, QueryType queryType) {
@@ -55,7 +57,7 @@ public class ServiceCompanyDaoJdbc extends LazyJdbcDao<ServiceCompanyVO, Integer
 
     @Override
     protected String getAllQuery() {
-        return null;
+        return GET_ALL;
     }
 
     @Override
@@ -68,7 +70,8 @@ public class ServiceCompanyDaoJdbc extends LazyJdbcDao<ServiceCompanyVO, Integer
                 rs.getString("phone2"),
                 rs.getString("email"),
                 rs.getInt("type_id"),
-                rs.getString("comment")
+                rs.getString("comment"),
+                rs.getString("type_name")
         );
     }
 

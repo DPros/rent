@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
->
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <title th:text="#{all.buildings}">Title</title>
-    <th:block th:fragment="template :: css"></th:block>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="#{apartments}">Title</title>
+    <th:block th:replace="template :: css"></th:block>
 </head>
 <body>
-<table class="table table-striped">
+<div th:replace="template :: header"/>
+<table class="table table-striped dataTable" th:attr="data-button-href='apartments/0?buildingId='+${id},data-button-name=#{register.apartment},data-button-visible=${id}">
     <thead>
     <tr>
         <td th:text="#{address}"></td>
@@ -21,7 +21,7 @@
     <tbody th:each="object : ${list}">
     <tr>
         <td><a th:href="'/buildings/' + ${object.getBuildingId()}" th:text="${object.address}"></a></td>
-        <td th:text="${object.roomNumber}"></td>
+        <td><a th:href="'/apartments/'+${object.id}" th:text="${object.roomNumber}"></a></td>
         <td th:text="${object.size}"></td>
         <td>
             <a th:href="'/rentingContracts/' + ${object.getRentingContractId()}" th:text="${object.tenantName}"></a>
@@ -29,6 +29,6 @@
     </tr>
     </tbody>
 </table>
-<th:block th:fragment="template :: js"></th:block>
+<th:block th:replace="template :: js"></th:block>
 </body>
 </html>

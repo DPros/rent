@@ -2,17 +2,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
 >
-<!--/*@thymesVar id="object" type="com.proskurnia.VOs.ServiceContractVO"*/-->
+<!--/*@thymesVar id="serviceContractVO" type="com.proskurnia.VOs.ServiceContractVO"*/-->
 <head>
-    <meta charset="UTF-8"/>
-    <title th:text="${object.companyName}?:#{register.service.contract}">Title</title>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${serviceContractVO.companyName}?:#{register.service.contract}">Title</title>
     <th:block th:replace="template :: css"></th:block>
 </head>
 <body>
-<form th:object="${object}" th:action="@{save}" action="#" method="post">
+<div th:replace="template :: header"/>
+<form th:object="${serviceContractVO}" th:action="@{save}" action="#" method="post">
     <div class="container">
         <input type="hidden" th:field="*{id}"/>
-        <div class="form-group">
+        <div class="form-group col-sm-6">
             <label th:text="#{service.company.name}"></label>
             <select data-live-search="true" class="form-control selectpicker" th:field="*{serviceCompanyId}"
                     th:readonly="${companies.size()==1}">
@@ -21,29 +22,29 @@
                 </th:block>
             </select>
         </div>
-        <div class="form-group">
+        <div class="form-group col-sm-6">
             <label th:text="#{address}"></label>
             <input class="form-control" th:field="*{buildingAddress}" th:readonly="true"/>
         </div>
-        <div class="form-group">
+        <div class="form-group col-sm-6">
             <label th:text="#{login}"></label>
             <input class="form-control" th:field="*{accountLogin}"/>
         </div>
-        <div class="form-group">
+        <div class="form-group col-sm-6">
             <label th:text="#{password}"></label>
             <input class="form-control" th:field="*{accountPassword}"/>
         </div>
-        <div class="form-group">
+        <div class="form-group col-sm-6">
             <label th:text="#{start.date}"></label>
             <input type="hidden" th:field="*{startDate}"/>
-            <input class="datepicker form-control" data-alt-field="#startDate"/>
+            <input class="datepicker form-control" data-default="today" data-alt-field="#startDate"/>
         </div>
-        <div class="form-group">
+        <div class="form-group col-sm-6">
             <label th:text="#{end.date}"></label>
             <input type="hidden" th:field="*{endDate}"/>
             <input class="datepicker form-control" data-alt-field="#endDate"/>
         </div>
-        <div class="form-group">
+        <div class="form-group col-sm-6">
             <label th:text="#{comment}"></label>
             <input class="form-control" th:field="*{comment}"/>
         </div>
@@ -51,8 +52,8 @@
         <div th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.globalErrors()}">
             <div class="alert alert-danger" th:text="${error}"></div>
         </div>
-        <div class="pull-right">
-            <button type="submit" class="btn btn-primary" th:text="#{save}">Save</button>
+        <div class="footer">
+            <button type="submit" class="pull-right btn btn-success" th:text="#{save}">Save</button>
         </div>
     </div>
 </form>

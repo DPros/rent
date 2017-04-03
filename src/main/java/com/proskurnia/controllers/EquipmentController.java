@@ -29,6 +29,7 @@ public class EquipmentController {
                 buildingId != null ? equipmentService.getByBuildingId(buildingId) :
                         contractId != null ? equipmentService.getByServiceContractId(contractId) :
                                 equipmentService.getAll());
+        model.addAttribute("id",contractId);
         return "equipments/list";
     }
 
@@ -37,9 +38,9 @@ public class EquipmentController {
         if (id.equals("0")) {
             EquipmentVO object = new EquipmentVO();
             object.setServiceContractId(contractId);
-            model.addAttribute("object", object);
+            model.addAttribute(object);
         } else {
-            model.addAttribute("object", equipmentService.getById(id));
+            model.addAttribute(equipmentService.getById(id));
         }
         return "equipments/form";
     }

@@ -6,15 +6,20 @@ import com.proskurnia.VOs.PersonVO;
 import com.proskurnia.services.BuildingService;
 import com.proskurnia.services.OwnerAccountService;
 import com.proskurnia.services.PersonService;
+import org.springframework.beans.PropertyValuesEditor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.beans.PropertyEditor;
+import java.beans.PropertyEditorSupport;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 /**
  * Created by dmpr0116 on 28.03.2017.
@@ -35,6 +40,12 @@ public class BuildingController {
     @GetMapping
     public String all(Model model, @RequestParam(required = false) Integer ownerId) {
         model.addAttribute("list", ownerId != null ? buildingService.getByOwnerId(ownerId) : buildingService.getAll());
+        if (ownerId == null) {
+            model.addAttribute("list", buildingService.getAll());
+        } else {
+            model.addAttribute("id", ownerId);
+            model.addAttribute("list", buildingService.getByOwnerId(ownerId));
+        }
         return "buildings/list";
     }
 
@@ -46,11 +57,11 @@ public class BuildingController {
             BuildingVO object = new BuildingVO();
             object.setOwnerId(owner.getId());
             object.setOwnerName(owner.getName());
-            model.addAttribute("object", object);
+            model.addAttribute(object);
             model.addAttribute("accounts", ownerAccountService.getByOwnerId(ownerId));
         } else {
             BuildingVO object = buildingService.getById(id);
-            model.addAttribute("object", object);
+            model.addAttribute(object);
             model.addAttribute("accounts", ownerAccountService.getByOwnerId(object.getOwnerId()));
         }
         return "buildings/form";
@@ -74,5 +85,15 @@ public class BuildingController {
             }
             return "redirect:/buildings?ownerId=" + object.getOwnerId();
         }
+    }
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(java.sql.Timestamp.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String value) {
+                super.setValue(value == null || value.isEmpty() ? null : Timestamp.valueOf(value));
+            }
+        });
     }
 }

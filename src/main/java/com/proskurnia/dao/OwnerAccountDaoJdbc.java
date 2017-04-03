@@ -14,17 +14,17 @@ import java.util.List;
 @Repository
 public class OwnerAccountDaoJdbc extends LazyJdbcDao<OwnerAccountVO, String> implements OwnerAccountDao {
 
-    private final static String INSERT = "INSERT INTO accounts (balance,bank_id,owner_id,account_number) VALUES(?,?,?,?) RETURNING account_id;";
+    private final static String INSERT = "INSERT INTO accounts (balance,bank_id,owner_id,account_number) VALUES(?,?,?,?) RETURNING account_number;";
 
     private final static String SELECT_ALL = "SELECT * FROM accounts NATURAL JOIN banks;";
 
-    private final static String DELETE = "DELETE FROM accounts WHERE account_id=?;";
+    private final static String DELETE = "DELETE FROM accounts WHERE account_number=?;";
 
-    private final static String SELECT_BY_ID = "SELECT * FROM accounts NATURAL JOIN banks WHERE account_id=?;";
+    private final static String SELECT_BY_ID = "SELECT * FROM accounts NATURAL JOIN banks WHERE account_number=?;";
 
     private final static String SELECT_BY_OWNER_ID = "SELECT * FROM accounts NATURAL JOIN banks WHERE owner_id=?;";
 
-    private final static String SELECT_ALL_ACCOUNT_OF_OWNER_BY_ACCOUNT_ID = "SELECT * FROM accounts WHERE owner_id IN (SELECT owner_id FROM accounts WHERE account_id=?);";
+    private final static String SELECT_ALL_ACCOUNT_OF_OWNER_BY_ACCOUNT_ID = "SELECT * FROM accounts WHERE owner_id IN (SELECT owner_id FROM accounts WHERE account_number=?);";
 
     @Override
     protected PreparedStatementCreator getStatementCreator(OwnerAccountVO o, QueryType queryType) {

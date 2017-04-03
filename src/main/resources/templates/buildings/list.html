@@ -4,12 +4,13 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
     <title th:text="#{buildings}">Title</title>
     <th:block th:replace="template :: css"></th:block>
 </head>
 <body>
-<table class="table table-striped dataTable">
+<div th:replace="template :: header"/>
+<table class="table table-striped dataTable" th:attr="data-button-href='buildings/0?ownerId='+${id},data-button-name=#{register.building},data-button-visible=${id}">
     <thead>
     <tr>
         <td th:text="#{address}"></td>
@@ -25,12 +26,12 @@
     <tbody th:each="object : ${list}">
     <tr>
         <td th:text="${object.address}"></td>
-        <td><a th:href="${'/apartments?buildingId=' + ${object.id}}" th:text="${object.emptyApartments}"></a></td>
+        <td><a th:href="'/apartments?buildingId=' + ${object.id}" th:text="${object.emptyApartments}"></a></td>
         <td th:text="${object.acquisitionDate}"></td>
         <td th:text="${object.constructionDate}"></td>
         <td th:text="${object.dateOfSale}"></td>
         <td th:text="${object.comment}"></td>
-        <td th:text="${object.manageable ? #{yes} : #{no}}"></td>
+        <td th:text="${object.manageable}?#{yes}:#{no}"></td>
     </tr>
     </tbody>
 </table>

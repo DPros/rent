@@ -32,6 +32,7 @@ public class ServiceContractsController {
         model.addAttribute("list",
                 buildingId != null ? serviceContractService.getByBuildingId(buildingId) :
                         serviceContractService.getAll());
+        model.addAttribute("id", buildingId);
         return "service-contracts/list";
     }
 
@@ -46,7 +47,7 @@ public class ServiceContractsController {
             model.addAttribute("companies", serviceCompanyService.getAll());
         } else {
             ServiceContractVO object = serviceContractService.getById(id);
-            model.addAttribute("object", object);
+            model.addAttribute(object);
             ServiceCompanyVO company = new ServiceCompanyVO();
             company.setId(object.getServiceCompanyId());
             company.setName(object.getCompanyName());

@@ -163,36 +163,38 @@ public class RentingContractVO implements Identified<Integer> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof RentingContractVO)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         RentingContractVO that = (RentingContractVO) o;
 
-        if (getId() != that.getId()) return false;
-        if (isDepositReturned() != that.isDepositReturned()) return false;
-        if (getTenantId() != that.getTenantId()) return false;
-        if (getApartmentId() != that.getApartmentId()) return false;
-        if (!getRentPrice().equals(that.getRentPrice())) return false;
-        if (!getDeposit().equals(that.getDeposit())) return false;
-        if (!getBalance().equals(that.getBalance())) return false;
-        if (!getEstimatedFees().equals(that.getEstimatedFees())) return false;
-        if (!getStartDate().equals(that.getStartDate())) return false;
-        if (!getExpectedEndDate().equals(that.getExpectedEndDate())) return false;
-        return getActualEndDate() != null ? getActualEndDate().equals(that.getActualEndDate()) : that.getActualEndDate() == null;
+        if (id != that.id) return false;
+        if (depositReturned != that.depositReturned) return false;
+        if (tenantId != that.tenantId) return false;
+        if (apartmentId != that.apartmentId) return false;
+        if (rentPrice != null ? !rentPrice.equals(that.rentPrice) : that.rentPrice != null) return false;
+        if (deposit != null ? !deposit.equals(that.deposit) : that.deposit != null) return false;
+        if (balance != null ? !balance.equals(that.balance) : that.balance != null) return false;
+        if (estimatedFees != null ? !estimatedFees.equals(that.estimatedFees) : that.estimatedFees != null)
+            return false;
+        if (startDate != null ? !startDate.equals(that.startDate) : that.startDate != null) return false;
+        if (expectedEndDate != null ? !expectedEndDate.equals(that.expectedEndDate) : that.expectedEndDate != null)
+            return false;
+        return actualEndDate != null ? actualEndDate.equals(that.actualEndDate) : that.actualEndDate == null;
     }
 
     @Override
     public int hashCode() {
-        int result = getId();
-        result = 31 * result + getRentPrice().hashCode();
-        result = 31 * result + getDeposit().hashCode();
-        result = 31 * result + (isDepositReturned() ? 1 : 0);
-        result = 31 * result + getBalance().hashCode();
-        result = 31 * result + getEstimatedFees().hashCode();
-        result = 31 * result + getStartDate().hashCode();
-        result = 31 * result + getExpectedEndDate().hashCode();
-        result = 31 * result + (getActualEndDate() != null ? getActualEndDate().hashCode() : 0);
-        result = 31 * result + getTenantId();
-        result = 31 * result + getApartmentId();
+        int result = id;
+        result = 31 * result + (rentPrice != null ? rentPrice.hashCode() : 0);
+        result = 31 * result + (deposit != null ? deposit.hashCode() : 0);
+        result = 31 * result + (depositReturned ? 1 : 0);
+        result = 31 * result + (balance != null ? balance.hashCode() : 0);
+        result = 31 * result + (estimatedFees != null ? estimatedFees.hashCode() : 0);
+        result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
+        result = 31 * result + (expectedEndDate != null ? expectedEndDate.hashCode() : 0);
+        result = 31 * result + (actualEndDate != null ? actualEndDate.hashCode() : 0);
+        result = 31 * result + tenantId;
+        result = 31 * result + apartmentId;
         return result;
     }
 }

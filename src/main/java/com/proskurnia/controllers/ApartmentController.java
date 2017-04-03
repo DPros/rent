@@ -1,5 +1,6 @@
 package com.proskurnia.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proskurnia.VOs.ApartmentVO;
 import com.proskurnia.services.ApartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +10,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Collection;
 
 /**
  * Created by D on 22.03.2017.
@@ -26,11 +30,12 @@ public class ApartmentController implements Serializable{
     @GetMapping
     public String getAll(Model model, @RequestParam(required = false) Integer buildingId) {
         model.addAttribute("list", buildingId == null ? apartmentService.getAll() : apartmentService.getByBuildingId(buildingId));
+        model.addAttribute("id", buildingId);
         return "apartments/list";
     }
 
-    @GetMapping("/{apartmentId}")
-    public String getBuilding(@PathVariable int id,
+    @GetMapping("/{id}")
+    public String edit(@PathVariable int id,
                               @RequestParam(required = false) Integer buildingId,
                               @RequestParam(required = false) String address, Model model) {
         if (id == 0) {
@@ -39,7 +44,7 @@ public class ApartmentController implements Serializable{
             object.setAddress(address);
             model.addAttribute(object);
         } else {
-            model.addAttribute("object", apartmentService.getById(id));
+            model.addAttribute(apartmentService.getById(id));
         }
         return "apartments/form";
     }
@@ -62,4 +67,12 @@ public class ApartmentController implements Serializable{
             return "redirect:/apartments?buildingId=" + object.getBuildingId();
         }
     }
+
+    @GetMapping("/json")
+    public void getAll(@RequestParam(required = false) Integer buildingId, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json");
+        response.getWriter().write(mapper.writeValueAsString(buildingId == null ? apartmentService.getAll() : apartmentService.getByBuildingId(buildingId)));
+    }
+
+    private static ObjectMapper mapper = new ObjectMapper();
 }

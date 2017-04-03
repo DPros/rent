@@ -21,8 +21,5 @@ public class RestControlller {
     @Autowired
     ApartmentService apartmentService;
 
-    @GetMapping("/apartments")
-    public Collection<ApartmentVO> getAll(Model model, @RequestParam(required = false) Integer buildingId) {
-        return buildingId == null ? apartmentService.getAll() : apartmentService.getEmptyByBuilding(buildingId);
-    }
+
 }

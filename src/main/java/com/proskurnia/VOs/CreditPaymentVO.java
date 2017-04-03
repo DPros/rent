@@ -56,6 +56,11 @@ public class CreditPaymentVO extends Payment {
     }
 
     @Override
+    public String getDescription() {
+        return "";
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof CreditPaymentVO)) return false;

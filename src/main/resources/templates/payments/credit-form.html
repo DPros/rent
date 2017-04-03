@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="#{register.credit.payment}">Title</title>
+    <th:block th:replace="template :: css"></th:block>
+</head>
+<body>
+<div th:replace="template :: header"/>
+<!--/*@thymesVar id="creditPaymentVO" type="com.proskurnia.VOs.CreditPaymentVO"*/-->
+<form th:object="${creditPaymentVO}" th:action="@{save-credit}" action="#" method="post">
+    <div class="container">
+        <input type="hidden" th:field="*{id}"/>
+        <input type="hidden" th:field="*{contractId}"/>
+        <div class="form-group col-sm-6">
+            <label th:text="#{address}"></label>
+            <input class="form-control" th:field="*{address}" readonly/>
+        </div>
+        <div class="form-group col-sm-6">
+            <label th:text="#{room.number}"></label>
+            <input class="form-control" th:text="${room}" readonly/>
+        </div>
+        <div class="form-group col-sm-6">
+            <label th:text="#{date}"></label>
+            <input type="hidden" th:field="*{date}"/>
+            <div class="alert-danger" th:errors="*{date}">Name Error</div>
+            <input class="datepicker form-control" data-live-search="true" data-alt-field="#date"/>
+        </div>
+        <div class="form-group col-sm-6">
+            <label th:text="#{amount}"></label>
+            <div class="alert-danger" th:errors="*{amount}">Name Error</div>
+            <input class="form-control" th:field="*{amount}"/>
+        </div>
+        <div class="form-group col-sm-6">
+            <label th:text="#{comment}"></label>
+            <textarea class="form-control" id="comment" th:field="*{comment}"/>
+        </div>
+        <hr/>
+        <div th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.globalErrors()}">
+            <div class="alert alert-danger" th:text="${error}"></div>
+        </div>
+        <div class="footer">
+            <button type="submit" class="pull-right btn btn-success" th:text="#{save}">Save</button>
+        </div>
+    </div>
+</form>
+<th:block th:replace="template :: js"></th:block>
+</body>
+</html>

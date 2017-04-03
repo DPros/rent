@@ -2,6 +2,7 @@ package com.proskurnia.controllers;
 
 import com.proskurnia.VOs.PersonVO;
 import com.proskurnia.services.PersonService;
+import com.proskurnia.services.RentingContractService;
 import com.proskurnia.services.UtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,17 +21,20 @@ import java.sql.SQLException;
  * Created by D on 13.03.2017.
  */
 @Controller
-@RequestMapping("/owners")
+@RequestMapping("/tenants")
 public class TenantController {
 
     @Autowired
     PersonService personService;
 
     @Autowired
+    RentingContractService rentingContractService;
+
+    @Autowired
     UtilsService utilsService;
 
     @RequestMapping
-    public String allOwners(Model model) {
+    public String all(Model model) {
         model.addAttribute("list", personService.getAllTenants());
         return "tenants/list";
     }
@@ -39,9 +43,10 @@ public class TenantController {
     public String editOwner(Model model, @PathVariable int id) {
         model.addAttribute("titles", utilsService.getPersonTitles());
         if (id == 0) {
-            model.addAttribute("object", new PersonVO());
+            model.addAttribute(new PersonVO());
         } else {
-            model.addAttribute("object", personService.getById(id));
+            model.addAttribute(personService.getById(id));
+            model.addAttribute("contracts", rentingContractService.getByTenantId(id));
         }
         return "tenants/form";
     }

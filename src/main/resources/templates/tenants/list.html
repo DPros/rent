@@ -4,12 +4,13 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <meta charset="UTF-8"/>
-    <title th:text="#{all.owners}">Title</title>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="#{tenants}">Title</title>
     <th:block th:replace="template :: css"></th:block>
 </head>
 <body>
-<table id="owners" class="table table-striped dataTable">
+<div th:replace="template :: header"/>
+<table id="owners" class="table table-striped dataTable" th:attr="data-button-href='/tenants/0',data-button-name=#{new.tenant},data-button-visible='true'">
     <thead>
     <tr>
         <td th:text="#{person.id}">ID</td>
@@ -21,10 +22,10 @@
     </tr>
     </thead>
     <!--/*@thymesVar id="person" type="com.proskurnia.VOs.PersonVO"*/-->
-    <tbody th:each="person : ${owners}">
+    <tbody th:each="person : ${list}">
     <tr>
         <td th:text="${person.passport}"></td>
-        <td><a th:href="${'/owners/' + person.id}" th:text="${person.name}"></a></td>
+        <td><a th:href="${'/tenants/' + person.id}" th:text="${person.name}"></a></td>
         <td th:text="${person.caf}"></td>
         <td th:text="${person.address}"></td>
         <td>

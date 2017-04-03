@@ -34,9 +34,9 @@ public class BankController {
     @GetMapping("/{id}")
     public String edit(@PathVariable int id, Model model) {
         if (id == 0) {
-            model.addAttribute("object", new BankVO());
+            model.addAttribute(new BankVO());
         } else {
-            model.addAttribute("object", bankService.getById(id));
+            model.addAttribute(bankService.getById(id));
         }
         return "banks/form";
     }

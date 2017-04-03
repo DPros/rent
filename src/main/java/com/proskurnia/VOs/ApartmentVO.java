@@ -2,14 +2,16 @@ package com.proskurnia.VOs;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import java.io.Serializable;
+
 /**
  * Created by dmpr0116 on 07.03.2017.
  */
-public class ApartmentVO implements Identified<Integer> {
+public class ApartmentVO implements Identified<Integer>, Serializable {
     private int id;
     @NotEmpty
     private String roomNumber;
-    private double size;
+    private Double size;
     private int buildingId;
     private String address;
     private String tenantName;

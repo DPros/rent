@@ -39,9 +39,9 @@ public class OwnerController {
     public String editOwner(Model model, @PathVariable int ownerId) {
         model.addAttribute("titles", utilsService.getPersonTitles());
         if (ownerId == 0) {
-            model.addAttribute("object", new PersonVO());
+            model.addAttribute(new PersonVO());
         } else {
-            model.addAttribute("object", ownerService.getById(ownerId));
+            model.addAttribute(ownerService.getById(ownerId));
         }
         return "owners/form";
     }

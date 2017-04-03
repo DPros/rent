@@ -2,25 +2,26 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
     <title th:text="${personVO.name == null} ? #{new.owner} : ${personVO.name}">Title</title>
     <th:block th:replace="template :: css"></th:block>
 </head>
 <body>
-<!--/*@thymesVar id="object" type="com.proskurnia.VOs.EquipmentVO"*/-->
-<form th:object="${object}" th:action="@{save}" action="#" method="post">
+<div th:replace="template :: header"/>
+<!--/*@thymesVar id="equipmentVO" type="com.proskurnia.VOs.equipmentVO"*/-->
+<form th:object="${equipmentVO}" th:action="@{save}" action="#" method="post">
     <div class="container">
         <!--<input type="hidden" th:field="*{id}"/>-->
-        <div class="form-group">
+        <div class="form-group col-sm-6">
             <label th:text="#{serial.number}"></label>
             <div class="alert-danger" th:if="${#fields.hasErrors('id')}" th:errors="*{id}">Name Error</div>
             <input class="form-control" th:field="*{id}"/>
         </div>
-        <div class="form-group">
+        <div class="form-group col-sm-6">
             <label th:text="#{wifi.name}"></label>
             <input class="form-control" th:field="*{wifiName}"/>
         </div>
-        <div class="form-group">
+        <div class="form-group col-sm-6">
             <label th:text="#{wifi.password}"></label>
             <input class="form-control" th:field="*{wifiPassword}"/>
         </div>
@@ -28,8 +29,8 @@
         <div th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.globalErrors()}">
             <div class="alert alert-danger" th:text="${error}"></div>
         </div>
-        <div class="pull-right">
-            <button type="submit" class="btn btn-primary" th:text="#{save}">Save</button>
+        <div class="footer">
+            <button type="submit" class="btn btn-success pull-right" th:text="#{save}">Save</button>
         </div>
     </div>
 </form>

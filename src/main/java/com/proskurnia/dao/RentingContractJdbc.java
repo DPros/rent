@@ -27,7 +27,7 @@ public class RentingContractJdbc extends LazyJdbcDao<RentingContractVO, Integer>
 
     private final static String DELETE = "DELETE FROM renting_contracts WHERE contract_id=?;";
 
-    private final static String SELECT_BY_TENANT_ID = "SELECT *,(SELECT amount FROM credit_payments WHERE contract_id=renting_contracts.contract_id AND deposit=TRUE) FROM renting_contracts NATURAL JOIN apartments NATURAL JOIN buildings JOIN persons ON renting_contracts.tenant_id=persons.persons_id WHERE tenant_id=?;";
+    private final static String SELECT_BY_TENANT_ID = "SELECT *,(SELECT amount FROM credit_payments WHERE contract_id=renting_contracts.contract_id AND deposit=TRUE) FROM renting_contracts NATURAL JOIN apartments NATURAL JOIN buildings JOIN persons ON renting_contracts.tenant_id=persons.person_id WHERE tenant_id=?;";
 
     private final static String SELECT_BY_ID = "SELECT * FROM renting_contracts NATURAL JOIN apartments NATURAL JOIN buildings JOIN persons ON renting_contracts.tenant_id=persons.person_id WHERE contract_id=?;";
 

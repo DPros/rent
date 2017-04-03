@@ -16,6 +16,8 @@ public abstract class Payment implements Identified<Long> {
     protected String accountNumber;
     protected String buildingAddress;
 
+    public abstract String getDescription();
+
     public String getBuildingAddress() {
         return buildingAddress;
     }
@@ -90,7 +92,7 @@ public abstract class Payment implements Identified<Long> {
     }
 
     public enum PaymentType {
-        ServicePayment(0), BuildingPayment(1), ApartmentPayment(2), CreditPayment(3);
+        ServicePayment(0), BuildingPayment(1), ApartmentPayment(2), ReturnCreditPayment(3), CreditPayment(4);
 
         private int val;
 
@@ -98,7 +100,7 @@ public abstract class Payment implements Identified<Long> {
             this.val = val;
         }
 
-        public int getVal() {
+         public int getVal() {
             return val;
         }
 
@@ -110,6 +112,8 @@ public abstract class Payment implements Identified<Long> {
                     return BuildingPayment;
                 case 2:
                     return ApartmentPayment;
+                case 3:
+                    return ReturnCreditPayment;
                 default:
                     return CreditPayment;
             }

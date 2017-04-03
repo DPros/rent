@@ -48,7 +48,7 @@ public class RentingContractController {
             model.addAttribute("buildings", buildingService.getBuildingsWithEmptyApartments());
         } else {
             RentingContractVO object = rentingContractService.getById(id);
-            model.addAttribute("object", object);
+            model.addAttribute(object);
         }
         return "renting-contracts/form";
     }
