@@ -25,7 +25,7 @@
     <!--/*@thymesVar id="object" type="com.proskurnia.VOs.BuildingVO"*/-->
     <tbody th:each="object : ${list}">
     <tr>
-        <td th:text="${object.address}"></td>
+        <td><a th:href="'/buildings/'+${object.id}" th:text="${object.address}"></a></td>
         <td><a th:href="'/apartments?buildingId=' + ${object.id}" th:text="${object.emptyApartments}"></a></td>
         <td th:text="${object.acquisitionDate}"></td>
         <td th:text="${object.constructionDate}"></td>

@@ -66,6 +66,12 @@ public abstract class Payment implements Identified<Long> {
         this.comment = comment;
     }
 
+    public abstract String amountForOwnerReport();
+
+    public abstract String amountForTenantReport();
+
+    public abstract PaymentType getType();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -100,7 +106,7 @@ public abstract class Payment implements Identified<Long> {
             this.val = val;
         }
 
-         public int getVal() {
+        public int getVal() {
             return val;
         }
 

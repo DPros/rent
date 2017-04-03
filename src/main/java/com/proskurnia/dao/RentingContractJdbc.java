@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -84,5 +85,10 @@ public class RentingContractJdbc extends LazyJdbcDao<RentingContractVO, Integer>
     @Override
     public List<RentingContractVO> getByTenantId(int tenantId) {
         return jdbcTemplate.query(SELECT_BY_TENANT_ID, getRowMapper(), tenantId);
+    }
+
+    @Override
+    public void returnDeposit(int id) {
+        throw new NotImplementedException();
     }
 }

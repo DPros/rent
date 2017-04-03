@@ -11,11 +11,12 @@ public class CreditPaymentVO extends Payment {
     private boolean deposit;
     private boolean confirmed;
     private int contractId;
+    private String roomNumber;
 
     public CreditPaymentVO() {
     }
 
-    public CreditPaymentVO(long id, Timestamp date, BigDecimal amount, String comment, boolean deposit, boolean confirmed, int contractId, String accountNumber, String buildingAddress) {
+    public CreditPaymentVO(long id, Timestamp date, BigDecimal amount, String comment, boolean deposit, boolean confirmed, int contractId, String accountNumber, String buildingAddress, String roomNumber) {
         this.id = id;
         this.date = date;
         this.amount = amount;
@@ -25,6 +26,7 @@ public class CreditPaymentVO extends Payment {
         this.contractId = contractId;
         this.accountNumber = accountNumber;
         this.buildingAddress = buildingAddress;
+        this.roomNumber = roomNumber;
     }
 
     public PaymentType getType() {
@@ -57,7 +59,17 @@ public class CreditPaymentVO extends Payment {
 
     @Override
     public String getDescription() {
-        return "";
+        return roomNumber;
+    }
+
+    @Override
+    public String amountForOwnerReport() {
+        return '+' + amount.toString();
+    }
+
+    @Override
+    public String amountForTenantReport() {
+        return '-' + amount.toString();
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.proskurnia.VOs;
 
+import com.sun.istack.internal.NotNull;
+
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import java.sql.Timestamp;
@@ -12,13 +14,13 @@ import java.util.Date;
 public class RentingContractVO implements Identified<Integer> {
     private int id;
     @DecimalMin("0.00")
-    private BigDecimal rentPrice;
+    private BigDecimal rentPrice = BigDecimal.ZERO;
     @DecimalMin("0.00")
-    private BigDecimal deposit;
+    private BigDecimal deposit = BigDecimal.ZERO;
     private boolean depositReturned;
-    private BigDecimal balance;
+    private BigDecimal balance = BigDecimal.ZERO;
     @DecimalMin("0.00")
-    private BigDecimal estimatedFees;
+    private BigDecimal estimatedFees = BigDecimal.ZERO;
     private Timestamp startDate;
     private Timestamp expectedEndDate;
     private Timestamp actualEndDate;

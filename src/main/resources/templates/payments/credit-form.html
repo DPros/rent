@@ -10,17 +10,17 @@
 <body>
 <div th:replace="template :: header"/>
 <!--/*@thymesVar id="creditPaymentVO" type="com.proskurnia.VOs.CreditPaymentVO"*/-->
-<form th:object="${creditPaymentVO}" th:action="@{save-credit}" action="#" method="post">
+<form th:object="${creditPaymentVO}" th:action="@{/payments/save-credit}" method="post">
     <div class="container">
         <input type="hidden" th:field="*{id}"/>
         <input type="hidden" th:field="*{contractId}"/>
         <div class="form-group col-sm-6">
             <label th:text="#{address}"></label>
-            <input class="form-control" th:field="*{address}" readonly/>
+            <input class="form-control" th:field="*{buildingAddress}" readonly="readonly"/>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{room.number}"></label>
-            <input class="form-control" th:text="${room}" readonly/>
+            <input class="form-control" th:value="${room}" readonly="readonly"/>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{date}"></label>

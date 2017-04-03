@@ -41,7 +41,7 @@ public class MoneyFlowJdbcUtils {
             "(SELECT building_id FROM apartments WHERE apartment_id IN " +
             "(SELECT apartment_id FROM renting_contracts WHERE contract_id=?)))END)) RETURNING payment_id,account_number;";
 
-    private final static String INSERT_RENTING_CONTRACT = "INSERT INTO renting_contracts(rent_price,estimated_fees,start_date,expected_end_date,tenant_id,apartment_id) VALUES(?,?,?,?,?,?) RETURNING contract_id;";
+    private final static String INSERT_RENTING_CONTRACT = "INSERT INTO renting_contracts(rent_price,estimated_fees,deposit_amount,balance,start_date,expected_end_date,tenant_id,apartment_id) VALUES(?,?,?,?,?,?,?,?) RETURNING contract_id;";
 
     private final static String UPDATE_RENTING_CONTRACT_BALANCE = "UPDATE renting_contracts SET balance=?+balance WHERE contract_id=?;";
 
@@ -64,75 +64,75 @@ public class MoneyFlowJdbcUtils {
             "(SELECT apartment_id FROM renting_contracts WHERE contract_id=?)));";
 
     private final static String REPORT_BY_ACCOUNT = "" +
-            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,service_company_types.type_name AS description " +
+            "SELECT p.reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,types.type_name AS description " +
             "FROM debit_payments p " +
             "JOIN service_contracts c ON c.contract_id=p.reason_id " +
             "JOIN buildings ON c.building_id=buildings.building_id " +
             "JOIN service_companies ON c.company_id=service_companies.company_id " +
-            "JOIN service_company_types types ON types.type_id=service_companies.type " +
+            "JOIN service_company_types types ON types.type_id=service_companies.type_id " +
             "WHERE p.account_number=? AND type=0 " +
             "UNION " +
-            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,p,type,buildings.address,'' description " +
+            "SELECT p.reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,'' description " +
             "FROM debit_payments p " +
             "JOIN buildings ON buildings.building_id=p.reason_id " +
             "WHERE p.account_number=? AND type=1 " +
             "UNION " +
-            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,apartments.number AS description " +
+            "SELECT p.reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,apartments.room_number AS description " +
             "FROM debit_payments p JOIN apartments ON p.reason_id=apartments.apartment_id " +
-            "JOIN buildings ON building.building_id=apartments.building_id " +
+            "JOIN buildings ON buildings.building_id=apartments.building_id " +
             "WHERE p.account_number=? AND type=2 " +
             "UNION " +
-            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,apartments.number AS description " +
+            "SELECT p.reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,apartments.room_number AS description " +
             "FROM debit_payments p JOIN renting_contracts ON p.reason_id=renting_contracts.contract_id " +
             "JOIN apartments ON renting_contracts.apartment_id=apartments.apartment_id " +
-            "JOIN buildings ON building.building_id=apartments.building_id " +
+            "JOIN buildings ON buildings.building_id=apartments.building_id " +
             "WHERE p.account_number=? AND type=3 " +
             "UNION " +
-            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,100 AS type,building.address, '' AS description " +
-            "FROM credit_payments NATURAL JOIN apartments NATURAL JOIN buildings" +
-            "WHERE p.account_number=? AND confirmed=true " +
+            "SELECT p.contract_id AS reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,100 AS type,buildings.address,apartments.room_number AS description " +
+            "FROM credit_payments p NATURAL JOIN renting_contracts NATURAL JOIN apartments JOIN buildings ON apartments.building_id=buildings.building_id " +
+            "WHERE p.account_number=? AND confirmed=TRUE " +
             "ORDER BY buildings.building_id, date;";
 
     private final static String REPORT_BY_BUILDING = "" +
-            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,service_company_types.type_name AS description " +
+            "SELECT p.reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,types.type_name AS description " +
             "FROM debit_payments p " +
             "JOIN service_contracts c ON c.contract_id=p.reason_id " +
             "JOIN buildings ON c.building_id=buildings.building_id " +
             "JOIN service_companies ON c.company_id=service_companies.company_id " +
-            "JOIN service_company_types types ON types.type_id=service_companies.type " +
+            "JOIN service_company_types types ON types.type_id=service_companies.type_id " +
             "WHERE buildings.building_id=? AND type=0 " +
             "UNION " +
-            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,p,type,buildings.address,'' description " +
+            "SELECT p.reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,'' description " +
             "FROM debit_payments p " +
             "JOIN buildings ON buildings.building_id=p.reason_id " +
             "WHERE buildings.building_id=? AND type=1 " +
             "UNION " +
-            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,apartments.number AS description " +
+            "SELECT p.reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,apartments.room_number AS description " +
             "FROM debit_payments p JOIN apartments ON p.reason_id=apartments.apartment_id " +
-            "JOIN buildings ON building.building_id=apartments.building_id " +
+            "JOIN buildings ON buildings.building_id=apartments.building_id " +
             "WHERE buildings.building_id=? AND type=2 " +
             "UNION " +
-            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,apartments.number AS description " +
+            "SELECT p.reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,apartments.room_number AS description " +
             "FROM debit_payments p JOIN renting_contracts ON p.reason_id=renting_contracts.contract_id " +
             "JOIN apartments ON renting_contracts.apartment_id=apartments.apartment_id " +
-            "JOIN buildings ON building.building_id=apartments.building_id " +
+            "JOIN buildings ON buildings.building_id=apartments.building_id " +
             "WHERE buildings.building_id=? AND type=3 " +
             "UNION " +
-            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,100 AS type,building.address, '' AS description " +
-            "FROM credit_payments NATURAL JOIN apartments NATURAL JOIN buildings" +
-            "WHERE buildings.building_id=? AND confirmed=true " +
+            "SELECT p.contract_id AS reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,100 AS type,buildings.address,apartments.room_number AS description " +
+            "FROM credit_payments p NATURAL JOIN renting_contracts NATURAL JOIN apartments JOIN buildings ON apartments.building_id=buildings.building_id " +
+            "WHERE buildings.building_id=? AND confirmed=TRUE " +
             "ORDER BY date;";
 
     private final static String REPORT_BY_RENTING_CONTRACT = "" +
-            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,apartments.number AS description " +
+            "SELECT p.reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,apartments.room_number AS description " +
             "FROM debit_payments p JOIN renting_contracts ON p.reason_id=renting_contracts.contract_id " +
             "JOIN apartments ON renting_contracts.apartment_id=apartments.apartment_id " +
-            "JOIN buildings ON building.building_id=apartments.building_id " +
+            "JOIN buildings ON buildings.building_id=apartments.building_id " +
             "WHERE type=3 AND renting_contracts.contract_id=? " +
             "UNION " +
-            "SELECT p.id,p.date,p.amount,p.comment,p.account_number,100 AS type,building.address, '' AS description " +
-            "FROM credit_payments NATURAL JOIN apartments NATURAL JOIN buildings" +
-            "WHERE renting_contracts.contract_id=? AND confirmed=true " +
+            "SELECT p.contract_id AS reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,100 AS type,buildings.address,apartments.room_number AS description " +
+            "FROM credit_payments p NATURAL JOIN renting_contracts NATURAL JOIN apartments JOIN buildings ON apartments.building_id=buildings.building_id " +
+            "WHERE p.contract_id=? AND confirmed=TRUE " +
             "ORDER BY date;";
 
     @Transactional
@@ -165,6 +165,7 @@ public class MoneyFlowJdbcUtils {
             con.setAutoCommit(false);
             doCreateDebitPayment(con, payment);
             doUpdateOwnerBalance(con, payment.getAmount().negate(), payment.getAccountNumber());
+            con.commit();
             return payment;
         } catch (SQLException e) {
             if (con != null) con.rollback();
@@ -180,11 +181,13 @@ public class MoneyFlowJdbcUtils {
         try {
             con = jdbcTemplate.getDataSource().getConnection();
             con.setAutoCommit(false);
-            CreditPaymentVO rent = new CreditPaymentVO(0, contract.getStartDate(), contract.getRentPrice().add(contract.getEstimatedFees()), null, false, true, contract.getId(), null, null);
-            CreditPaymentVO deposit = new CreditPaymentVO(0, contract.getStartDate(), contract.getDeposit(), null, true, true, contract.getId(), null, null);
+            doCreateRentingContract(con, contract);
+            CreditPaymentVO rent = new CreditPaymentVO(0, contract.getStartDate(), contract.getRentPrice().add(contract.getEstimatedFees()), null, false, true, contract.getId(), null, null, null);
+            CreditPaymentVO deposit = new CreditPaymentVO(0, contract.getStartDate(), contract.getDeposit(), null, true, true, contract.getId(), null, null, null);
             doCreateCreditPayment(con, rent);
             doCreateCreditPayment(con, deposit);
             doUpdateOwnerBalance(con, rent.getAmount().add(deposit.getAmount()), deposit.getAccountNumber());
+            con.commit();
             return contract;
         } catch (SQLException e) {
             if (con != null) con.rollback();
@@ -194,15 +197,15 @@ public class MoneyFlowJdbcUtils {
         }
     }
 
-    public List<Payment> getRentingContractReport(int id){
+    public List<Payment> getRentingContractReport(int id) {
         return jdbcTemplate.query(REPORT_BY_RENTING_CONTRACT, getRowMapper(), id, id);
     }
 
-    public List<Payment> getBuildingReport(int id){
+    public List<Payment> getBuildingReport(int id) {
         return jdbcTemplate.query(REPORT_BY_BUILDING, getRowMapper(), id, id, id, id, id);
     }
 
-    public List<Payment> getOwnerAccountReport(int id){
+    public List<Payment> getOwnerAccountReport(String id) {
         return jdbcTemplate.query(REPORT_BY_ACCOUNT, getRowMapper(), id, id, id, id, id);
     }
 
@@ -217,7 +220,8 @@ public class MoneyFlowJdbcUtils {
                         true,
                         rs.getInt("reason_id"),
                         rs.getString("account_number"),
-                        rs.getString("address")
+                        rs.getString("address"),
+                        rs.getString("description")
                 ) :
                 new DebitPaymentVO(
                         rs.getLong("payment_id"),
@@ -232,6 +236,22 @@ public class MoneyFlowJdbcUtils {
                 );
     }
 
+    private void doCreateRentingContract(Connection con, RentingContractVO contract) throws SQLException {
+        PreparedStatement ps = con.prepareCall(INSERT_RENTING_CONTRACT);
+        int index = 0;
+        ps.setBigDecimal(++index, contract.getRentPrice());
+        ps.setBigDecimal(++index, contract.getEstimatedFees());
+        ps.setBigDecimal(++index, contract.getDeposit());
+        ps.setBigDecimal(++index, contract.getBalance());
+        ps.setTimestamp(++index, contract.getStartDate());
+        ps.setTimestamp(++index, contract.getExpectedEndDate());
+        ps.setInt(++index, contract.getTenantId());
+        ps.setInt(++index, contract.getApartmentId());
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        contract.setId(rs.getInt("contract_id"));
+    }
+
     private void doCreateCreditPayment(Connection con, CreditPaymentVO payment) throws SQLException {
         PreparedStatement createPayment = con.prepareStatement(INSERT_CREDIT);
         int index = 0;
@@ -242,8 +262,8 @@ public class MoneyFlowJdbcUtils {
         createPayment.setBoolean(++index, payment.isConfirmed());
         createPayment.setInt(++index, payment.getContractId());
         createPayment.setInt(++index, payment.getContractId());
-        createPayment.setString(++index, payment.getAccountNumber());
         ResultSet res = createPayment.executeQuery();
+        res.next();
         payment.setId(res.getLong("payment_id"));
         payment.setAccountNumber(res.getString("account_number"));
     }
@@ -261,6 +281,7 @@ public class MoneyFlowJdbcUtils {
         createPayment.setInt(++index, payment.getReasonId());
         createPayment.setInt(++index, payment.getReasonId());
         ResultSet res = createPayment.executeQuery();
+        res.next();
         payment.setId(res.getLong("payment_id"));
         payment.setAccountNumber(res.getString("account_number"));
     }

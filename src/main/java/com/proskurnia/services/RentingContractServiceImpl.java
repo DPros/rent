@@ -4,6 +4,7 @@ import com.proskurnia.VOs.RentingContractVO;
 import com.proskurnia.dao.RentingContractDao;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -14,5 +15,15 @@ public class RentingContractServiceImpl extends GenericServiceImpl<RentingContra
     @Override
     public List<RentingContractVO> getByTenantId(int id) {
         return ((RentingContractDao)dao).getByTenantId(id);
+    }
+
+    @Override
+    public void endContract(Timestamp date, int id) {
+        ((RentingContractDao)dao).endContract(date, id);
+    }
+
+    @Override
+    public void returnDeposit(int id) {
+        ((RentingContractDao)dao).returnDeposit(id);
     }
 }

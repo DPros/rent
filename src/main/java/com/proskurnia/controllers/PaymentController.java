@@ -9,13 +9,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.beans.PropertyEditorSupport;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 /**
  * Created by D on 29.03.2017.
@@ -27,7 +27,7 @@ public class PaymentController {
     @Autowired
     PaymentService paymentService;
 
-    @RequestMapping("debit/{id}")
+    @RequestMapping("/debit/{id}")
     public String debit(@PathVariable int reasonId, @RequestParam String address, @RequestParam String description, Model model) {
         DebitPaymentVO object = new DebitPaymentVO();
         object.setReasonId(reasonId);
@@ -52,7 +52,7 @@ public class PaymentController {
         }
     }
 
-    @RequestMapping("credit/{id}")
+    @RequestMapping("/credit/{id}")
     public String credit(@PathVariable int id, @RequestParam String address, @RequestParam String roomNumber, Model model) {
         CreditPaymentVO object = new CreditPaymentVO();
         object.setContractId(id);
@@ -68,6 +68,7 @@ public class PaymentController {
             return "payments/credit-form";
         } else {
             try {
+                object.setConfirmed(true);
                 paymentService.create(object);
             } catch (SQLException e) {
                 bindingResult.addError(new ObjectError("object", e.getLocalizedMessage()));
@@ -77,4 +78,13 @@ public class PaymentController {
         }
     }
 
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(java.sql.Timestamp.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                setValue(text.isEmpty() ? null : new Timestamp(Long.parseLong(text)));
+            }
+        });
+    }
 }

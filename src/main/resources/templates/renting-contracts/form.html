@@ -30,19 +30,16 @@
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{room.number}"></label>
-            <select data-live-search="true" class="form-control selectpicker" th:readonly="${rentingContractVO.id!=0}"
+            <select th:if="${rentingContractVO.id==0}" data-live-search="true" class="form-control selectpicker"
                     th:field="*{apartmentId}">
-                <option th:if="${rentingContractVO.id!=0}" th:id="${rentingContractVO.apartmentId}"
-                        th:value="${rentingContractVO.roomNumber}"/>
-                <!--<th:block th:each="company : ${companies}">-->
-                <!--<option th:value="${company.id}" th:text="${company.name}"></option>-->
-                <!--</th:block>-->
             </select>
+            <input type="hidden" th:field="*{apartmentId}"/>
+            <input th:unless="${rentingContractVO==0}" class="form-control" th:field="*{roomNumber}"/>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{rent.price}"></label>
             <div class="alert-danger" th:errors="*{rentPrice}"/>
-            <input class="form-control" th:field="*{rentPrice}"/>
+            <input class="form-control" th:readonly="${rentingContractVO.id!=0}" th:field="*{rentPrice}"/>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{estimated.fees}"></label>
@@ -52,17 +49,14 @@
         <div class="form-group col-sm-6">
             <label th:text="#{deposit}"></label>
             <div class="alert-danger" th:errors="*{deposit}"/>
+            <a id="return-deposit" th:href="'/renting-contracts/return-deposit/'+${rentingContractVO.id}"
+               th:class="'pull-right btn btn-warning btn-xs' + ${rentingContractVO.actualEndDate!='' and !rentingContractVO.depositReturned}?' hidden':''"
+               th:text="#{return.deposit}">
+            </a>
             <input class="form-control" th:unless="${rentingContractVO.depositReturned}" th:field="*{deposit}"
                    th:readonly="${rentingContractVO.id!=0}"/>
             <input class="form-control" th:if="${rentingContractVO.depositReturned}"
                    th:value="#{deposit.returned} + ': ' + *{deposit}"/>
-            <span class="input-group-btns">
-            <button id="return-deposit" class="pull-right btn btn-danger"
-                    th:href="'/renting-contracts/return-deposit/'+${rentingContractVO.id}"
-                    th:class="${rentingContractVO.actualEndDate!=null and !rentingContractVO.depositReturned}?'hidden'"
-                    th:text="#{return.deposit}">
-            </button>
-                </span>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{account.balance}"></label>
@@ -71,25 +65,28 @@
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{start.date}"></label>
+            <div class="alert-danger" th:errors="*{startDate}"/>
             <input type="hidden" th:field="*{startDate}"/>
             <input class="datepicker form-control" data-default="today" data-alt-field="#startDate"
                    th:readonly="${rentingContractVO.id!=0}"/>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{expected.end.date}"></label>
+            <div class="alert-danger" th:errors="*{expectedEndDate}"/>
             <input type="hidden" th:field="*{expectedEndDate}"/>
             <input class="datepicker form-control" data-alt-field="#expectedEndDate"
                    th:readonly="${rentingContractVO.id!=0}"/>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{actual.end.date}"></label>
-            <a id="end-contract" class="pull-right btn btn-danger"
+            <div class="alert-danger" th:errors="*{actualEndDate}"/>
+            <a id="end-contract" class="pull-right btn btn-danger btn-xs"
                th:href="'/renting-contracts/end-contract/'+${rentingContractVO.id}"
                th:if="${rentingContractVO.actualEndDate==null and rentingContractVO.id!=0}"
                th:text="#{end.contract}"></a>
             <input th:field="*{actualEndDate}" class="form-control" th:readonly="true"/>
         </div>
-        <th:block th:if="${rentingContractVO.id==0}">
+        <th:block>
             <hr/>
             <div th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.globalErrors()}">
                 <div class="alert alert-danger" th:text="${error}"></div>
@@ -98,17 +95,21 @@
                 <a th:href="'/payments/credit/'+${rentingContractVO.id}+'?address='+${rentingContractVO.address}+'&amp;roomNumber='+${rentingContractVO.roomNumber}"
                    th:unless="${rentingContractVO.id==0}" class="btn btn-primary"
                    th:text="#{register.credit.payment}"></a>
-                <button type="submit" class="pull-right btn btn-success" th:text="#{save}">Save</button>
+                <a th:href="'/reports/contract/'+${rentingContractVO.id}" th:unless="${rentingContractVO.id==0}"
+                   class="btn btn-primary" th:text="#{view.report}"></a>
+                <button th:if="${rentingContractVO.id==0}" type="submit" class="pull-right btn btn-success"
+                        th:text="#{save}">Save
+                </button>
             </div>
         </th:block>
     </div>
 </form>
 <th:block th:replace="template :: js"></th:block>
-<script>
+<script th:if="${rentingContractVO.id==0}">
     $('#building').change(function () {
         $.get("/apartments/json", {buildingId: $('#building').val()}, function (data) {
             $('#apartmentId').selectpicker('destroy').html(data.map(function (ap) {
-                return $('<option val="' + ap.id + '">' + ap.roomNumber + '</option>')
+                return $('<option value="' + ap.id + '">' + ap.roomNumber + '</option>')
             })).selectpicker();
         });
     }).change();

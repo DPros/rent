@@ -50,17 +50,7 @@ public class CreditPaymentDaoJdbc extends LazyJdbcDao<CreditPaymentVO, Long> imp
 
     @Override
     protected RowMapper<CreditPaymentVO> getRowMapper() {
-        return (rs, rowNum) -> new CreditPaymentVO(
-                rs.getLong("payment_id"),
-                rs.getTimestamp("date"),
-                rs.getBigDecimal("amount"),
-                rs.getString("comment"),
-                rs.getBoolean("deposit"),
-                rs.getBoolean("confirmed"),
-                rs.getInt("contract_id"),
-                rs.getString("account_number"),
-                rs.getString("address")
-        );
+        return null;
     }
 
     public List<CreditPaymentVO> getByContractId(int contractId) {

@@ -55,6 +55,7 @@
             <div class="alert alert-danger" th:text="${error}"></div>
         </div>
         <div class="footer">
+            <a th:href="'/reports/building/'+*{id}" th:text="#{view.report}" class="btn btn-primary"></a>
             <button type="submit" class="pull-right btn btn-success" th:text="#{save}">Save</button>
         </div>
     </div>

@@ -13,4 +13,6 @@ public interface RentingContractDao extends Dao<RentingContractVO, Integer> {
     void endContract(Timestamp date, int contractId);
 
     List<RentingContractVO> getByTenantId(int tenantId);
+
+    void returnDeposit(int id);
 }

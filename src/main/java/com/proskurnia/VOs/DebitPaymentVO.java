@@ -32,6 +32,16 @@ public class DebitPaymentVO extends Payment {
         return description;
     }
 
+    @Override
+    public String amountForOwnerReport() {
+        return '-' + amount.toString();
+    }
+
+    @Override
+    public String amountForTenantReport() {
+        return '+' + amount.toString();
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }

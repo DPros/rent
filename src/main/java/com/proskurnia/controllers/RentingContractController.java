@@ -1,7 +1,6 @@
 package com.proskurnia.controllers;
 
 import com.proskurnia.VOs.RentingContractVO;
-import com.proskurnia.services.ApartmentService;
 import com.proskurnia.services.BuildingService;
 import com.proskurnia.services.RentingContractService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +8,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.beans.PropertyEditorSupport;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 /**
  * Created by dmpr0116 on 30.03.2017.
@@ -55,11 +57,13 @@ public class RentingContractController {
 
     @PostMapping("/end-contract")
     public String endContract(@RequestParam int id) {
+//        rentingContractService.
         return "redirect:renting-contracts/" + id;
     }
 
     @PostMapping("/return-deposit")
     public String returnDeposit(@RequestParam int id) {
+
         return "redirect:renting-contracts/" + id;
     }
 
@@ -80,5 +84,15 @@ public class RentingContractController {
             }
             return "redirect:/renting-contracts/" + object.getId();
         }
+    }
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(java.sql.Timestamp.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                setValue(text.isEmpty() ? null : new Timestamp(Long.parseLong(text)));
+            }
+        });
     }
 }

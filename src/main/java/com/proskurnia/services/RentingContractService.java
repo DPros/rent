@@ -2,6 +2,7 @@ package com.proskurnia.services;
 
 import com.proskurnia.VOs.RentingContractVO;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -10,4 +11,8 @@ import java.util.List;
 public interface RentingContractService extends GenericService<RentingContractVO, Integer> {
 
     List<RentingContractVO> getByTenantId(int id);
+
+    void endContract(Timestamp date, int id);
+
+    void returnDeposit(int id);
 }

@@ -8,7 +8,7 @@
 </head>
 <body>
 <div th:replace="template :: header"/>
-<!--/*@thymesVar id="ownerAccountVO" type="com.proskurnia.VOs.ownerAccountVO"*/-->
+<!--/*@thymesVar id="ownerAccountVO" type="com.proskurnia.VOs.OwnerAccountVO"*/-->
 <form th:object="${ownerAccountVO}" th:action="@{save}" action="#" method="post">
     <div class="container">
         <input type="hidden" th:field="*{ownerId}"/>
@@ -34,6 +34,7 @@
             <div class="alert alert-danger" th:text="${error}"></div>
         </div>
         <div class="footer">
+            <a th:href="'/reports/account/'+*{id}" th:text="#{view.report}" class="btn btn-primary"></a>
             <button th:if="${isNew}" type="submit" class="pull-right btn btn-success" th:text="#{save}">Save</button>
         </div>
     </div>
