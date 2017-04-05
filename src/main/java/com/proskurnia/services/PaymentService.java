@@ -12,12 +12,14 @@ import java.util.Collection;
  */
 public interface PaymentService {
 
-//    Collection<Payment> get();
+    Collection<Payment> getAll();
 
 //    T getById(I id);
 
     CreditPaymentVO create(CreditPaymentVO o) throws SQLException;
     DebitPaymentVO create(DebitPaymentVO o) throws SQLException;
+
+    void delete(long id, boolean credit) throws SQLException;
 
 //    void update(T o) throws SQLException;
 

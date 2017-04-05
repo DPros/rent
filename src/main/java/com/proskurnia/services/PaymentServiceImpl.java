@@ -20,6 +20,11 @@ public class PaymentServiceImpl implements PaymentService {
     MoneyFlowJdbcUtils moneyFlowJdbcUtils;
 
     @Override
+    public Collection<Payment> getAll() {
+        return moneyFlowJdbcUtils.getAll();
+    }
+
+    @Override
     public CreditPaymentVO create(CreditPaymentVO o) throws SQLException {
         return moneyFlowJdbcUtils.create(o);
     }
@@ -27,5 +32,10 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public DebitPaymentVO create(DebitPaymentVO o) throws SQLException {
         return moneyFlowJdbcUtils.create(o);
+    }
+
+    @Override
+    public void delete(long id, boolean credit) throws SQLException {
+        moneyFlowJdbcUtils.delete(id, credit);
     }
 }

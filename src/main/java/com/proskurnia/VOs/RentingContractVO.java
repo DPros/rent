@@ -19,7 +19,6 @@ public class RentingContractVO implements Identified<Integer>, Serializable {
     @DecimalMin("0.00")
     private BigDecimal deposit = BigDecimal.ZERO;
     private boolean depositReturned;
-    private BigDecimal balance = BigDecimal.ZERO;
     @DecimalMin("0.00")
     private BigDecimal estimatedFees = BigDecimal.ZERO;
     private Timestamp startDate;
@@ -34,12 +33,11 @@ public class RentingContractVO implements Identified<Integer>, Serializable {
     public RentingContractVO() {
     }
 
-    public RentingContractVO(int id, BigDecimal rentPrice, BigDecimal deposit, boolean depositReturned, BigDecimal balance, BigDecimal estimatedFees, Timestamp startDate, Timestamp expectedEndDate, Timestamp actualEndDate, int tenantId, int apartmentId, String tenantName, String address, String roomNumber) {
+    public RentingContractVO(int id, BigDecimal rentPrice, BigDecimal deposit, boolean depositReturned, BigDecimal estimatedFees, Timestamp startDate, Timestamp expectedEndDate, Timestamp actualEndDate, int tenantId, int apartmentId, String tenantName, String address, String roomNumber) {
         this.id = id;
         this.rentPrice = rentPrice;
         this.deposit = deposit;
         this.depositReturned = depositReturned;
-        this.balance = balance;
         this.estimatedFees = estimatedFees;
         this.startDate = startDate;
         this.expectedEndDate = expectedEndDate;
@@ -107,14 +105,6 @@ public class RentingContractVO implements Identified<Integer>, Serializable {
         this.depositReturned = depositReturned;
     }
 
-    public BigDecimal getBalance() {
-        return balance;
-    }
-
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
-    }
-
     public BigDecimal getEstimatedFees() {
         return estimatedFees;
     }
@@ -176,7 +166,6 @@ public class RentingContractVO implements Identified<Integer>, Serializable {
         if (apartmentId != that.apartmentId) return false;
         if (rentPrice != null ? !rentPrice.equals(that.rentPrice) : that.rentPrice != null) return false;
         if (deposit != null ? !deposit.equals(that.deposit) : that.deposit != null) return false;
-        if (balance != null ? !balance.equals(that.balance) : that.balance != null) return false;
         if (estimatedFees != null ? !estimatedFees.equals(that.estimatedFees) : that.estimatedFees != null)
             return false;
         if (startDate != null ? !startDate.equals(that.startDate) : that.startDate != null) return false;
@@ -191,7 +180,6 @@ public class RentingContractVO implements Identified<Integer>, Serializable {
         result = 31 * result + (rentPrice != null ? rentPrice.hashCode() : 0);
         result = 31 * result + (deposit != null ? deposit.hashCode() : 0);
         result = 31 * result + (depositReturned ? 1 : 0);
-        result = 31 * result + (balance != null ? balance.hashCode() : 0);
         result = 31 * result + (estimatedFees != null ? estimatedFees.hashCode() : 0);
         result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
         result = 31 * result + (expectedEndDate != null ? expectedEndDate.hashCode() : 0);

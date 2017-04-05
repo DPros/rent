@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -25,8 +26,11 @@ public class MoneyFlowJdbcUtils {
 
     private final static String UPDATE_RENTING_CONTRACT_RETURN_DEPOSIT = "UPDATE renting_contracts SET deposit_amount=?,deposit_returned=TRUE WHERE contract_id=?";
 
-    private final static String INSERT_CREDIT = "INSERT INTO credit_payments (date,amount,comment,deposit,confirmed,contract_id,account_number) " +
-            "VALUES(?,?,?,?,?,?,(SELECT account_number FROM buildings WHERE building_id IN " +
+    private final static String DELETE_CREDIT = "DELETE FROM credit_payments WHERE payment_id=? RETURNING amount,account_number;";
+    private final static String DELETE_DEBIT = "DELETE FROM debit_payments WHERE payment_id=? RETURNING amount,account_number;";
+
+    private final static String INSERT_CREDIT = "INSERT INTO credit_payments (date,amount,comment,deposit,contract_id,account_number) " +
+            "VALUES(?,?,?,?,?,(SELECT account_number FROM buildings WHERE building_id IN " +
             "(SELECT building_id FROM apartments WHERE apartment_id IN " +
             "(SELECT apartment_id FROM renting_contracts WHERE contract_id=?)))) RETURNING payment_id,account_number;";
 
@@ -40,7 +44,7 @@ public class MoneyFlowJdbcUtils {
             "(SELECT building_id FROM apartments WHERE apartment_id IN " +
             "(SELECT apartment_id FROM renting_contracts WHERE contract_id=?)))END)) RETURNING payment_id,account_number;";
 
-    private final static String INSERT_RENTING_CONTRACT = "INSERT INTO renting_contracts(rent_price,estimated_fees,deposit_amount,balance,start_date,expected_end_date,tenant_id,apartment_id) VALUES(?,?,?,?,?,?,?,?) RETURNING contract_id;";
+    private final static String INSERT_RENTING_CONTRACT = "INSERT INTO renting_contracts(rent_price,estimated_fees,deposit_amount,start_date,expected_end_date,tenant_id,apartment_id) VALUES(?,?,?,?,?,?,?) RETURNING contract_id;";
 
     private final static String UPDATE_RENTING_CONTRACT_BALANCE = "UPDATE renting_contracts SET balance=?+balance WHERE contract_id=?;";
 
@@ -61,6 +65,35 @@ public class MoneyFlowJdbcUtils {
             "(SELECT account_number FROM buildings WHERE building_id IN " +
             "(SELECT building_id FROM apartments WHERE apartment_id IN " +
             "(SELECT apartment_id FROM renting_contracts WHERE contract_id=?)));";
+
+    private final static String GET_ALL = "" +
+            "SELECT p.reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,types.type_name AS description " +
+            "FROM debit_payments p " +
+            "JOIN service_contracts c ON c.contract_id=p.reason_id " +
+            "JOIN buildings ON c.building_id=buildings.building_id " +
+            "JOIN service_companies ON c.company_id=service_companies.company_id " +
+            "JOIN service_company_types types ON types.type_id=service_companies.type_id " +
+            "WHERE type=0 " +
+            "UNION " +
+            "SELECT p.reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,'' description " +
+            "FROM debit_payments p " +
+            "JOIN buildings ON buildings.building_id=p.reason_id " +
+            "WHERE type=1 " +
+            "UNION " +
+            "SELECT p.reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,apartments.room_number AS description " +
+            "FROM debit_payments p JOIN apartments ON p.reason_id=apartments.apartment_id " +
+            "JOIN buildings ON buildings.building_id=apartments.building_id " +
+            "WHERE type=2 " +
+            "UNION " +
+            "SELECT p.reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,apartments.room_number AS description " +
+            "FROM debit_payments p JOIN renting_contracts ON p.reason_id=renting_contracts.contract_id " +
+            "JOIN apartments ON renting_contracts.apartment_id=apartments.apartment_id " +
+            "JOIN buildings ON buildings.building_id=apartments.building_id " +
+            "WHERE type=3 " +
+            "UNION " +
+            "SELECT p.contract_id AS reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,100 AS type,buildings.address,apartments.room_number AS description " +
+            "FROM credit_payments p NATURAL JOIN renting_contracts NATURAL JOIN apartments JOIN buildings ON apartments.building_id=buildings.building_id " +
+            "ORDER BY date;";
 
     private final static String REPORT_BY_ACCOUNT = "" +
             "SELECT p.reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,types.type_name AS description " +
@@ -141,11 +174,7 @@ public class MoneyFlowJdbcUtils {
             con = jdbcTemplate.getDataSource().getConnection();
             con.setAutoCommit(false);
             doCreateCreditPayment(con, payment);
-            if (payment.isConfirmed()) {
-                doUpdateOwnerBalance(con, payment.getAmount(), payment.getAccountNumber());
-            } else {
-                doUpdateTenantBalance(con, payment.getAmount().negate(), payment.getContractId());
-            }
+            doUpdateOwnerBalance(con, payment.getAmount(), payment.getAccountNumber());
             con.commit();
             return payment;
         } catch (SQLException e) {
@@ -207,13 +236,35 @@ public class MoneyFlowJdbcUtils {
             con = jdbcTemplate.getDataSource().getConnection();
             con.setAutoCommit(false);
             doCreateRentingContract(con, contract);
-            CreditPaymentVO rent = new CreditPaymentVO(0, contract.getStartDate(), contract.getRentPrice().add(contract.getEstimatedFees()), null, false, true, contract.getId(), null, null, null);
-            CreditPaymentVO deposit = new CreditPaymentVO(0, contract.getStartDate(), contract.getDeposit(), null, true, true, contract.getId(), null, null, null);
+            CreditPaymentVO rent = new CreditPaymentVO(0, contract.getStartDate(), contract.getRentPrice().add(contract.getEstimatedFees()), null, false, contract.getId(), null, null, null);
+            CreditPaymentVO deposit = new CreditPaymentVO(0, contract.getStartDate(), contract.getDeposit(), null, true, contract.getId(), null, null, null);
             doCreateCreditPayment(con, rent);
             doCreateCreditPayment(con, deposit);
             doUpdateOwnerBalance(con, rent.getAmount().add(deposit.getAmount()), deposit.getAccountNumber());
             con.commit();
             return contract;
+        } catch (SQLException e) {
+            if (con != null) con.rollback();
+            throw e;
+        } finally {
+            if (con != null) con.close();
+        }
+    }
+
+    @Transactional
+    public void delete(long id, boolean credit) throws SQLException {
+        Connection con = null;
+        try {
+            con = jdbcTemplate.getDataSource().getConnection();
+            con.setAutoCommit(false);
+            PreparedStatement delete = con.prepareStatement(credit ? DELETE_CREDIT : DELETE_DEBIT);
+            delete.setLong(1, id);
+            ResultSet rs = delete.executeQuery();
+            rs.next();
+            BigDecimal amount = rs.getBigDecimal("amount");
+            String account = rs.getString("account_number");
+            doUpdateOwnerBalance(con, credit ? amount.negate() : amount, account);
+            con.commit();
         } catch (SQLException e) {
             if (con != null) con.rollback();
             throw e;
@@ -241,8 +292,7 @@ public class MoneyFlowJdbcUtils {
                         rs.getTimestamp("date"),
                         rs.getBigDecimal("amount"),
                         rs.getString("comment"),
-                        false,
-                        true,
+                        rs.getBoolean("deposit"),
                         rs.getInt("reason_id"),
                         rs.getString("account_number"),
                         rs.getString("address"),
@@ -267,7 +317,6 @@ public class MoneyFlowJdbcUtils {
         ps.setBigDecimal(++index, contract.getRentPrice());
         ps.setBigDecimal(++index, contract.getEstimatedFees());
         ps.setBigDecimal(++index, contract.getDeposit());
-        ps.setBigDecimal(++index, contract.getBalance());
         ps.setTimestamp(++index, contract.getStartDate());
         ps.setTimestamp(++index, contract.getExpectedEndDate());
         ps.setInt(++index, contract.getTenantId());
@@ -284,7 +333,6 @@ public class MoneyFlowJdbcUtils {
         createPayment.setBigDecimal(++index, payment.getAmount());
         createPayment.setString(++index, payment.getComment());
         createPayment.setBoolean(++index, payment.isDeposit());
-        createPayment.setBoolean(++index, payment.isConfirmed());
         createPayment.setInt(++index, payment.getContractId());
         createPayment.setInt(++index, payment.getContractId());
         ResultSet res = createPayment.executeQuery();
@@ -319,10 +367,7 @@ public class MoneyFlowJdbcUtils {
         updateOwnerBalance.execute();
     }
 
-    private void doUpdateTenantBalance(Connection con, BigDecimal amount, int contractId) throws SQLException {
-        PreparedStatement updateTenantBalance = con.prepareStatement(UPDATE_RENTING_CONTRACT_BALANCE);
-        updateTenantBalance.setBigDecimal(1, amount);
-        updateTenantBalance.setInt(2, contractId);
-        updateTenantBalance.execute();
+    public Collection<Payment> getAll() {
+        return jdbcTemplate.query(GET_ALL, getRowMapper());
     }
 }

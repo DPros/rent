@@ -28,7 +28,81 @@
         <td th:text="*{comment}"></td>
     </tr>
     </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="4">
+            <span class="input-group">
+            <input type="hidden" id="from"/>
+            <input type="text" class="datepicker form-control" id="from-picker" th:attr="data-alt-field='#from'"
+                   th:placeholder="#{since}"/>
+                <span class="input-group-btn">
+            <button class="btn btn-default clear-btn" data-target="#from-picker" th:text="#{clear}"/>
+                    </span>
+            </span>
+            <span class="input-group">
+            <input type="hidden" id="to"/>
+            <input type="text" class="datepicker form-control" id="to-picker" th:attr="data-alt-field='#to'"
+                   th:placeholder="#{till}"/>
+                <span class="input-group-btn">
+            <button class="btn btn-default clear-btn" data-target="#to-picker" th:text="#{clear}"/>
+                </span>
+            </span>
+        </td>
+    </tr>
+    </tfoot>
 </table>
 <th:block th:replace="template :: js"></th:block>
+<script>
+    /*<![CDATA[*/
+    $.fn.dataTable.ext.search.push(
+        function (settings, data, dataIndex) {
+            var from = parseInt($('#from').val());
+            var to = parseInt($('#to').val());
+            var date = parseInt(data[0]);
+            if (( isNaN(from) && isNaN(to) ) ||
+                ( isNaN(from) && date <= to ) ||
+                ( from <= date && isNaN(to) ) ||
+                ( from <= date && date <= to )) {
+                return true;
+            }
+            return false;
+        }
+    );
+
+    $('.clear-btn').click(function () {
+        var datefield = $($(this).data('target'));
+        $.datepicker._clearDate(datefield);
+        datefield.change();
+    });
+
+    $(document).ready(function () {
+        var table = $('.dataTable').DataTable();
+        $('#from-picker, #to-picker').change(function () {
+            table.draw();
+        });
+    });
+    /*]]>*/
+</script>
+<style>
+    .form-inline .input-group > .form-control {
+        width: auto
+    }
+
+    tr.red.odd {
+        background-color: #f2dede !important;
+    }
+
+    tr.red.even {
+        background-color: #fdeded !important;
+    }
+
+    tr.green.odd {
+        background-color: #c6ffae !important;
+    }
+
+    tr.green.even {
+        background-color: #dbf9cf !important;
+    }
+</style>
 </body>
 </html>

@@ -1,14 +1,15 @@
 package com.proskurnia.controllers;
 
+import com.proskurnia.services.PaymentService;
 import com.proskurnia.services.UtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * Created by D on 16.03.2017.
@@ -19,6 +20,9 @@ public class SettingsController {
 
     @Autowired
     UtilsService utilsService;
+
+    @Autowired
+    PaymentService paymentService;
 
     @RequestMapping
     public String render(Model model) {
@@ -34,7 +38,7 @@ public class SettingsController {
         } else {
             key = utilsService.createPersonTitle(value);
         }
-        response.getWriter().write(""+key);
+        response.getWriter().write("" + key);
     }
 
     @PostMapping("/delete-title")
@@ -50,12 +54,24 @@ public class SettingsController {
         } else {
             key = utilsService.createServiceCompanyType(value);
         }
-        response.getWriter().write(""+key);
+        response.getWriter().write("" + key);
     }
 
     @PostMapping("/delete-service-company-type")
     public void deleteServiceCompanyType(@RequestParam int key, HttpServletResponse response) throws Exception {
         utilsService.deleteServiceCompanyType(key);
         response.getWriter().write(key);
+    }
+
+    @GetMapping("/payments")
+    public String contractReport(Model model) {
+        model.addAttribute("payments", paymentService.getAll());
+        return "settings/payments";
+    }
+
+    @PostMapping("/delete-payment/{id}")
+    public void deletePayment(HttpServletResponse response, Model model, @PathVariable long id, @RequestParam boolean credit) throws IOException, SQLException {
+        paymentService.delete(id,credit);
+        response.getWriter().write("done");
     }
 }

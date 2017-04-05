@@ -17,6 +17,7 @@
         <td th:text="#{amount}"></td>
         <td th:text="#{description}"></td>
         <td th:text="#{comment}"></td>
+        <td></td>
     </tr>
     </thead>
     <!--/*@thymesVar id="p" type="com.proskurnia.VOs.Payment"*/-->
@@ -28,6 +29,10 @@
         <td th:text="*{amountForOwnerReport()}"></td>
         <td th:text="*{description}"></td>
         <td th:text="*{comment}"></td>
+        <td>
+            <button th:text="#{delete}" class="btn btn-danger btn-xs delete-btn"
+                    th:attr="data-id=${p.id},data-credit=${p.getType()==T(com.proskurnia.VOs.Payment.PaymentType).CreditPayment}?'true':'false'"></button>
+        </td>
     </tr>
     </tbody>
     <tfoot>
@@ -56,6 +61,8 @@
 <th:block th:replace="template :: js"></th:block>
 <script>
     /*<![CDATA[*/
+    var dataTable = $('.dataTable').dataTable();
+
     $.fn.dataTable.ext.search.push(
         function (settings, data, dataIndex) {
             var from = parseInt($('#from').val());
@@ -70,6 +77,13 @@
             return false;
         }
     );
+
+    $('.delete-btn').click(function () {
+        var $this = $(this);
+        $.post('/settings/delete-payment/' + $this.data('id')+'?credit='+$this.data('credit'), function () {
+            dataTable.row($this.parents('tr')).remove().draw();
+        });
+    });
 
     $('.clear-btn').click(function () {
         var datefield = $($(this).data('target'));

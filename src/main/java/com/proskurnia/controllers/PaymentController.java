@@ -88,7 +88,6 @@ public class PaymentController {
             return "payments/credit-form";
         } else {
             try {
-                object.setConfirmed(true);
                 paymentService.create(object);
             } catch (SQLException e) {
                 bindingResult.addError(new ObjectError("object", e.getLocalizedMessage()));
