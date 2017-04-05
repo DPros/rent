@@ -20,8 +20,8 @@
     </tr>
     </thead>
     <!--/*@thymesVar id="object" type="com.proskurnia.VOs.EquipmentVO"*/-->
-    <tbody th:each="object : ${list}">
-    <tr>
+    <tbody>
+    <tr th:each="object : ${list}">
         <td th:text="${object.id}"></td>
         <td th:text="${object.wifiName}"></td>
         <td th:text="${object.wifiPassword}"></td>

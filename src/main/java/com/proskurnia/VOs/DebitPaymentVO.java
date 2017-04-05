@@ -65,20 +65,22 @@ public class DebitPaymentVO extends Payment {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DebitPaymentVO)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
 
         DebitPaymentVO that = (DebitPaymentVO) o;
 
-        if (getReasonId() != that.getReasonId()) return false;
-        return getType() == that.getType();
+        if (reasonId != that.reasonId) return false;
+        if (type != that.type) return false;
+        return description != null ? description.equals(that.description) : that.description == null;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + getType().hashCode();
-        result = 31 * result + getReasonId();
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + reasonId;
         return result;
     }
 }

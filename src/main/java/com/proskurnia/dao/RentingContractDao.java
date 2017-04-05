@@ -2,6 +2,8 @@ package com.proskurnia.dao;
 
 import com.proskurnia.VOs.RentingContractVO;
 
+import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -14,5 +16,9 @@ public interface RentingContractDao extends Dao<RentingContractVO, Integer> {
 
     List<RentingContractVO> getByTenantId(int tenantId);
 
-    void returnDeposit(int id);
+    void returnDeposit(int id, BigDecimal amount, Timestamp timestamp) throws SQLException;
+
+    List<RentingContractVO> getActive();
+
+    List<RentingContractVO> getByBuildingId(Integer id);
 }

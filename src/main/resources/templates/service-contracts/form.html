@@ -10,42 +10,63 @@
 </head>
 <body>
 <div th:replace="template :: header"/>
+<form id="end-contract-form"
+      th:action="'/service-contracts/end-contract/'+${serviceContractVO.id}+'?buildingId='+${serviceContractVO.buildingId}"
+      method="post"></form>
 <form th:object="${serviceContractVO}" th:action="@{save}" action="#" method="post">
     <div class="container">
         <input type="hidden" th:field="*{id}"/>
         <div class="form-group col-sm-6">
             <label th:text="#{service.company.name}"></label>
-            <select data-live-search="true" class="form-control selectpicker" th:field="*{serviceCompanyId}"
-                    th:readonly="${companies.size()==1}">
-                <th:block th:each="company : ${companies}">
-                    <option th:value="${company.id}" th:text="${company.name}"></option>
-                </th:block>
+            <div class="alert-danger alert" th:errors="*{serviceCompanyId}"/>
+            <a th:unless="*{id==0}" class="form-control" th:text="*{companyName}"
+               th:href="'/service-companies/'+*{serviceCompanyId}"/>
+            <select th:if="*{id==0}" data-live-search="true" class="form-control selectpicker"
+                    th:field="*{serviceCompanyId}">
+                <option th:each="company : ${companies}" th:value="${company.id}" th:text="${company.name}"></option>
             </select>
         </div>
         <div class="form-group col-sm-6">
-            <label th:text="#{address}"></label>
-            <input class="form-control" th:field="*{buildingAddress}" th:readonly="true"/>
+            <label th:text="#{building}"></label>
+            <div class="alert-danger alert" th:errors="*{buildingId}"/>
+            <a th:unless="*{id==0}" class="form-control" th:text="*{buildingAddress}"
+               th:href="'/buildings/'+*{buildingId}"/>
+            <select data-live-search="true" class="form-control selectpicker" th:field="*{buildingId}"
+                    th:if="*{id==0}">
+                <option th:each="building : ${buildings}" th:value="${building.id}"
+                        th:text="${building.address}"></option>
+            </select>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{login}"></label>
+            <div class="alert-danger alert" th:errors="*{accountLogin}"/>
             <input class="form-control" th:field="*{accountLogin}"/>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{password}"></label>
+            <div class="alert-danger alert" th:errors="*{accountPassword}"/>
             <input class="form-control" th:field="*{accountPassword}"/>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{start.date}"></label>
+            <div class="alert-danger alert" th:errors="*{startDate}"/>
             <input type="hidden" th:field="*{startDate}"/>
-            <input class="datepicker form-control" data-default="today" data-alt-field="#startDate"/>
+            <input class="datepicker form-control"
+                   th:attr="data-value=*{startDate}?*{startDate.getTime()}:${#dates.createNow().getTime()},data-alt-field='#startDate'"/>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{end.date}"></label>
-            <input type="hidden" th:field="*{endDate}"/>
-            <input class="datepicker form-control" data-alt-field="#endDate"/>
+            <button id="end-contract" type="button" class="pull-right btn btn-danger btn-xs" th:if="*{id!=0}"
+                    th:text="#{end.contract}"></button>
+            <div class="alert-danger alert" th:errors="*{endDate}"/>
+            <input type="hidden" th:field="*{endDate}" form="end-contract-form"
+                   th:attr="data-error-message=#{select.date}"/>
+            <input class="datepicker form-control" data-alt-field="#endDate" th:placeholder="*{id==0}?'':#{select.date}"
+                   th:attr="data-value=*{endDate}?*{endDate.getTime()}:''" th:disabled="*{endDate}"/>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{comment}"></label>
+            <div class="alert-danger alert" th:errors="*{comment}"/>
             <input class="form-control" th:field="*{comment}"/>
         </div>
         <hr/>
@@ -58,5 +79,16 @@
     </div>
 </form>
 <th:block th:replace="template :: js"></th:block>
+<script>
+    $('#end-contract').click(function () {
+        var endDate = $('#endDate').val();
+        if (endDate) {
+            $('#end-contract-form').submit();
+        } else {
+            $('#endDate')
+                .before($('<div class="alert alert-danger">' + $('#endDate').data('error-message') + '</div>'));
+        }
+    })
+</script>
 </body>
 </html>

@@ -2,6 +2,7 @@ package com.proskurnia.dao;
 
 import com.proskurnia.VOs.ServiceContractVO;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -9,4 +10,6 @@ import java.util.List;
  */
 public interface ServiceContractDao extends Dao<ServiceContractVO, Integer> {
     List<ServiceContractVO> getByBuildingId(int id);
+
+    void endContract(int id, Timestamp timestamp);
 }

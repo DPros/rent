@@ -1,13 +1,14 @@
 package com.proskurnia.VOs;
 
 import javax.validation.constraints.Min;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 
 /**
  * Created by dmpr0116 on 07.03.2017.
  */
-public class ServiceContractVO implements Identified<Integer> {
+public class ServiceContractVO implements Identified<Integer>, Serializable {
     private int id;
     private Timestamp startDate;
     private Timestamp endDate;
@@ -20,11 +21,12 @@ public class ServiceContractVO implements Identified<Integer> {
     private int buildingId;
     private String companyName;
     private String buildingAddress;
+    private String companyType;
 
     public ServiceContractVO() {
     }
 
-    public ServiceContractVO(int id, Timestamp startDate, Timestamp endDate, int serviceCompanyId, String comment, String accountLogin, String accountPassword, int buildingId, String companyName, String buildingAddress) {
+    public ServiceContractVO(int id, Timestamp startDate, Timestamp endDate, int serviceCompanyId, String comment, String accountLogin, String accountPassword, int buildingId, String companyName, String buildingAddress, String companyType) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -35,6 +37,15 @@ public class ServiceContractVO implements Identified<Integer> {
         this.buildingId = buildingId;
         this.companyName = companyName;
         this.buildingAddress = buildingAddress;
+        this.companyType = companyType;
+    }
+
+    public String getCompanyType() {
+        return companyType;
+    }
+
+    public void setCompanyType(String companyType) {
+        this.companyType = companyType;
     }
 
     public String getBuildingAddress() {

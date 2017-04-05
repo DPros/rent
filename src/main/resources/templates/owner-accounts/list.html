@@ -10,20 +10,22 @@
 </head>
 <body>
 <div th:replace="template :: header"/>
-<table id="owners" class="table table-striped dataTable" th:attr="data-button-href='/accounts/0?ownerId='+${id},data-button-name=#{register.owner.account},data-button-visible=${id}">
+<table id="owners" class="table table-striped dataTable" th:attr="data-column-defs='[{"sortable": false, targets: [3]}]',data-button-href='/accounts/0?ownerId='+${id},data-button-name=#{register.owner.account},data-button-visible=${id}">
     <thead>
     <tr>
         <td th:text="#{bank.account.number}">ID</td>
         <td th:text="#{account.balance}"></td>
         <td th:text="#{bank}"></td>
+        <td></td>
     </tr>
     </thead>
     <!--/*@thymesVar id="object" type="com.proskurnia.VOs.OwnerAccountVO"*/-->
-    <tbody th:each="object : ${list}">
-    <tr>
+    <tbody>
+    <tr th:each="object : ${list}">
         <td th:text="${object.id}"></td>
         <td th:text="${object.balance}"></td>
         <td><a th:href="${'/banks/' + object.bankId}" th:text="${object.bankName}"></a></td>
+        <td><a th:href="'/reports/account/'+${object.id}" th:text="#{view.report}" class="btn btn-primary btn-sm"></a></td>
     </tr>
     </tbody>
 </table>

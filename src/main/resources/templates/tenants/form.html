@@ -63,7 +63,7 @@
             <th:block th:each="contract : ${contracts}">
                 <a th:href="'/renting-contracts/'+${contract.id}" class="btn btn-primary" th:text="${contract.address}+', '+${contract.roomNumber}"></a>
             </th:block>
-            <a th:href="'/renting-contracts/0?tenantId='+${personVO.id}+'&amp;tenantName='+${personVO.name}" class="btn btn-primary" th:text="#{new.renting.contract}"></a>
+            <a th:unless="${personVO.id==0}" th:href="'/renting-contracts/0?tenantId='+${personVO.id}+'&amp;tenantName='+${personVO.name}" class="btn btn-primary" th:text="#{new.renting.contract}"></a>
             <button type="submit" class="pull-right btn btn-success" th:text="#{save}">Save</button>
         </div>
     </div>

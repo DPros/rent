@@ -5,10 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
@@ -22,8 +22,6 @@ public class RentingContractJdbc extends LazyJdbcDao<RentingContractVO, Integer>
     @Autowired
     MoneyFlowJdbcUtils moneyFlowJdbcUtils;
 
-    private final static String RETURN_DEPOSIT = "UPDATE renting_contracts SET deposit_returned=true WHERE contract_id=?;";
-
     private final static String END_CONTRACT = "UPDATE renting_contracts SET actual_end_date=? WHERE contract_id=?;";
 
     private final static String DELETE = "DELETE FROM renting_contracts WHERE contract_id=?;";
@@ -32,9 +30,21 @@ public class RentingContractJdbc extends LazyJdbcDao<RentingContractVO, Integer>
 
     private final static String SELECT_BY_ID = "SELECT * FROM renting_contracts NATURAL JOIN apartments NATURAL JOIN buildings JOIN persons ON renting_contracts.tenant_id=persons.person_id WHERE contract_id=?;";
 
+    private final static String GET_ACTIVE = "SELECT * FROM renting_contracts NATURAL JOIN apartments NATURAL JOIN buildings JOIN persons ON renting_contracts.tenant_id=persons.person_id WHERE actual_end_date IS NULL;";
+
+    private final static String SELECT_BY_BUILDING_ID = "SELECT *,(SELECT amount FROM credit_payments WHERE contract_id=renting_contracts.contract_id AND deposit=TRUE) FROM renting_contracts NATURAL JOIN apartments NATURAL JOIN buildings JOIN persons ON renting_contracts.tenant_id=persons.person_id WHERE building_id=?;";
+
+    private final static String UPDATE = "UPDATE renting_contracts SET estimated_fees=? WHERE contract_id=?";
+
     @Override
     protected PreparedStatementCreator getStatementCreator(RentingContractVO o, QueryType queryType) {
-        return null;
+        return con -> {
+            PreparedStatement ps = con.prepareStatement(UPDATE);
+            int index = 0;
+            ps.setBigDecimal(++index, o.getEstimatedFees());
+            ps.setInt(++index, o.getId());
+            return ps;
+        };
     }
 
     @Override
@@ -88,7 +98,18 @@ public class RentingContractJdbc extends LazyJdbcDao<RentingContractVO, Integer>
     }
 
     @Override
-    public void returnDeposit(int id) {
-        throw new NotImplementedException();
+    @Transactional
+    public void returnDeposit(int id, BigDecimal amount, Timestamp timestamp) throws SQLException {
+        moneyFlowJdbcUtils.returnDeposit(id, amount, timestamp);
+    }
+
+    @Override
+    public List<RentingContractVO> getActive() {
+        return jdbcTemplate.query(GET_ACTIVE, getRowMapper());
+    }
+
+    @Override
+    public List<RentingContractVO> getByBuildingId(Integer id) {
+        return jdbcTemplate.query(SELECT_BY_BUILDING_ID, getRowMapper(), id);
     }
 }

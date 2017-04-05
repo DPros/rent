@@ -23,6 +23,8 @@
     <a class="btn btn-default" href="/service-companies" th:text="#{service.companies}"/>
     <a class="btn btn-default" href="/banks" th:text="#{banks}"/>
     <a class="btn btn-default" href="/settings" th:text="#{application.settings}"/>
+    <a class="btn btn-default" href="/payments/debit/0" th:text="#{create.debit.payment}"/>
+    <a class="btn btn-default" href="/payments/credit/0" th:text="#{create.credit.payment}"/>
 </div>
 <th:block th:fragment="js">
     <script src="/resources/js/jquery-3.2.0.min.js" th:src="@{/js/jquery-3.2.0.min.js}"></script>

@@ -14,7 +14,7 @@
     <thead>
     <tr>
         <td th:text="#{address}"></td>
-        <td th:text="#{vacant.apartments}"></td>
+        <td th:text="#{apartments}"></td>
         <td th:text="#{acquisition.date}"></td>
         <td th:text="#{construction.date}"></td>
         <td th:text="#{date.of.sale}"></td>
@@ -23,10 +23,10 @@
     </tr>
     </thead>
     <!--/*@thymesVar id="object" type="com.proskurnia.VOs.BuildingVO"*/-->
-    <tbody th:each="object : ${list}">
-    <tr>
-        <td><a th:href="'/buildings/'+${object.id}" th:text="${object.address}"></a></td>
-        <td><a th:href="'/apartments?buildingId=' + ${object.id}" th:text="${object.emptyApartments}"></a></td>
+    <tbody>
+    <tr th:each="object : ${list}">
+        <td th:attr="data-order=${object.address}"><a th:href="'/buildings/'+${object.id}" th:text="${object.address}"></a></td>
+        <td th:attr="data-order=${object.emptyApartments}"><a th:href="'/apartments?buildingId=' + ${object.id}" th:text="${object.emptyApartments}+' '+#{available}"></a></td>
         <td th:text="${object.acquisitionDate}"></td>
         <td th:text="${object.constructionDate}"></td>
         <td th:text="${object.dateOfSale}"></td>

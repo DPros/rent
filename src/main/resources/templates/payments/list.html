@@ -21,11 +21,11 @@
     </tr>
     </thead>
     <!--/*@thymesVar id="object" type="com.proskurnia.VOs.Payment"*/-->
-    <tbody th:each="object : ${list}">
-    <tr>
+    <tbody>
+    <tr th:each="object : ${list}">
         <td th:text="${object.buildingAddress}"></td>
         <td th:text="${object.description}"></td>
-        <td th:text="${object.date}"></td>
+        <td th:text="${#dates.format(object.date, 'd MMMM, yyyy')}"></td>
         <td th:text="${object.amount}"></td>
         <td th:text="${object.comment}"></td>
     </tr>

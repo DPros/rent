@@ -3,7 +3,10 @@ package com.proskurnia.controllers;
 import com.proskurnia.VOs.CreditPaymentVO;
 import com.proskurnia.VOs.DebitPaymentVO;
 import com.proskurnia.VOs.EquipmentVO;
+import com.proskurnia.VOs.Payment;
+import com.proskurnia.services.BuildingService;
 import com.proskurnia.services.PaymentService;
+import com.proskurnia.services.RentingContractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,37 +30,54 @@ public class PaymentController {
     @Autowired
     PaymentService paymentService;
 
-    @RequestMapping("/debit/{id}")
-    public String debit(@PathVariable int reasonId, @RequestParam String address, @RequestParam String description, Model model) {
+    @Autowired
+    RentingContractService rentingContractService;
+
+    @Autowired
+    BuildingService buildingService;
+
+    @RequestMapping("/debit/{buildingId}")
+    public String debit(@PathVariable int buildingId, @RequestParam(required = false) Integer type, Model model) {
         DebitPaymentVO object = new DebitPaymentVO();
-        object.setReasonId(reasonId);
-        object.setBuildingAddress(address);
-        object.setDescription(description);
+        if (buildingId != 0) {
+            model.addAttribute("buildingId", buildingId);
+        }
+        if (type != null) {
+            object.setType(Payment.PaymentType.valueOf(type));
+        }
         model.addAttribute(object);
+        model.addAttribute("buildings", buildingService.getAll());
         return "payments/debit-form";
     }
 
     @PostMapping("/save-debit")
-    public String saveDebit(@Valid DebitPaymentVO object, BindingResult bindingResult, Model model) throws SQLException {
+    public String saveDebit(@Valid DebitPaymentVO object, BindingResult bindingResult, @RequestParam(required = false) Integer selectedBuildingId, @RequestParam(required = false) Integer reasonId, Model model) throws SQLException {
         if (bindingResult.hasErrors()) {
-            return "payments/credit-form";
+            model.addAttribute("buildings", buildingService.getAll());
+            model.addAttribute("buildingId", selectedBuildingId);
+            model.addAttribute("reasonId", reasonId);
+            return "payments/debit-form";
         } else {
             try {
                 paymentService.create(object);
             } catch (SQLException e) {
                 bindingResult.addError(new ObjectError("object", e.getLocalizedMessage()));
-                return saveDebit(object, bindingResult, model);
+                return saveDebit(object, bindingResult, selectedBuildingId, reasonId, model);
             }
             return "redirect:/accounts/" + object.getAccountNumber();
         }
     }
 
     @RequestMapping("/credit/{id}")
-    public String credit(@PathVariable int id, @RequestParam String address, @RequestParam String roomNumber, Model model) {
+    public String credit(@PathVariable int id, @RequestParam(required = false) String address, @RequestParam(required = false) String roomNumber, Model model) {
         CreditPaymentVO object = new CreditPaymentVO();
-        object.setContractId(id);
-        object.setBuildingAddress(address);
-        model.addAttribute("room", roomNumber);
+        if (id == 0) {
+            model.addAttribute("contracts", rentingContractService.getActiveContracts());
+        } else {
+            object.setContractId(id);
+            object.setBuildingAddress(address);
+            model.addAttribute("room", roomNumber);
+        }
         model.addAttribute(object);
         return "payments/credit-form";
     }
@@ -79,7 +99,7 @@ public class PaymentController {
     }
 
     @InitBinder
-    protected void initBinder(WebDataBinder binder) {
+    protected void timestampBinder(WebDataBinder binder) {
         binder.registerCustomEditor(java.sql.Timestamp.class, new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) throws IllegalArgumentException {

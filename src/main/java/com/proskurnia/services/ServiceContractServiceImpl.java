@@ -4,6 +4,7 @@ import com.proskurnia.VOs.ServiceContractVO;
 import com.proskurnia.dao.ServiceContractDao;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -14,5 +15,10 @@ public class ServiceContractServiceImpl extends GenericServiceImpl<ServiceContra
     @Override
     public List<ServiceContractVO> getByBuildingId(int id) {
         return ((ServiceContractDao)dao).getByBuildingId(id);
+    }
+
+    @Override
+    public void endContract(Timestamp timestamp, int id) {
+        ((ServiceContractDao)dao).endContract(id, timestamp);
     }
 }

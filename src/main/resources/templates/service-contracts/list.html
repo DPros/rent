@@ -4,7 +4,7 @@
 >
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
-    <title th:text="#{all.owners}">Title</title>
+    <title th:text="#{service.contracts}">Title</title>
     <th:block th:replace="template :: css"></th:block>
 </head>
 <body>
@@ -19,18 +19,20 @@
         <td th:text="#{login}"></td>
         <td th:text="#{password}"></td>
         <td th:text="#{comment}"></td>
+        <td></td>
     </tr>
     </thead>
     <!--/*@thymesVar id="object" type="com.proskurnia.VOs.ServiceContractVO"*/-->
-    <tbody th:each="object : ${list}">
-    <tr>
-        <td><a th:href="/service-companies/+${object.serviceCompanyId}" th:text="${object.companyName}"></td>
-        <td><a th:href="${'/owners/' + object.buildingId}" th:text="${object.buildingAddress}"></a></td>
-        <td th:text="${new java.util.Date(object.startDate)}"></td>
-        <td th:text="${new java.util.Date(object.endDate)}"></td>
-        <td th:text="${object.accountLogin}"></td>
-        <td th:text="${object.accountPassword}"></td>
-        <td th:text="${object.comment}"></td>
+    <tbody>
+    <tr th:each="object : ${list}" th:object="${object}">
+        <td><a th:href="'/service-companies/'+*{serviceCompanyId}" th:text="*{companyName}"></a></td>
+        <td><a th:href="'/buildings/'+*{buildingId}" th:text="*{buildingAddress}"></a></td>
+        <td th:text="${#dates.format(object.startDate,'d MMMM, yyyy')}"></td>
+        <td th:text="*{endDate}?${#dates.format(object.endDate,'d MMMM, yyyy')}:''"></td>
+        <td th:text="*{accountLogin}"></td>
+        <td th:text="*{accountPassword}"></td>
+        <td th:text="*{comment}"></td>
+        <td><a th:href="'/service-contracts/'+*{id}" th:text="#{edit}" class="btn btn-primary"></a></td>
     </tr>
     </tbody>
 </table>

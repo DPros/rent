@@ -22,7 +22,7 @@
     <tbody>
     <tr th:each="p : ${payments}" th:object="${p}"
         th:style="${p.getType()==T(com.proskurnia.VOs.Payment.PaymentType).CreditPayment}?'background-color:#f2dede':'background-color:#dff0d8'">
-        <td th:text="*{date}"></td>
+        <td th:text="${#dates.format(p.date, 'd MMMM, yyyy')}"></td>
         <td th:text="*{amountForTenantReport()}"></td>
         <td th:text="*{description}"></td>
         <td th:text="*{comment}"></td>

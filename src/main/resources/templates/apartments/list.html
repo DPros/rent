@@ -18,13 +18,13 @@
     </tr>
     </thead>
     <!--/*@thymesVar id="object" type="com.proskurnia.VOs.ApartmentVO"*/-->
-    <tbody th:each="object : ${list}">
-    <tr>
-        <td><a th:href="'/buildings/' + ${object.getBuildingId()}" th:text="${object.address}"></a></td>
+    <tbody>
+    <tr th:each="object : ${list}">
+        <td><a th:href="'/buildings/' + ${object.buildingId}" th:text="${object.address}"></a></td>
         <td><a th:href="'/apartments/'+${object.id}" th:text="${object.roomNumber}"></a></td>
         <td th:text="${object.size}"></td>
         <td>
-            <a th:href="'/rentingContracts/' + ${object.getRentingContractId()}" th:text="${object.tenantName}"></a>
+            <a th:href="'/renting-contracts/' + ${object.getRentingContractId()}" th:text="${object.tenantName}"></a>
         </td>
     </tr>
     </tbody>

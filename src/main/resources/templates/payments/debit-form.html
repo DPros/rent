@@ -4,29 +4,55 @@
 >
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
-    <title th:text="#{register.credit.payment}">Title</title>
+    <title th:text="#{create.debit.payment}">Title</title>
     <th:block th:replace="template :: css"></th:block>
 </head>
 <body>
 <div th:replace="template :: header"/>
 <!--/*@thymesVar id="debitPaymentVO" type="com.proskurnia.VOs.DebitPaymentVO"*/-->
-<form th:object="${debitPaymentVO}" th:action="@{save-debit}" action="#" method="post">
+<form th:object="${debitPaymentVO}" th:action="@{/payments/save-debit}" method="post">
     <div class="container">
         <input type="hidden" th:field="*{id}"/>
-        <input type="hidden" th:field="*{reasonId}"/>
-        <div class="form-group col-sm-6">
-            <label th:text="#{address}"></label>
-            <input class="form-control" th:field="*{address}" readonly/>
+        <div class="form-group text-center" id="payment-types">
+            <label class="radio-inline"><input type="radio" th:field="*{type}" value="ServicePayment"
+                                               th:text="#{service.payment}"/></label>
+            <label class="radio-inline"><input type="radio" th:field="*{type}" value="BuildingPayment"
+                                               th:text="#{building.payment}"/></label>
+            <label class="radio-inline"><input type="radio" th:field="*{type}" value="ApartmentPayment"
+                                               th:text="#{apartment.payment}"/></label>
+            <label class="radio-inline"><input type="radio" th:field="*{type}" value="ReturnCreditPayment"
+                                               th:text="#{reimbursement}"/></label>
         </div>
-        <div class="form-group col-sm-6">
-            <label th:text="#{description}"></label>
-            <input class="form-control" th:text="*{description}" readonly/>
+        <div class="form-group col-sm-6" id="building" th:attr="data-building=${buildingId},data-reason=${reasonId}">
+            <label th:text="#{building}"></label>
+            <select data-live-search="true" class="form-control selectpicker" th:field="*{reasonId}">
+                <th:block th:each="building : ${buildings}">
+                    <option th:value="${building.id}"
+                            th:text="${building.address}"></option>
+                </th:block>
+            </select>
+        </div>
+        <div class="form-group col-sm-6 type-select" id="service-contract">
+            <label th:text="#{service.company.name}"></label>
+            <select data-live-search="true" class="form-control selectpicker">
+            </select>
+        </div>
+        <div class="form-group col-sm-6 type-select" id="apartment">
+            <label th:text="#{apartment}"></label>
+            <select data-live-search="true" class="form-control selectpicker">
+            </select>
+        </div>
+        <div class="form-group col-sm-6 type-select" id="renting-contract">
+            <label th:text="#{tenant}"></label>
+            <select data-live-search="true" class="form-control selectpicker">
+            </select>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{date}"></label>
             <input type="hidden" th:field="*{date}"/>
             <div class="alert-danger" th:errors="*{date}">Name Error</div>
-            <input class="datepicker form-control" data-live-search="true" data-alt-field="#date"/>
+            <input class="datepicker form-control" th:attr="data-value=*{date}?*{date.getTime()}:''"
+                   data-live-search="true" data-alt-field="#date"/>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{amount}"></label>
@@ -47,5 +73,70 @@
     </div>
 </form>
 <th:block th:replace="template :: js"></th:block>
+<script>
+    var building = $('#building');
+    building.find('select').change(function () {
+        switch ($('input[type=radio]:checked').val()) {
+            case 'ServicePayment':
+                $('.type-select').hide();
+                $.get("/service-contracts/json", {buildingId: building.find('select').val()}, function (data) {
+                    $('#service-contract').show().find('select').selectpicker('destroy').html(data.map(function (o) {
+                        return $('<option value="' + o.id + '">' + o.companyType + ', ' + o.companyName + '</option>')
+                    })).selectpicker();
+                    setReason();
+                });
+                break;
+            case 'BuildingPayment':
+                $('.type-select').hide();
+                building.data('reason');
+                break;
+            case 'ApartmentPayment':
+                $('.type-select').hide();
+                $.get("/apartments/json", {buildingId: building.find('select').val()}, function (data) {
+                    $('#apartment').show().find('select').selectpicker('destroy').html(data.map(function (o) {
+                        return $('<option value="' + o.id + '">' + o.roomNumber + '</option>')
+                    })).selectpicker();
+                    setReason();
+                });
+                break;
+            case 'ReturnCreditPayment':
+                $('.type-select').hide();
+                $.get("/renting-contracts/json", {buildingId: building.find('select').val()}, function (data) {
+                    $('#renting-contract').show().find('select').selectpicker('destroy').html(data.map(function (o) {
+                        return $('<option value="' + o.id + '">' + o.tenantName + ', ' + o.roomNumber + '</option>')
+                    })).selectpicker();
+                    setReason();
+                });
+                break;
+        }
+    });
+    function setReason() {
+        var reasonId = building.data('reason');
+        if (reasonId) $('.type-select:visible select').val(reasonId).selectpicker('refresh');
+        building.data('reason', null);
+    }
+    $('form').submit(function () {
+        if ($('input[type=radio]:checked').val() != 'BuildingPayment') {
+            $('.type-select:visible select').attr('name', building.find('select').attr('name'));
+            building.find('select').attr('name', 'selectedBuildingId');
+        }
+        console.log($(this).serialize());
+    });
+    $('input[type=radio]').change(function () {
+        building.show().find('select').change();
+    });
+    $(document).ready(function () {
+        var selectedBuilding = building.data('building');
+        if (selectedBuilding) {
+            building.find('select').val(selectedBuilding).selectpicker('refresh');
+        }
+        $('input[type=radio]:checked').change();
+    });
+</script>
+<style>
+    .type-select, #building {
+        display: none;
+    }
+</style>
 </body>
 </html>

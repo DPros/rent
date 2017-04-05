@@ -1,5 +1,6 @@
 package com.proskurnia.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proskurnia.VOs.RentingContractVO;
 import com.proskurnia.services.BuildingService;
 import com.proskurnia.services.RentingContractService;
@@ -11,8 +12,12 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.beans.PropertyEditorSupport;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
@@ -46,6 +51,7 @@ public class RentingContractController {
                 object.setTenantId(tenantId);
                 object.setTenantName(tenantName);
             }
+            object.setStartDate(new Timestamp(System.currentTimeMillis()));
             model.addAttribute(object);
             model.addAttribute("buildings", buildingService.getBuildingsWithEmptyApartments());
         } else {
@@ -55,16 +61,20 @@ public class RentingContractController {
         return "renting-contracts/form";
     }
 
-    @PostMapping("/end-contract")
-    public String endContract(@RequestParam int id) {
-//        rentingContractService.
-        return "redirect:renting-contracts/" + id;
+    @PostMapping("/end-contract/{id}")
+    public String endContract(@PathVariable int id, @RequestParam long actualEndDate) {
+        rentingContractService.endContract(new Timestamp(actualEndDate), id);
+        return "redirect:/renting-contracts/" + id;
     }
 
-    @PostMapping("/return-deposit")
-    public String returnDeposit(@RequestParam int id) {
-
-        return "redirect:renting-contracts/" + id;
+    @PostMapping("/return-deposit/{id}")
+    public String returnDeposit(@PathVariable int id, @RequestParam BigDecimal deposit, @RequestParam long returnDepositDate) {
+        try {
+            rentingContractService.returnDeposit(id, deposit, new Timestamp(returnDepositDate));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "redirect:/renting-contracts/" + id;
     }
 
     @PostMapping("/save")
@@ -95,4 +105,12 @@ public class RentingContractController {
             }
         });
     }
+
+    @GetMapping("/json")
+    public void getAll(@RequestParam(required = false) Integer buildingId, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json");
+        response.getWriter().write(mapper.writeValueAsString(buildingId == null ? rentingContractService.getAll() : rentingContractService.getByBuildingId(buildingId)));
+    }
+
+    private static ObjectMapper mapper = new ObjectMapper();
 }

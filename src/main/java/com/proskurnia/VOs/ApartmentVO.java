@@ -11,7 +11,7 @@ public class ApartmentVO implements Identified<Integer>, Serializable {
     private int id;
     @NotEmpty
     private String roomNumber;
-    private Double size;
+    private double size;
     private int buildingId;
     private String address;
     private String tenantName;

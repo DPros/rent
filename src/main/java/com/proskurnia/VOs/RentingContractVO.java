@@ -4,6 +4,7 @@ import com.sun.istack.internal.NotNull;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -11,7 +12,7 @@ import java.util.Date;
 /**
  * Created by dmpr0116 on 07.03.2017.
  */
-public class RentingContractVO implements Identified<Integer> {
+public class RentingContractVO implements Identified<Integer>, Serializable {
     private int id;
     @DecimalMin("0.00")
     private BigDecimal rentPrice = BigDecimal.ZERO;

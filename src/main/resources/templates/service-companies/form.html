@@ -29,32 +29,32 @@
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{address}"></label>
-            <div class="alert-danger" th:errors="*{address}"/>
+            <div class="alert-danger alert" th:errors="*{address}"/>
             <input class="form-control" th:field="*{address}"/>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{phone}+' 1'"></label>
-            <div class="alert-danger" th:errors="*{phone1}"/>
+            <div class="alert-danger alert" th:errors="*{phone1}"/>
             <input class="form-control" th:field="*{phone1}"/>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{phone}+' 2'"></label>
-            <div class="alert-danger" th:errors="*{phone2}"/>
+            <div class="alert-danger alert" th:errors="*{phone2}"/>
             <input class="form-control" th:field="*{phone2}"/>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{email}"></label>
-            <div class="alert-danger" th:errors="*{email}"/>
+            <div class="alert-danger alert" th:errors="*{email}"/>
             <input class="form-control" th:field="*{email}"/>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{comment}"></label>
-            <div class="alert-danger" th:errors="*{comment}"/>
+            <div class="alert-danger alert" th:errors="*{comment}"/>
             <input class="form-control" th:field="*{comment}"/>
         </div>
         <hr/>
         <div th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.globalErrors()}">
-            <div class="alert alert-danger" th:text="${error}"></div>
+            <div class="alert-danger alert" th:text="${error}"></div>
         </div>
         <div class="footer">
             <button type="submit" class="pull-right btn btn-success" th:text="#{save}">Save</button>

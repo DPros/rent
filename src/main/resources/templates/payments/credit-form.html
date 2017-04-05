@@ -13,12 +13,20 @@
 <form th:object="${creditPaymentVO}" th:action="@{/payments/save-credit}" method="post">
     <div class="container">
         <input type="hidden" th:field="*{id}"/>
-        <input type="hidden" th:field="*{contractId}"/>
-        <div class="form-group col-sm-6">
+        <input type="hidden" th:unless="${creditPaymentVO.contractId==0}" th:field="*{contractId}"/>
+        <div th:if="${creditPaymentVO.contractId==0}" class="form-group col-sm-6">
+            <label th:text="#{renting.contract}"></label>
+            <select data-live-search="true" class="form-control selectpicker" id="title" th:field="*{contractId}">
+                <th:block th:each="contract : ${contracts}">
+                    <option th:value="${contract.id}" th:text="|${contract.tenantName}, ${contract.address}, ${contract.roomNumber}|"></option>
+                </th:block>
+            </select>
+        </div>
+        <div th:unless="${creditPaymentVO.contractId==0}" class="form-group col-sm-6">
             <label th:text="#{address}"></label>
             <input class="form-control" th:field="*{buildingAddress}" readonly="readonly"/>
         </div>
-        <div class="form-group col-sm-6">
+        <div th:unless="${creditPaymentVO.contractId==0}" class="form-group col-sm-6">
             <label th:text="#{room.number}"></label>
             <input class="form-control" th:value="${room}" readonly="readonly"/>
         </div>
@@ -26,7 +34,7 @@
             <label th:text="#{date}"></label>
             <input type="hidden" th:field="*{date}"/>
             <div class="alert-danger" th:errors="*{date}">Name Error</div>
-            <input class="datepicker form-control" data-live-search="true" data-alt-field="#date"/>
+            <input class="datepicker form-control" th:attr="data-value=*{date}?*{date.getTime()}:''" data-live-search="true" data-alt-field="#date"/>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{amount}"></label>

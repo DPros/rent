@@ -21,9 +21,9 @@
     </tr>
     </thead>
     <!--/*@thymesVar id="object" type="com.proskurnia.VOs.BankVO"*/-->
-    <tbody th:each="object : ${list}">
-    <tr>
-        <td th:text="${object.name}"></td>
+    <tbody>
+    <tr th:each="object : ${list}">
+        <td><a th:href="'/banks/'+${object.id}" th:text="${object.name}"></a></td>
         <td th:text="${object.address}"></td>
         <td th:text="${object.phone}"></td>
         <td th:text="${object.email}"></td>

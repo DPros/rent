@@ -9,7 +9,7 @@ import java.sql.Timestamp;
  */
 public abstract class Payment implements Identified<Long> {
     protected long id;
-    protected Timestamp date;
+    protected Timestamp date = new Timestamp(System.currentTimeMillis());
     @DecimalMin("0.00")
     protected BigDecimal amount;
     protected String comment;

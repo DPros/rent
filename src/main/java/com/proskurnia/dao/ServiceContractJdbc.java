@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -14,15 +15,19 @@ import java.util.List;
 @Repository
 public class ServiceContractJdbc extends LazyJdbcDao<ServiceContractVO, Integer> implements ServiceContractDao {
 
-    private static final String INSERT = "INSERT INTO service_contracts(comment,login,password,company_id,building_id,start_date,end_date) VALUES (?,?,?,?,?,?,?);";
+    private static final String INSERT = "INSERT INTO service_contracts(comment,login,password,company_id,building_id,start_date) VALUES (?,?,?,?,?,?) RETURNING contract_id;";
 
     private static final String UPDATE = "UPDATE service_contracts SET comment=?,login=?,password=? WHERE contract_id=?;";
 
+    private static final String END_CONTRACT = "UPDATE service_contracts SET end_date=? WHERE contract_id=?;";
+
     private final static String DELETE = "DELETE FROM service_contracts WHERE contract_id=?;";
 
-    private final static String GET_BY_ID = "SELECT contract_id,comment,login,password,company_id,name,address,building_id FROM service_contracts NATURAL JOIN service_companies NATURAL JOIN buildings WHERE contract_id=?;";
+    private final static String GET_ALL = "SELECT contract_id,service_contracts.comment,login,password,start_date,end_date,company_id,name,buildings.address,buildings.building_id,type_name FROM service_contracts NATURAL JOIN service_companies NATURAL JOIN service_company_types JOIN buildings ON service_contracts.building_id=buildings.building_id";
 
-    private final static String GET_BY_BUILDING_ID = "SELECT contract_id,comment,login,password,company_id,name,address,building_id FROM service_contracts NATURAL JOIN service_companies NATURAL JOIN buildings WHERE contract_id=?;";
+    private final static String GET_BY_ID = "SELECT contract_id,service_contracts.comment,login,password,start_date,end_date,company_id,name,buildings.address,buildings.building_id,type_name FROM service_contracts NATURAL JOIN service_companies NATURAL JOIN service_company_types JOIN buildings ON service_contracts.building_id=buildings.building_id WHERE contract_id=?;";
+
+    private final static String GET_BY_BUILDING_ID = "SELECT contract_id,service_contracts.comment,login,password,start_date,end_date,company_id,name,buildings.address,buildings.building_id,type_name FROM service_contracts NATURAL JOIN service_companies NATURAL JOIN service_company_types JOIN buildings ON service_contracts.building_id=buildings.building_id WHERE buildings.building_id=? AND end_date IS NULL;";
 
     @Override
     protected PreparedStatementCreator getStatementCreator(ServiceContractVO o, QueryType queryType) {
@@ -37,6 +42,7 @@ public class ServiceContractJdbc extends LazyJdbcDao<ServiceContractVO, Integer>
             } else {
                 ps.setInt(++index, o.getServiceCompanyId());
                 ps.setInt(++index, o.getBuildingId());
+                ps.setTimestamp(++index, o.getStartDate());
             }
             return ps;
         };
@@ -54,7 +60,7 @@ public class ServiceContractJdbc extends LazyJdbcDao<ServiceContractVO, Integer>
 
     @Override
     protected String getAllQuery() {
-        return null;
+        return GET_ALL;
     }
 
     @Override
@@ -69,12 +75,18 @@ public class ServiceContractJdbc extends LazyJdbcDao<ServiceContractVO, Integer>
                 rs.getString("password"),
                 rs.getInt("building_id"),
                 rs.getString("name"),
-                rs.getString("address")
+                rs.getString("address"),
+                rs.getString("type_name")
         );
     }
 
     @Override
     public List<ServiceContractVO> getByBuildingId(int id) {
         return jdbcTemplate.query(GET_BY_BUILDING_ID, getRowMapper(), id);
+    }
+
+    @Override
+    public void endContract(int id, Timestamp timestamp) {
+        jdbcTemplate.update(END_CONTRACT, timestamp, id);
     }
 }

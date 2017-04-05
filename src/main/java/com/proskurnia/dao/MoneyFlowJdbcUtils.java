@@ -11,10 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 
 /**
@@ -26,12 +23,14 @@ public class MoneyFlowJdbcUtils {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    final static String INSERT_CREDIT = "INSERT INTO credit_payments (date,amount,comment,deposit,confirmed,contract_id,account_number) " +
+    private final static String UPDATE_RENTING_CONTRACT_RETURN_DEPOSIT = "UPDATE renting_contracts SET deposit_amount=?,deposit_returned=TRUE WHERE contract_id=?";
+
+    private final static String INSERT_CREDIT = "INSERT INTO credit_payments (date,amount,comment,deposit,confirmed,contract_id,account_number) " +
             "VALUES(?,?,?,?,?,?,(SELECT account_number FROM buildings WHERE building_id IN " +
             "(SELECT building_id FROM apartments WHERE apartment_id IN " +
             "(SELECT apartment_id FROM renting_contracts WHERE contract_id=?)))) RETURNING payment_id,account_number;";
 
-    final static String INSERT_DEBIT = "INSERT INTO debit_payments (date,amount,comment,type,reason_id,account_number) " +
+    private final static String INSERT_DEBIT = "INSERT INTO debit_payments (date,amount,comment,type,reason_id,account_number) " +
             "VALUES(?,?,?,?,?,(CASE ? WHEN 0 THEN (SELECT account_number FROM buildings " +
             "WHERE building_id IN (SELECT building_id FROM service_contracts WHERE contract_id=?)) " +
             "WHEN 1 THEN (SELECT account_number FROM buildings WHERE building_id=?) " +
@@ -91,7 +90,7 @@ public class MoneyFlowJdbcUtils {
             "SELECT p.contract_id AS reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,100 AS type,buildings.address,apartments.room_number AS description " +
             "FROM credit_payments p NATURAL JOIN renting_contracts NATURAL JOIN apartments JOIN buildings ON apartments.building_id=buildings.building_id " +
             "WHERE p.account_number=? AND confirmed=TRUE " +
-            "ORDER BY buildings.building_id, date;";
+            "ORDER BY address, date;";
 
     private final static String REPORT_BY_BUILDING = "" +
             "SELECT p.reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,p.type,buildings.address,types.type_name AS description " +
@@ -167,6 +166,32 @@ public class MoneyFlowJdbcUtils {
             doUpdateOwnerBalance(con, payment.getAmount().negate(), payment.getAccountNumber());
             con.commit();
             return payment;
+        } catch (SQLException e) {
+            if (con != null) con.rollback();
+            throw e;
+        } finally {
+            if (con != null) con.close();
+        }
+    }
+
+    @Transactional
+    public void returnDeposit(int id, BigDecimal amount, Timestamp timestamp) throws SQLException {
+        Connection con = null;
+        try {
+            con = jdbcTemplate.getDataSource().getConnection();
+            con.setAutoCommit(false);
+            DebitPaymentVO returnDeposit = new DebitPaymentVO();
+            returnDeposit.setReasonId(id);
+            returnDeposit.setType(Payment.PaymentType.ReturnCreditPayment);
+            returnDeposit.setAmount(amount);
+            returnDeposit.setDate(timestamp);
+            doCreateDebitPayment(con, returnDeposit);
+            doUpdateOwnerBalance(con, amount.negate(), returnDeposit.getAccountNumber());
+            PreparedStatement updateContract = con.prepareStatement(UPDATE_RENTING_CONTRACT_RETURN_DEPOSIT);
+            updateContract.setBigDecimal(1, amount);
+            updateContract.setInt(2, id);
+            updateContract.execute();
+            con.commit();
         } catch (SQLException e) {
             if (con != null) con.rollback();
             throw e;
@@ -277,6 +302,7 @@ public class MoneyFlowJdbcUtils {
         createPayment.setInt(++index, payment.getType().getVal());
         createPayment.setInt(++index, payment.getReasonId());
         createPayment.setInt(++index, payment.getType().getVal());
+        createPayment.setInt(++index, payment.getReasonId());
         createPayment.setInt(++index, payment.getReasonId());
         createPayment.setInt(++index, payment.getReasonId());
         createPayment.setInt(++index, payment.getReasonId());

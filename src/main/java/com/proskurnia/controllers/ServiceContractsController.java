@@ -1,7 +1,9 @@
 package com.proskurnia.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proskurnia.VOs.ServiceCompanyVO;
 import com.proskurnia.VOs.ServiceContractVO;
+import com.proskurnia.services.BuildingService;
 import com.proskurnia.services.ServiceCompanyService;
 import com.proskurnia.services.ServiceContractService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +11,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.beans.PropertyEditorSupport;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 /**
  * Created by D on 22.03.2017.
@@ -26,6 +33,9 @@ public class ServiceContractsController {
 
     @Autowired
     ServiceCompanyService serviceCompanyService;
+
+    @Autowired
+    BuildingService buildingService;
 
     @GetMapping
     public String getAll(Model model, @RequestParam(required = false) Integer buildingId) {
@@ -44,6 +54,7 @@ public class ServiceContractsController {
             ServiceContractVO object = new ServiceContractVO();
             object.setBuildingId(buildingId);
             model.addAttribute(object);
+            model.addAttribute("buildings", buildingService.getAll());
             model.addAttribute("companies", serviceCompanyService.getAll());
         } else {
             ServiceContractVO object = serviceContractService.getById(id);
@@ -54,6 +65,12 @@ public class ServiceContractsController {
             model.addAttribute("companies", new ServiceCompanyVO[]{company});
         }
         return "service-contracts/form";
+    }
+
+    @PostMapping("/end-contract/{id}")
+    public String endContract(@PathVariable int id, @RequestParam long endDate, @RequestParam int buildingId) {
+        serviceContractService.endContract(new Timestamp(endDate), id);
+        return "redirect:/service-contracts?buildingId=" + buildingId;
     }
 
     @PostMapping("/save")
@@ -74,4 +91,23 @@ public class ServiceContractsController {
             return "redirect:/service-contracts?buildingId=" + object.getBuildingId();
         }
     }
+
+    @GetMapping("/json")
+    public void getAll(@RequestParam(required = false) Integer buildingId, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json");
+        response.getWriter().write(mapper.writeValueAsString(buildingId == null ? serviceContractService.getAll() : serviceContractService.getByBuildingId(buildingId)));
+    }
+
+    private static ObjectMapper mapper = new ObjectMapper();
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(java.sql.Timestamp.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) throws IllegalArgumentException {
+                setValue(text.isEmpty() ? null : new Timestamp(Long.parseLong(text)));
+            }
+        });
+    }
+
 }

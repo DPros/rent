@@ -44,13 +44,13 @@ public class ServiceCompanyController {
             ServiceCompanyVO object = serviceCompanyService.getById(id);
             model.addAttribute(object);
         }
-        return "service-contracts/form";
+        return "service-companies/form";
     }
 
     @PostMapping("/save")
     public String save(@Valid ServiceCompanyVO object, BindingResult bindingResult, Model model) throws SQLException {
         if (bindingResult.hasErrors()) {
-            return "service-contracts/form";
+            return "service-companies/form";
         } else {
             try {
                 if (object.getId() == 0) {

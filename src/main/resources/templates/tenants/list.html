@@ -22,8 +22,8 @@
     </tr>
     </thead>
     <!--/*@thymesVar id="person" type="com.proskurnia.VOs.PersonVO"*/-->
-    <tbody th:each="person : ${list}">
-    <tr>
+    <tbody>
+    <tr th:each="person : ${list}">
         <td th:text="${person.passport}"></td>
         <td><a th:href="${'/tenants/' + person.id}" th:text="${person.name}"></a></td>
         <td th:text="${person.caf}"></td>

@@ -1,6 +1,9 @@
 $('.container .js-new').click(function () {
     var etalon = $(this).closest('.container').find('.etalon');
-    etalon.before(etalon.clone(true).removeClass('etalon'));
+    var newLine = etalon.clone(true).removeClass('etalon');
+    etalon.before(newLine);
+    console.log(newLine.find('input[name=value]'));
+    newLine.find('input[name=value]').focus();
 });
 
 $('.container .js-delete').click(function () {
