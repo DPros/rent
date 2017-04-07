@@ -60,7 +60,7 @@ public class SettingsController {
     @PostMapping("/delete-service-company-type")
     public void deleteServiceCompanyType(@RequestParam int key, HttpServletResponse response) throws Exception {
         utilsService.deleteServiceCompanyType(key);
-        response.getWriter().write(key);
+        response.getWriter().write("" + key);
     }
 
     @GetMapping("/payments")
@@ -71,7 +71,7 @@ public class SettingsController {
 
     @PostMapping("/delete-payment/{id}")
     public void deletePayment(HttpServletResponse response, Model model, @PathVariable long id, @RequestParam boolean credit) throws IOException, SQLException {
-        paymentService.delete(id,credit);
+        paymentService.delete(id, credit);
         response.getWriter().write("done");
     }
 }

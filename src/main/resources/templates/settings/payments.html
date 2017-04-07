@@ -61,7 +61,7 @@
 <th:block th:replace="template :: js"></th:block>
 <script>
     /*<![CDATA[*/
-    var dataTable = $('.dataTable').dataTable();
+    var dataTable = $('.dataTable').DataTable();
 
     $.fn.dataTable.ext.search.push(
         function (settings, data, dataIndex) {

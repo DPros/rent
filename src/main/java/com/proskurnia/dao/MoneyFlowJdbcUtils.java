@@ -292,7 +292,7 @@ public class MoneyFlowJdbcUtils {
                         rs.getTimestamp("date"),
                         rs.getBigDecimal("amount"),
                         rs.getString("comment"),
-                        rs.getBoolean("deposit"),
+                       false,
                         rs.getInt("reason_id"),
                         rs.getString("account_number"),
                         rs.getString("address"),

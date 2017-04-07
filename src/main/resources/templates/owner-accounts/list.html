@@ -10,7 +10,7 @@
 </head>
 <body>
 <div th:replace="template :: header"/>
-<table id="owners" class="table table-striped dataTable" th:attr="data-column-defs='[{"sortable": false, targets: [3]}]',data-button-href='/accounts/0?ownerId='+${id},data-button-name=#{register.owner.account},data-button-visible=${id}">
+<table id="owners" class="table table-striped dataTable" th:attr="data-column-defs='[{&quot;sortable&quot;: false, &quot;targets&quot;: [3]}]',data-button-href='/accounts/0?ownerId='+${id},data-button-name=#{register.owner.account},data-button-visible=${id}">
     <thead>
     <tr>
         <td th:text="#{bank.account.number}">ID</td>
