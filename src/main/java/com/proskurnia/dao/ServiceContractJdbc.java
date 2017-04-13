@@ -25,9 +25,9 @@ public class ServiceContractJdbc extends LazyJdbcDao<ServiceContractVO, Integer>
 
     private final static String GET_ALL = "SELECT contract_id,service_contracts.comment,login,password,start_date,end_date,company_id,name,buildings.address,buildings.building_id,type_name FROM service_contracts NATURAL JOIN service_companies NATURAL JOIN service_company_types JOIN buildings ON service_contracts.building_id=buildings.building_id";
 
-    private final static String GET_BY_ID = "SELECT contract_id,service_contracts.comment,login,password,start_date,end_date,company_id,name,buildings.address,buildings.building_id,type_name FROM service_contracts NATURAL JOIN service_companies NATURAL JOIN service_company_types JOIN buildings ON service_contracts.building_id=buildings.building_id WHERE contract_id=?;";
+    private final static String GET_BY_ID = "SELECT contract_id,service_contracts.comment,login,password,start_date,end_date,service_contracts.company_id,name,buildings.address,buildings.building_id,type_name FROM service_contracts JOIN service_companies ON service_companies.company_id=service_contracts.company_id NATURAL JOIN service_company_types JOIN buildings ON service_contracts.building_id=buildings.building_id WHERE contract_id=?;";
 
-    private final static String GET_BY_BUILDING_ID = "SELECT contract_id,service_contracts.comment,login,password,start_date,end_date,company_id,name,buildings.address,buildings.building_id,type_name FROM service_contracts NATURAL JOIN service_companies NATURAL JOIN service_company_types JOIN buildings ON service_contracts.building_id=buildings.building_id WHERE buildings.building_id=? AND end_date IS NULL;";
+    private final static String GET_BY_BUILDING_ID = "SELECT contract_id,service_contracts.comment,login,password,start_date,end_date,service_contracts.company_id,name,buildings.address,buildings.building_id,type_name FROM service_contracts JOIN service_companies ON service_contracts.company_id = service_companies.company_id NATURAL JOIN service_company_types JOIN buildings ON service_contracts.building_id=buildings.building_id WHERE buildings.building_id=? AND end_date IS NULL;";
 
     @Override
     protected PreparedStatementCreator getStatementCreator(ServiceContractVO o, QueryType queryType) {

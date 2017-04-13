@@ -19,7 +19,7 @@
         <td th:text="#{construction.date}"></td>
         <td th:text="#{date.of.sale}"></td>
         <td th:text="#{comment}"></td>
-        <td th:text="#{manageable}"></td>
+        <!--<td th:text="#{manageable}"></td>-->
     </tr>
     </thead>
     <!--/*@thymesVar id="object" type="com.proskurnia.VOs.BuildingVO"*/-->
@@ -31,7 +31,7 @@
         <td th:text="${object.constructionDate}"></td>
         <td th:text="${object.dateOfSale}"></td>
         <td th:text="${object.comment}"></td>
-        <td th:text="${object.manageable}?#{yes}:#{no}"></td>
+        <!--<td th:text="${object.manageable}?#{yes}:#{no}"></td>-->
     </tr>
     </tbody>
 </table>

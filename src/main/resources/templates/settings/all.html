@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
     <title th:text="#{application.settings}">Title</title>
@@ -8,57 +10,99 @@
 </head>
 <body>
 <div th:replace="template :: header"/>
-<div class="container col-sm-6">
-    <h3 th:text="#{person.titles}"></h3>
-    <th:block th:each="entry : ${titles}">
-        <div class="input-group form-group">
+<div class="container-fluid">
+    <div class="container col-sm-6" sec:authorize="hasAuthority('ADMIN')">
+        <h3 th:text="#{person.titles}"></h3>
+        <th:block th:each="entry : ${titles}">
+            <div class="input-group form-group">
                 <input name="key" type="hidden" th:value="${entry.key}"/>
                 <input type="text" name="value" class="form-control" th:value="${entry.value}"/>
-            <span class="input-group-btn">
+                <span class="input-group-btn">
                 <button class="btn btn-success js-save" data-url="/settings/save-title" th:text="#{save}"></button>
                 <button class="btn btn-danger js-delete" data-url="/settings/delete-title" th:text="#{delete}"></button>
             </span>
-        </div>
-    </th:block>
-    <div class="input-group form-group new etalon">
+            </div>
+        </th:block>
+        <div class="input-group form-group new etalon">
             <input name="key" type="hidden" value="0"/>
             <input name="value" type="text" class="form-control"/>
-        <span class="input-group-btn">
+            <span class="input-group-btn">
             <button class="btn btn-success js-save" data-url="/settings/save-title" th:text="#{save}"></button>
             <button class="btn btn-danger js-delete" data-url="/settings/delete-title" th:text="#{delete}"></button>
         </span>
+        </div>
+        <button class="btn btn-primary js-new" th:text="#{add.new}"></button>
     </div>
-    <button class="btn btn-primary js-new" th:text="#{add.new}"></button>
-</div>
-<div class="container col-sm-6">
-    <h3 th:text="#{service.company.types}"></h3>
-    <th:block th:each="entry : ${serviceCompanyTypes}">
-        <div class="input-group form-group">
+    <div class="container col-sm-6" sec:authorize="hasAuthority('ADMIN')">
+        <h3 th:text="#{service.company.types}"></h3>
+        <th:block th:each="entry : ${serviceCompanyTypes}">
+            <div class="input-group form-group">
                 <input name="key" type="hidden" th:value="${entry.key}"/>
                 <input type="text" name="value" class="form-control" th:value="${entry.value}"/>
-            <span class="input-group-btn">
+                <span class="input-group-btn">
                 <button class="btn btn-success js-save" data-url="/settings/save-service-company-type"
                         th:text="#{save}"></button>
                 <button class="btn btn-danger js-delete" data-url="/settings/delete-service-company-type"
                         th:text="#{delete}"></button>
             </span>
-        </div>
-    </th:block>
-    <div class="input-group form-group new etalon">
+            </div>
+        </th:block>
+        <div class="input-group form-group new etalon">
             <input name="key" type="hidden" value="0"/>
             <input name="value" type="text" class="form-control"/>
-        <span class="input-group-btn">
+            <span class="input-group-btn">
             <button class="btn btn-success js-save" data-url="/settings/save-service-company-type"
                     th:text="#{save}"></button>
             <button class="btn btn-danger js-delete" data-url="/settings/delete-service-company-type"
                     th:text="#{delete}"></button>
         </span>
+        </div>
+        <div>
+            <button class="btn btn-primary js-new" th:text="#{add.new}"></button>
+        </div>
     </div>
-    <div>
-        <button class="btn btn-primary js-new" th:text="#{add.new}"></button>
+    <div class="container col-sm-6">
+        <form th:action="@{/settings/change-username}" class="change-credential-form" method="post">
+            <fieldset>
+                <h3 th:text="#{change.username}"></h3>
+                <div class="alert alert-danger hidden" th:text="#{fields.dont.match}"></div>
+                <div class="alert alert-success hidden" th:text="#{successfully.changed}"></div>
+                <div class="form-group">
+                    <label for="username" th:text="#{new.username}">Username</label>
+                    <input class="form-control" type="text" id="username" name="username"/>
+                </div>
+                <div class="form-group">
+                    <label th:text="#{confirmation}">Confirm</label>
+                    <input class="form-control confirm-input" type="text"/>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary submit-change" th:text="#{save}">Log in</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="container col-sm-6">
+        <form th:action="@{/setting/change-password}" class="change-credential-form" method="post">
+            <fieldset>
+                <h3 th:text="#{change.password}"></h3>
+                <div class="alert alert-danger hidden" th:text="#{fields.dont.match}"></div>
+                <div class="alert alert-success hidden" th:text="#{successfully.changed}"></div>
+                <div class="form-group">
+                    <label for="username" th:text="#{new.password}">Username</label>
+                    <input class="form-control" type="text" id="password" name="password"/>
+                </div>
+                <div class="form-group">
+                    <label th:text="#{confirmation}">Confirm</label>
+                    <input class="form-control confirm-input" type="text"/>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary submit-change" th:text="#{save}">Log in</button>
+                </div>
+            </fieldset>
+        </form>
     </div>
 </div>
-<footer class="footer">
+<footer class="footer" sec:authorize="hasAuthority('ADMIN')">
     <a href="/settings/payments" th:text="#{all.payments}" class="btn btn-primary"/>
 </footer>
 </body>

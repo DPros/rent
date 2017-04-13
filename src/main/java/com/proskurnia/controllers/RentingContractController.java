@@ -53,7 +53,7 @@ public class RentingContractController {
             }
             object.setStartDate(new Timestamp(System.currentTimeMillis()));
             model.addAttribute(object);
-            model.addAttribute("buildings", buildingService.getBuildingsWithEmptyApartments());
+            model.addAttribute("buildings", buildingService.getBuildingsWithEmptyApartments(object.getStartDate()));
         } else {
             RentingContractVO object = rentingContractService.getById(id);
             model.addAttribute(object);

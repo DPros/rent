@@ -14,20 +14,30 @@ public class ApartmentVO implements Identified<Integer>, Serializable {
     private double size;
     private int buildingId;
     private String address;
+    private int tenantId;
     private String tenantName;
     private Integer rentingContractId;
 
     public ApartmentVO() {
     }
 
-    public ApartmentVO(int id, String roomNumber, double size, int buildingId, String address, Integer rentingContractId, String tenantName) {
+    public ApartmentVO(int id, String roomNumber, double size, int buildingId, String address, Integer rentingContractId, int tenantId, String tenantName) {
         this.id = id;
         this.roomNumber = roomNumber;
         this.size = size;
         this.buildingId = buildingId;
         this.address = address;
+        this.tenantId = tenantId;
         this.tenantName = tenantName;
         this.rentingContractId = rentingContractId;
+    }
+
+    public int getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(int tenantId) {
+        this.tenantId = tenantId;
     }
 
     public String getTenantName() {

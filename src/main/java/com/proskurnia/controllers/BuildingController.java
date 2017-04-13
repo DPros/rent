@@ -69,7 +69,7 @@ public class BuildingController {
 
     @PostMapping("/save")
     public String save(@Valid BuildingVO object, BindingResult bindingResult, Model model) throws SQLException {
-        if (bindingResult.hasErrors()) {
+         if (bindingResult.hasErrors()) {
             model.addAttribute("accounts", ownerAccountService.getByAccountId(object.getOwnerAccountId()));
             return "buildings/form";
         } else {

@@ -4,6 +4,7 @@ import com.proskurnia.VOs.BuildingVO;
 import com.proskurnia.dao.BuildingDao;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ public class BuildingServiceImpl extends GenericServiceImpl<BuildingVO, Integer>
     }
 
     @Override
-    public Map<Integer, String> getBuildingsWithEmptyApartments() {
-        return ((BuildingDao)dao).getBuildingsWithEmptyApartments();
+    public Map<Integer, String> getBuildingsWithEmptyApartments(Timestamp startDate) {
+        return ((BuildingDao)dao).getBuildingsWithEmptyApartments(startDate);
     }
 }

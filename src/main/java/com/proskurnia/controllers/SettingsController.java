@@ -1,8 +1,12 @@
 package com.proskurnia.controllers;
 
+import com.proskurnia.services.CredentialsService;
 import com.proskurnia.services.PaymentService;
+import com.proskurnia.services.UserDetailsServiceImpl;
 import com.proskurnia.services.UtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +27,9 @@ public class SettingsController {
 
     @Autowired
     PaymentService paymentService;
+
+    @Autowired
+    CredentialsService credentialsService;
 
     @RequestMapping
     public String render(Model model) {
@@ -72,6 +79,21 @@ public class SettingsController {
     @PostMapping("/delete-payment/{id}")
     public void deletePayment(HttpServletResponse response, Model model, @PathVariable long id, @RequestParam boolean credit) throws IOException, SQLException {
         paymentService.delete(id, credit);
+        response.getWriter().write("done");
+    }
+
+    @PostMapping("/change-username")
+    public void changeUsername(HttpServletResponse response, @RequestParam String newValue) throws IOException, SQLException {
+        UserDetailsServiceImpl.User user = (UserDetailsServiceImpl.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        credentialsService.changeUsername(user.getUsername(), newValue);
+        user.setUsername(newValue);
+        response.getWriter().write("done");
+    }
+
+    @PostMapping("/change-password")
+    public void changePassword(HttpServletResponse response, @RequestParam String newValue) throws IOException, SQLException {
+        UserDetailsServiceImpl.User user = (UserDetailsServiceImpl.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        credentialsService.changePassword(user.getUsername(), newValue);
         response.getWriter().write("done");
     }
 }

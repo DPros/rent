@@ -122,7 +122,7 @@ public class MoneyFlowJdbcUtils {
             "UNION " +
             "SELECT p.contract_id AS reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,100 AS type,buildings.address,apartments.room_number AS description " +
             "FROM credit_payments p NATURAL JOIN renting_contracts NATURAL JOIN apartments JOIN buildings ON apartments.building_id=buildings.building_id " +
-            "WHERE p.account_number=? AND confirmed=TRUE " +
+            "WHERE p.account_number=? " +
             "ORDER BY address, date;";
 
     private final static String REPORT_BY_BUILDING = "" +
@@ -152,7 +152,7 @@ public class MoneyFlowJdbcUtils {
             "UNION " +
             "SELECT p.contract_id AS reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,100 AS type,buildings.address,apartments.room_number AS description " +
             "FROM credit_payments p NATURAL JOIN renting_contracts NATURAL JOIN apartments JOIN buildings ON apartments.building_id=buildings.building_id " +
-            "WHERE buildings.building_id=? AND confirmed=TRUE " +
+            "WHERE buildings.building_id=? " +
             "ORDER BY date;";
 
     private final static String REPORT_BY_RENTING_CONTRACT = "" +
@@ -164,7 +164,7 @@ public class MoneyFlowJdbcUtils {
             "UNION " +
             "SELECT p.contract_id AS reason_id,p.payment_id,p.date,p.amount,p.comment,p.account_number,100 AS type,buildings.address,apartments.room_number AS description " +
             "FROM credit_payments p NATURAL JOIN renting_contracts NATURAL JOIN apartments JOIN buildings ON apartments.building_id=buildings.building_id " +
-            "WHERE p.contract_id=? AND confirmed=TRUE " +
+            "WHERE p.contract_id=? " +
             "ORDER BY date;";
 
     @Transactional
@@ -292,7 +292,7 @@ public class MoneyFlowJdbcUtils {
                         rs.getTimestamp("date"),
                         rs.getBigDecimal("amount"),
                         rs.getString("comment"),
-                       false,
+                        false,
                         rs.getInt("reason_id"),
                         rs.getString("account_number"),
                         rs.getString("address"),

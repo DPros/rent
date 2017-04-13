@@ -13,7 +13,7 @@ public class OwnerAccountVO implements Identified<String>{
     @NotEmpty
     private String id;
     private int bankId;
-    private BigDecimal balance;
+    private BigDecimal balance = BigDecimal.ZERO;
     private int ownerId;
     private String bankName;
 

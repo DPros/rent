@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="#{login}">Title</title>
+    <th:block th:replace="template :: css"></th:block>
+</head>
+<body>
+<form th:action="@{/login}" method="post">
+    <div class="container" style="max-width:500px">
+        <fieldset >
+            <legend th:text="#{login}"></legend>
+            <div th:if="${param.error}" class="alert alert-danger" th:text="#{login.error}">
+
+            </div>
+            <div th:if="${param.logout}" class="alert alert-success" th:text="#{logged.out}">
+
+            </div>
+            <div class="form-group">
+            <label for="username" th:text="#{username}">Username</label>
+            <input class="form-control" type="text" id="username" name="username" autofocus="autofocus"/>
+            </div>
+            <div class="form-group">
+            <label for="password" th:text="#{password}">Password</label>
+            <input class="form-control" type="password" id="password" name="password"/>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" th:text="#{login}">Log in</button>
+            </div>
+        </fieldset>
+    </div>
+</form>
+</body>
+</html>

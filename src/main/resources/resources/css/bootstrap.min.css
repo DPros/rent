@@ -10,4 +10,3 @@ body{margin:60px 0}
 .footer,.header{position:fixed;padding:10px;left:0;width:100%;z-index:10;background-color:whitesmoke;text-align:center}
 .footer{bottom:0}
 .header{top:0}
-#ui-datepicker-div{z-index:50!important}

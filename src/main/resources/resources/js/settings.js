@@ -29,3 +29,19 @@ $('.container input[name="value"]').keyup(function () {
 function ajax(button, success, fail) {
     $.post(button.data('url'), button.closest('.input-group').find('input, select').serialize(), success, fail);
 }
+
+$('.change-credential-form').submit(function (e) {
+    e.preventDefault();
+    var form = $(this);
+    var inputs = form.find('input');
+    if (inputs[0].value && inputs[0].value === inputs[1].value) {
+        $.post(form.attr('action'), {newValue: inputs[0].value}).done(function () {
+            form.find('.alert-danger').addClass('hidden');
+            form.find('.alert-success').removeClass('hidden');
+        })
+    } else {
+        form.find('.alert-danger').removeClass('hidden');
+        form.find('.alert-success').addClass('hidden');
+    }
+});
+

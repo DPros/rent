@@ -16,10 +16,17 @@
 <form th:object="${rentingContractVO}" th:action="@{save}" action="#" method="post">
     <div class="container">
         <input type="hidden" th:field="*{id}"/>
-        <input type="hidden" th:field="*{tenantId}"/>
         <div class="form-group col-sm-6">
             <label th:text="#{tenant}"></label>
-            <input class="form-control" th:field="*{tenantName}" readonly="true"/>
+            <input type="hidden" th:field="*{tenantId}"/>
+            <a th:href="'/tenants/'+*{tenantId}" class="form-control" th:text="*{tenantName}"/>
+        </div>
+        <div class="form-group col-sm-6">
+            <label th:text="#{start.date}"></label>
+            <div class="alert-danger" th:errors="*{startDate}"/>
+            <input type="hidden" th:field="*{startDate}"/>
+            <input class="datepicker form-control start-date" th:attr="data-value=*{startDate}?*{startDate.getTime()}:''"
+                   data-alt-field="#startDate" th:disabled="${rentingContractVO.id!=0}"/>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{address}"></label>
@@ -29,8 +36,8 @@
                     <option th:value="${building.key}" th:text="${building.value}"></option>
                 </th:block>
             </select>
-            <input class="form-control" th:field="*{address}" th:unless="${rentingContractVO.id==0}"
-                   th:readonly="true"/>
+            <a th:href="'/buidlings/'+*{buildingId}" class="form-control" th:text="*{address}"
+               th:unless="${rentingContractVO.id==0}"/>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{room.number}"></label>
@@ -38,8 +45,8 @@
                     th:field="*{apartmentId}">
             </select>
             <input type="hidden" th:field="*{apartmentId}" th:unless="${rentingContractVO.id==0}"/>
-            <input th:unless="${rentingContractVO.id==0}" class="form-control" th:field="*{roomNumber}"
-                   readonly="readonly"/>
+            <a th:href="'/apartments/'+*{apartmentId}" th:unless="${rentingContractVO.id==0}" class="form-control"
+               th:text="*{roomNumber}"/>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{rent.price}"></label>
@@ -56,7 +63,7 @@
             <input class="form-control" th:field="*{deposit}" readonly="readonly"/>
         </div>
         <div class="form-group col-sm-6"
-             th:if="${rentingContractVO.id!=0 and rentingContractVO.actualEndDate!='' and !rentingContractVO.depositReturned}">
+             th:if="${rentingContractVO.id!=0 and rentingContractVO.actualEndDate!=null and !rentingContractVO.depositReturned}">
             <div><label th:text="#{deposit}"></label>
                 <button id="return-deposit" form="return-deposit-form" class="pull-right btn btn-warning btn-xs"
                         th:text="#{return.deposit}"></button>
@@ -74,14 +81,6 @@
         <div class="form-group col-sm-6" th:if="${rentingContractVO.id==0}">
             <label th:text="#{deposit}"></label>
             <input class="form-control" th:field="*{deposit}"/>
-        </div>
-        <div class="form-group col-sm-6">
-            <label th:text="#{start.date}"></label>
-            <div class="alert-danger" th:errors="*{startDate}"/>
-            <input type="hidden" th:field="*{startDate}"/>
-            <input class="datepicker form-control" th:attr="data-value=*{startDate}?*{startDate.getTime()}:''"
-                   data-alt-field="#startDate"
-                   th:disabled="${rentingContractVO.id!=0}"/>
         </div>
         <div class="form-group col-sm-6">
             <label th:text="#{expected.end.date}"></label>
@@ -123,15 +122,19 @@
 </form>
 <th:block th:replace="template :: js"></th:block>
 <script th:if="${rentingContractVO.id==0}">
+    /*<![CDATA[*/
     $('#building').change(function () {
-        $.get("/apartments/json", {buildingId: $('#building').val()}, function (data) {
-            $('#apartmentId').selectpicker('destroy').html(data.map(function (ap) {
-                return $('<option value="' + ap.id + '">' + ap.roomNumber + '</option>')
-            })).selectpicker();
-        });
+        var buildingId = $('#building').val();
+        var startDate = $('#startDate').val();
+        if (buildingId && startDate) {
+            $.get("/apartments/empty-json", {buildingId: buildingId, startDate: startDate}, function (data) {
+                $('#apartmentId').selectpicker('destroy').html(data.map(function (ap) {
+                    return $('<option value="' + ap.id + '">' + ap.roomNumber + '</option>')
+                })).selectpicker();
+            });
+        }
     }).change();
-</script>
-<script>
+
     $('#end-contract').click(function () {
         var endDate = $('#actualEndDate').val();
         if (endDate) {
@@ -140,7 +143,8 @@
             $('#actualEndDate')
                 .before($('<div class="alert alert-danger">' + $('#endDate').data('error-message') + '</div>'));
         }
-    })
+    });
+    /*]]>*/
 </script>
 </body>
 </html>

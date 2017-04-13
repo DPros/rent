@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
->
-<!--/*@thymesVar id="personVO" type="com.proskurnia.VOs.personVO"*/-->
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
     <title th:text="${personVO.name}?:#{new.owner}">Title</title>
@@ -10,6 +8,7 @@
 </head>
 <body>
 <div th:replace="template :: header"/>
+<!--/*@thymesVar id="personVO" type="com.proskurnia.VOs.personVO"*/-->
 <form th:object="${personVO}" th:action="@{save}" action="#" method="post">
     <div class="container">
         <input type="hidden" th:field="*{id}"/>
@@ -60,8 +59,8 @@
             <div class="alert alert-danger" th:text="${error}"></div>
         </div>
         <div class="footer">
-            <a th:href="'/buildings?ownerId='+${personVO.id}" class="btn btn-primary" th:text="#{buildings}"></a>
-            <a th:href="'/accounts?ownerId='+${personVO.id}" class="btn btn-primary" th:text="#{bank.accounts}"></a>
+            <a th:unless="*{id==0}" th:href="'/buildings?ownerId='+${personVO.id}" class="btn btn-primary" th:text="#{buildings}"></a>
+            <a th:unless="*{id==0}" th:href="'/accounts?ownerId='+${personVO.id}" class="btn btn-primary" th:text="#{bank.accounts}"></a>
             <button type="submit" class="pull-right btn btn-success" th:text="#{save}">Save</button>
         </div>
     </div>

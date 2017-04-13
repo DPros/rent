@@ -74,14 +74,14 @@ public class RentingContractJdbc extends LazyJdbcDao<RentingContractVO, Integer>
                 rs.getBigDecimal("rent_price"),
                 rs.getBigDecimal("deposit_amount"),
                 rs.getBoolean("deposit_returned"),
-                rs.getBigDecimal("estimated_" +
-                        "fees"),
+                rs.getBigDecimal("estimated_fees"),
                 rs.getTimestamp("start_date"),
                 rs.getTimestamp("expected_end_date"),
                 rs.getTimestamp("actual_end_date"),
                 rs.getInt("tenant_id"),
                 rs.getInt("apartment_id"),
                 rs.getString("name"),
+                rs.getInt("building_id"),
                 rs.getString("address"),
                 rs.getString("room_number")
         );

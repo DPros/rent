@@ -63,7 +63,7 @@ public class OwnerAccountController {
                 } else {
                     ownerAccountService.update(object);
                 }
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 bindingResult.addError(new ObjectError("object", e.getLocalizedMessage()));
                 return save(object, bindingResult, isNew, model);
             }

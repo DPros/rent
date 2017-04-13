@@ -18,12 +18,13 @@ public class ApartmentDaoJdbc extends LazyJdbcDao<ApartmentVO, Integer> implemen
 
     private final static String UPDATE = "UPDATE apartments SET room_number=?, size=? WHERE apartment_id=?;";
 
-    private final static String SELECT_ALL = "SELECT a.apartment_id,a.room_number,a.size,a.building_id,buildings.address,c.contract_id,persons.name " +
+    private final static String SELECT_ALL = "SELECT a.apartment_id,a.room_number,a.size,a.building_id,buildings.address,c.contract_id,persons.person_id,persons.name " +
             "FROM apartments a NATURAL JOIN buildings NATURAL LEFT JOIN (SELECT * FROM renting_contracts WHERE actual_end_date IS NULL) c LEFT JOIN persons ON c.tenant_id=persons.person_id";
 
     private final static String DELETE = "DELETE FROM apartments WHERE apartment_id=?;";
 
-    private final static String SELECT_EMPTY_BY_BUILDING = SELECT_ALL + " WHERE building_id=?;";
+    private final static String SELECT_EMPTY_BY_BUILDING = "SELECT a.apartment_id,a.room_number,a.size,a.building_id,buildings.address,0 contract_id,0 person_id,'' AS name FROM apartments a NATURAL JOIN buildings " +
+            "WHERE building_id=? AND NOT EXISTS (SELECT 1 FROM renting_contracts WHERE apartment_id=a.apartment_id AND actual_end_date IS NULL);";
 
     private final static String SELECT_BY_BUILDING = SELECT_ALL + " WHERE building_id=? ORDER BY room_number;";
 
@@ -69,6 +70,7 @@ public class ApartmentDaoJdbc extends LazyJdbcDao<ApartmentVO, Integer> implemen
                 rs.getInt("building_id"),
                 rs.getString("address"),
                 rs.getInt("contract_id"),
+                rs.getInt("person_id"),
                 rs.getString("name")
         );
     }
@@ -80,6 +82,6 @@ public class ApartmentDaoJdbc extends LazyJdbcDao<ApartmentVO, Integer> implemen
 
     @Override
     public List<ApartmentVO> getEmptyByBuildingId(int buildingId) {
-        return null;
+        return jdbcTemplate.query(SELECT_EMPTY_BY_BUILDING, getRowMapper(), buildingId);
     }
 }

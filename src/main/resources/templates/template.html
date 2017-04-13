@@ -25,6 +25,7 @@
     <a class="btn btn-default" href="/settings" th:text="#{application.settings}"/>
     <a class="btn btn-default" href="/payments/debit/0" th:text="#{create.debit.payment}"/>
     <a class="btn btn-default" href="/payments/credit/0" th:text="#{create.credit.payment}"/>
+    <a class="btn btn-warning pull-right" href="/logout" th:text="#{logout}"></a>
 </div>
 <th:block th:fragment="js">
     <script src="/resources/js/jquery-3.2.0.min.js" th:src="@{/js/jquery-3.2.0.min.js}"></script>

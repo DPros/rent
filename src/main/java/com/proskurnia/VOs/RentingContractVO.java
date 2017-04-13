@@ -26,6 +26,7 @@ public class RentingContractVO implements Identified<Integer>, Serializable {
     private Timestamp actualEndDate;
     private int tenantId;
     private int apartmentId;
+    private int buildingId;
     private String address;
     private String roomNumber;
     private String tenantName;
@@ -33,7 +34,7 @@ public class RentingContractVO implements Identified<Integer>, Serializable {
     public RentingContractVO() {
     }
 
-    public RentingContractVO(int id, BigDecimal rentPrice, BigDecimal deposit, boolean depositReturned, BigDecimal estimatedFees, Timestamp startDate, Timestamp expectedEndDate, Timestamp actualEndDate, int tenantId, int apartmentId, String tenantName, String address, String roomNumber) {
+    public RentingContractVO(int id, BigDecimal rentPrice, BigDecimal deposit, boolean depositReturned, BigDecimal estimatedFees, Timestamp startDate, Timestamp expectedEndDate, Timestamp actualEndDate, int tenantId, int apartmentId, String tenantName, int buildingId, String address, String roomNumber) {
         this.id = id;
         this.rentPrice = rentPrice;
         this.deposit = deposit;
@@ -45,8 +46,17 @@ public class RentingContractVO implements Identified<Integer>, Serializable {
         this.tenantId = tenantId;
         this.apartmentId = apartmentId;
         this.tenantName = tenantName;
+        this.buildingId = buildingId;
         this.address = address;
         this.roomNumber = roomNumber;
+    }
+
+    public int getBuildingId() {
+        return buildingId;
+    }
+
+    public void setBuildingId(int buildingId) {
+        this.buildingId = buildingId;
     }
 
     public String getAddress() {

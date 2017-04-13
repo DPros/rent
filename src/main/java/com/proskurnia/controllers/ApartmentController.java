@@ -68,6 +68,12 @@ public class ApartmentController implements Serializable{
         }
     }
 
+    @GetMapping("/empty-json")
+    public void getEmpty(@RequestParam(required = false) Integer buildingId, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json");
+        response.getWriter().write(mapper.writeValueAsString(buildingId == null ? apartmentService.getAll() : apartmentService.getByBuildingId(buildingId)));
+    }
+
     @GetMapping("/json")
     public void getAll(@RequestParam(required = false) Integer buildingId, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
