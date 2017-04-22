@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <!--/*@thymesVar id="rentingContractVO" type="com.proskurnia.VOs.RentingContractVO"*/-->
 <head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta th:lang="${#locale.getDisplayLanguage()}" charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
     <title th:text="#{renting.contract}">Title</title>
     <th:block th:replace="template :: css"></th:block>
 </head>
@@ -96,7 +96,7 @@
             <div class="alert-danger" th:errors="*{actualEndDate}"/>
             <button type="button" id="end-contract" class="pull-right btn btn-danger btn-xs"
                     th:if="${rentingContractVO.actualEndDate==null and rentingContractVO.id!=0}"
-                    th:text="#{end.contract}"></button>
+                    th:text="#{end.renting.contract}"></button>
             <div class="alert-danger alert" th:errors="*{rentPrice}"/>
             <input type="hidden" form="end-contract-form" th:field="*{actualEndDate}"/>
             <input id="endDate" th:disabled="*{actualEndDate}?'true':'false'"

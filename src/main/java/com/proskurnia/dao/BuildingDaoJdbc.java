@@ -19,7 +19,7 @@ import java.util.Map;
  */
 @Repository
 @Aspect
-public class BuildingDaoJdbc extends LazyJdbcDao<BuildingVO, Integer> implements BuildingDao {
+public class BuildingDaoJdbc extends EagerJdbcDao<BuildingVO, Integer> implements BuildingDao {
 
     private final static String EMPTY_APARTMENTS_COUNT_FOR_BUILDING = "(SELECT COUNT(*) FROM apartments WHERE building_id=b.building_id AND NOT EXISTS (SELECT 1 FROM renting_contracts WHERE apartment_id=apartments.apartment_id AND actual_end_date IS NULL AND start_date < current_timestamp AND expected_end_date > current_timestamp)) AS empty_apartments";
 
@@ -87,10 +87,10 @@ public class BuildingDaoJdbc extends LazyJdbcDao<BuildingVO, Integer> implements
         return DELETE;
     }
 
-    @Override
-    protected String getByIdQuery() {
-        return SELECT_BY_ID;
-    }
+//    @Override
+//    protected String getByIdQuery() {
+//        return SELECT_BY_ID;
+//    }
 
     @Override
     protected String getAllQuery() {
@@ -114,12 +114,15 @@ public class BuildingDaoJdbc extends LazyJdbcDao<BuildingVO, Integer> implements
         );
     }
 
-//    @AfterReturning("execution(* com.proskurnia.services.ApartmentService.create(..)) || " +
-//            "execution(* com.proskurnia.services.ApartmentService.delete(..)) || " +
-//            "execution(* com.proskurnia.services.RentingContractService.create(..)) || " +
-//            "execution(* com.proskurnia.services.RentingContractService.endContract(..))")
-//    public void update() {
-//        System.out.println("POINTCUT WORKING!!!");
-//        super.init();
-//    }
+    @AfterReturning("(target(com.proskurnia.services.RentingContractService+) && " +
+            "(execution(* create(..)) || execution(* endContract(..))))")
+    public void update() {
+        super.init();
+    }
+
+    @AfterReturning("(target(com.proskurnia.services.ApartmentService+) && " +
+            "(execution(* create(..)) || execution(* delete(..))))")
+    public void update2() {
+        super.init();
+    }
 }

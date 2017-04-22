@@ -4,7 +4,7 @@
 >
 <!--/*@thymesVar id="serviceContractVO" type="com.proskurnia.VOs.ServiceContractVO"*/-->
 <head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta th:lang="${#locale.getDisplayLanguage()}" charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
     <title th:text="${serviceContractVO.companyName}?:#{register.service.contract}">Title</title>
     <th:block th:replace="template :: css"></th:block>
 </head>
@@ -59,7 +59,7 @@
         <div class="form-group col-sm-6">
             <label th:text="#{end.date}"></label>
             <button id="end-contract" type="button" class="pull-right btn btn-danger btn-xs" th:if="*{id!=0}"
-                    th:text="#{end.contract}"></button>
+                    th:text="#{end.service.contract}"></button>
             <div class="alert-danger alert" th:errors="*{endDate}"/>
             <input type="hidden" th:field="*{endDate}" form="end-contract-form"
                    th:attr="data-error-message=#{select.date}"/>

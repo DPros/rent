@@ -8,7 +8,8 @@
               type="text/css"/>
         <link rel="stylesheet" href="/resources/css/bootstrap-select.min.css" th:href="@{/css/bootstrap-select.min.css}"
               type="text/css"/>
-        <link rel="stylesheet" href="/resources/css/jquery-datepicker.min.css" th:href="@{/css/jquery-datepicker.min.css}"
+        <link rel="stylesheet" href="/resources/css/jquery-datepicker.min.css"
+              th:href="@{/css/jquery-datepicker.min.css}"
               type="text/css"/>
         <link rel="stylesheet" href="/resources/css/form.css" th:href="@{/css/form.css}" type="text/css"/>
         <link rel="stylesheet" href="/resources/css/datatables.min.css" th:href="@{/css/datatables.min.css}"
@@ -17,6 +18,10 @@
 </head>
 <body>
 <div class="header" th:fragment="header">
+    <span class="pull-left">
+        <a href="javascript:window.location.href=replaceUrlParam(window.location.href,'lang', 'en')"><img style="height: 20px" src="/css/images/gb.svg"/></a>
+        <a href="javascript:window.location.href=replaceUrlParam(window.location.href,'lang', 'fr')"><img style="height: 20px" src="/css/images/fr.svg"/></a>
+    </span>
     <a class="btn btn-default" href="/buildings" th:text="#{buildings}"/>
     <a class="btn btn-default" href="/owners" th:text="#{owners}"/>
     <a class="btn btn-default" href="/tenants" th:text="#{tenants}"/>
@@ -33,6 +38,19 @@
     <script src="/resources/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
     <script src="/resources/js/bootstrap-select.js" th:src="@{/js/bootstrap-select.js}"></script>
     <script src="/resources/js/jquery-datepicker.min.js" th:src="@{/js/jquery-datepicker.min.js}"></script>
+    <script type="text/javascript">
+        /*<![CDATA[*/
+        function replaceUrlParam(url, paramName, paramValue) {
+            if (paramValue == null)
+                paramValue = '';
+            var pattern = new RegExp('\\b(' + paramName + '=).*?(&|$)');
+            if (url.search(pattern) >= 0) {
+                return url.replace(pattern, '$1' + paramValue + '$2');
+            }
+            return url + (url.indexOf('?') > 0 ? '&' : '?') + paramName + '=' + paramValue
+        }
+        /*]]>*/
+    </script>
 </th:block>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta th:lang="${#locale.getDisplayLanguage()}" charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
     <title th:text="${ownerAccountVO.id}">Title</title>
     <th:block th:replace="template :: css"></th:block>
 </head>
