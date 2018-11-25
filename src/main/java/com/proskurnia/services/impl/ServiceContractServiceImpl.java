@@ -12,14 +12,14 @@ import java.util.List;
  * Created by D on 25.03.2017.
  */
 @Service
-public class ServiceContractServiceImpl extends GenericServiceImpl<ServiceContractVO, Integer> implements ServiceContractService {
+public class ServiceContractServiceImpl extends GenericServiceImpl<ServiceContractVO, Integer, ServiceContractDao> implements ServiceContractService {
     @Override
     public List<ServiceContractVO> getByBuildingId(int id) {
-        return ((ServiceContractDao)dao).getByBuildingId(id);
+        return dao.getByBuildingId(id);
     }
 
     @Override
     public void endContract(Timestamp timestamp, int id) {
-        ((ServiceContractDao)dao).endContract(id, timestamp);
+        dao.endContract(id, timestamp);
     }
 }

@@ -14,29 +14,29 @@ import java.util.List;
  * Created by dmpr0116 on 24.03.2017.
  */
 @Service
-public class RentingContractServiceImpl extends GenericServiceImpl<RentingContractVO, Integer> implements RentingContractService {
+public class RentingContractServiceImpl extends GenericServiceImpl<RentingContractVO, Integer, RentingContractDao> implements RentingContractService {
     @Override
     public List<RentingContractVO> getByTenantId(int id) {
-        return ((RentingContractDao) dao).getByTenantId(id);
+        return dao.getByTenantId(id);
     }
 
     @Override
     public List<RentingContractVO> getActiveContracts() {
-        return ((RentingContractDao) dao).getActive();
+        return dao.getActive();
     }
 
     @Override
     public void endContract(Timestamp date, int id) {
-        ((RentingContractDao) dao).endContract(date, id);
+        dao.endContract(date, id);
     }
 
     @Override
     public void returnDeposit(int id, BigDecimal amount, Timestamp timestamp) throws SQLException {
-        ((RentingContractDao) dao).returnDeposit(id, amount, timestamp);
+        dao.returnDeposit(id, amount, timestamp);
     }
 
     @Override
     public List<RentingContractVO> getByBuildingId(Integer id) {
-        return ((RentingContractDao) dao).getByBuildingId(id);
+        return dao.getByBuildingId(id);
     }
 }

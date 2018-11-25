@@ -11,14 +11,14 @@ import java.util.List;
  * Created by D on 25.03.2017.
  */
 @Service
-public class EquipmentServiceImpl extends GenericServiceImpl<EquipmentVO, String> implements EquipmentService {
+public class EquipmentServiceImpl extends GenericServiceImpl<EquipmentVO, String, EquipmentDao> implements EquipmentService {
     @Override
     public List<EquipmentVO> getByBuildingId(int id) {
-        return ((EquipmentDao)dao).getByBuildingId(id);
+        return dao.getByBuildingId(id);
     }
 
     @Override
     public List<EquipmentVO> getByServiceContractId(int id) {
-        return ((EquipmentDao)dao).getByServiceContractId(id);
+        return dao.getByServiceContractId(id);
     }
 }

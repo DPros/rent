@@ -12,10 +12,7 @@ import java.util.Collection;
  * Created by D on 13.03.2017.
  */
 @Service
-public class PersonServiceImpl extends GenericServiceImpl<PersonVO, Integer> implements PersonService {
-
-    @Autowired
-    PersonDao dao;
+public class PersonServiceImpl extends GenericServiceImpl<PersonVO, Integer, PersonDao> implements PersonService {
 
     @Override
     public Collection<PersonVO> getAllOwners() {
