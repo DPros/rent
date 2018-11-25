@@ -1,13 +1,13 @@
-package com.proskurnia.dao;
+package com.proskurnia.dao.jdbc;
 
 import com.proskurnia.VOs.CreditPaymentVO;
+import com.proskurnia.dao.CreditPaymentDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
 
 /**

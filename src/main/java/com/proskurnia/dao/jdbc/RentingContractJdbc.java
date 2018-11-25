@@ -1,6 +1,7 @@
-package com.proskurnia.dao;
+package com.proskurnia.dao.jdbc;
 
 import com.proskurnia.VOs.RentingContractVO;
+import com.proskurnia.dao.RentingContractDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;

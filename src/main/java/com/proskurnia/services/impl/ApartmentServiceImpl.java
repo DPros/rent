@@ -1,7 +1,8 @@
-package com.proskurnia.services;
+package com.proskurnia.services.impl;
 
 import com.proskurnia.VOs.ApartmentVO;
 import com.proskurnia.dao.ApartmentDao;
+import com.proskurnia.services.ApartmentService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

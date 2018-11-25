@@ -1,7 +1,8 @@
-package com.proskurnia.dao;
+package com.proskurnia.dao.jdbc;
 
 import com.proskurnia.VOs.DebitPaymentVO;
 import com.proskurnia.VOs.Payment;
+import com.proskurnia.dao.DebitPaymentDao;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;

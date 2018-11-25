@@ -1,6 +1,7 @@
-package com.proskurnia.services;
+package com.proskurnia.services.impl;
 
 import com.proskurnia.dao.UtilsDao;
+import com.proskurnia.services.UtilsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,8 @@
-package com.proskurnia.services;
+package com.proskurnia.services.impl;
 
 import com.proskurnia.VOs.PersonVO;
 import com.proskurnia.dao.PersonDao;
+import com.proskurnia.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

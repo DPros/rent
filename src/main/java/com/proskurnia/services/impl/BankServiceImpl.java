@@ -1,6 +1,7 @@
-package com.proskurnia.services;
+package com.proskurnia.services.impl;
 
 import com.proskurnia.VOs.BankVO;
+import com.proskurnia.services.BankService;
 import org.springframework.stereotype.Service;
 
 /**

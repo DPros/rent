@@ -1,9 +1,10 @@
-package com.proskurnia.dao;
+package com.proskurnia.dao.jdbc;
 
 import java.sql.SQLException;
 import java.util.Collection;
 
 import com.proskurnia.VOs.Identified;
+import com.proskurnia.dao.Dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;

@@ -18,6 +18,3 @@ public interface Dao<T extends Identified<I>, I> {
 	void delete(I id) throws SQLException;
 }
 
-enum QueryType {
-	INSERT, UPDATE
-}

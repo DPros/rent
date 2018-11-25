@@ -1,7 +1,8 @@
-package com.proskurnia.services;
+package com.proskurnia.services.impl;
 
 import com.proskurnia.VOs.RentingContractVO;
 import com.proskurnia.dao.RentingContractDao;
+import com.proskurnia.services.RentingContractService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

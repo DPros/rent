@@ -1,6 +1,7 @@
-package com.proskurnia.dao;
+package com.proskurnia.dao.jdbc;
 
 import com.proskurnia.VOs.ServiceContractVO;
+import com.proskurnia.dao.ServiceContractDao;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;

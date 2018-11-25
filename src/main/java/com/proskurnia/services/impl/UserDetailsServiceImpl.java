@@ -1,4 +1,4 @@
-package com.proskurnia.services;
+package com.proskurnia.services.impl;
 
 import com.proskurnia.dao.CredentialsDao;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,7 @@
-package com.proskurnia.services;
+package com.proskurnia.services.impl;
 
 import com.proskurnia.VOs.ServiceCompanyVO;
+import com.proskurnia.services.ServiceCompanyService;
 import org.springframework.stereotype.Service;
 
 /**

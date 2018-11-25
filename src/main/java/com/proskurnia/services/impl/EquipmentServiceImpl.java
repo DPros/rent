@@ -1,7 +1,8 @@
-package com.proskurnia.services;
+package com.proskurnia.services.impl;
 
 import com.proskurnia.VOs.EquipmentVO;
 import com.proskurnia.dao.EquipmentDao;
+import com.proskurnia.services.EquipmentService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

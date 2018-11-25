@@ -1,7 +1,8 @@
-package com.proskurnia.services;
+package com.proskurnia.services.impl;
 
 import com.proskurnia.VOs.ServiceContractVO;
 import com.proskurnia.dao.ServiceContractDao;
+import com.proskurnia.services.ServiceContractService;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;

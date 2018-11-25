@@ -1,6 +1,7 @@
-package com.proskurnia.dao;
+package com.proskurnia.dao.jdbc;
 
-import com.proskurnia.services.UserDetailsServiceImpl;
+import com.proskurnia.dao.CredentialsDao;
+import com.proskurnia.services.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;

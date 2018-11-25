@@ -1,7 +1,8 @@
-package com.proskurnia.services;
+package com.proskurnia.services.impl;
 
 import com.proskurnia.VOs.OwnerAccountVO;
 import com.proskurnia.dao.OwnerAccountDao;
+import com.proskurnia.services.OwnerAccountService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

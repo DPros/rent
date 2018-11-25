@@ -1,4 +1,4 @@
-package com.proskurnia.dao;
+package com.proskurnia.dao.jdbc;
 
 import com.proskurnia.VOs.CreditPaymentVO;
 import com.proskurnia.VOs.DebitPaymentVO;

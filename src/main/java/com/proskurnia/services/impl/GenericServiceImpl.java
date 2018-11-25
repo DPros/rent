@@ -1,10 +1,11 @@
-package com.proskurnia.services;
+package com.proskurnia.services.impl;
 
 import java.sql.SQLException;
 import java.util.Collection;
 
 import com.proskurnia.VOs.Identified;
 import com.proskurnia.dao.Dao;
+import com.proskurnia.services.GenericService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class GenericServiceImpl<T extends Identified<I>, I> implements GenericService<T, I> {

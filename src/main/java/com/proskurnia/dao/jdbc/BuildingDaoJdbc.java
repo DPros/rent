@@ -1,6 +1,7 @@
-package com.proskurnia.dao;
+package com.proskurnia.dao.jdbc;
 
 import com.proskurnia.VOs.BuildingVO;
+import com.proskurnia.dao.BuildingDao;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.jdbc.core.PreparedStatementCreator;

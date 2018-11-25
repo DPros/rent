@@ -1,6 +1,6 @@
 package com.proskurnia.dao;
 
-import com.proskurnia.services.UserDetailsServiceImpl;
+import com.proskurnia.services.impl.UserDetailsServiceImpl;
 
 /**
  * Created by D on 08.04.2017.
