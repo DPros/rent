@@ -16,8 +16,6 @@ import java.util.Locale;
 
 @SpringBootApplication
 @Configuration
-@EnableAutoConfiguration
-@ComponentScan
 public class RentApplication extends WebMvcConfigurerAdapter {
 
     public static void main(String[] args) {
