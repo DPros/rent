@@ -26,7 +26,7 @@ public abstract class EagerJdbcDao<T extends Identified<I>, I> implements Dao<T,
     protected void init() {
         List<T> list = jdbcTemplate.query(getAllQuery(), getRowMapper());
         repository = new HashMap<>(list.size());
-        list.stream().forEach(o -> repository.put(o.getId(), o));
+        list.forEach(o -> repository.put(o.getId(), o));
     }
 
     public void reload() {

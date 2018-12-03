@@ -8,7 +8,7 @@ import com.proskurnia.dao.Dao;
 import com.proskurnia.services.GenericService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class GenericServiceImpl<T extends Identified<I>, I, D extends Dao<T, I>> implements GenericService<T, I> {
+public abstract class GenericServiceImpl<T extends Identified<I>, I, D extends Dao<T, I>> implements GenericService<T, I> {
 
     @Autowired
     D dao;
